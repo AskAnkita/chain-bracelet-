@@ -1,0 +1,702 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_12_38_45_PM.png",
+            "subheading": "Mineral alliance",
+            "title": "THE TENNIS BRACELET EDIT",
+            "heading_style": "h1",
+            "mobile_text_position": "place-self-center-start text-start",
+            "desktop_text_position": "sm:place-self-center-start sm:text-start",
+            "content_max_width": 780,
+            "button_1_text": "Shop Tennis Bracelets",
+            "button_1_link": "shopify://collections",
+            "button_1_style": "outline",
+            "button_1_background": "#ffffff",
+            "button_1_text_color": "#000000",
+            "button_2_text": "EXPLORE ALL",
+            "button_2_link": "shopify://collections",
+            "button_2_style": "solid",
+            "button_2_background": "#ffffff",
+            "button_2_text_color": "#000000",
+            "background": "",
+            "background_opacity": 33,
+            "text_color": "#ffffff",
+            "border_color": "",
+            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)"
+          }
+        },
+        "slide_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_12_24_46_PM.png",
+            "subheading": "Fine jewelry",
+            "title": "CHAINS MADE TO SHINE",
+            "heading_style": "h1",
+            "mobile_text_position": "place-self-center-start text-start",
+            "desktop_text_position": "sm:place-self-center-start sm:text-start",
+            "content_max_width": 920,
+            "button_1_text": "Shop The shine",
+            "button_1_link": "shopify://collections/all",
+            "button_1_style": "outline",
+            "button_1_background": "#ffffff",
+            "button_1_text_color": "#000000",
+            "button_2_text": "Explore ALL",
+            "button_2_link": "",
+            "button_2_style": "solid",
+            "button_2_background": "#ffffff",
+            "button_2_text_color": "#000000",
+            "background": "",
+            "background_opacity": 38,
+            "text_color": "#ffffff",
+            "border_color": "",
+            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ],
+      "settings": {
+        "allow_transparent_header": true,
+        "show_next_section_button": false,
+        "media_size": "fill",
+        "show_initial_transition": false,
+        "autoplay": true,
+        "autoplay_pause_on_video": true,
+        "cycle_speed": 5,
+        "background": "#000000",
+        "controls_color": "#ffffff"
+      }
+    },
+    "rich_text_1": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_1": {
+          "type": "subheading",
+          "settings": {
+            "text": "Our goal"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Offer elegant, timeless and high quality products",
+            "heading_tag": "h1"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_1",
+        "heading_1"
+      ],
+      "name": "t:sections.rich_text.presets.rich_text.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "content_width": "xs",
+        "text_position": "center",
+        "remove_vertical_spacing": false
+      }
+    },
+    "featured_collections_1": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "collection": "pear-bracelet",
+            "products_count": 8,
+            "title": "",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        }
+      },
+      "block_order": [
+        "collection_1"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "hide_product_information": true,
+        "stack_products": true,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.2,
+        "header_alignment": "center",
+        "heading_style": "h2",
+        "subheading": "",
+        "hide_collection_title": true
+      }
+    },
+    "scrolling_content_1": {
+      "type": "scrolling-content",
+      "blocks": {
+        "text_1": {
+          "type": "text",
+          "settings": {
+            "text": "Designed to tell your own story"
+          }
+        }
+      },
+      "block_order": [
+        "text_1"
+      ],
+      "name": "t:sections.scrolling_content.presets.scrolling_content.name",
+      "settings": {
+        "separate_section_with_border": false,
+        "scrolling_speed": 0.3,
+        "scroll_direction": "left",
+        "pause_on_hover": false,
+        "text_font": "heading",
+        "text_font_size_mobile": 28,
+        "text_font_size_desktop": 32,
+        "section_vertical_spacing_mobile": 64,
+        "section_vertical_spacing_desktop": 112,
+        "item_horizontal_spacing_mobile": 40,
+        "item_horizontal_spacing_desktop": 95,
+        "background": "",
+        "text_color": ""
+      }
+    },
+    "media_grid_1": {
+      "type": "media-grid",
+      "blocks": {
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_16_53_PM.png",
+            "column_count": "6",
+            "row_count": 2,
+            "add_padding": false,
+            "title": "Chains",
+            "heading_tag": "h2",
+            "content": "",
+            "link_text": "Shop",
+            "link_url": "shopify://collections/all",
+            "link_style": "link",
+            "text_position": "place-self-center text-center",
+            "overlay_color": "#000000",
+            "overlay_opacity": 10
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_33_42_PM.png",
+            "column_count": "6",
+            "row_count": 2,
+            "add_padding": false,
+            "title": "Bracelets",
+            "heading_tag": "h2",
+            "content": "",
+            "link_text": "Shop",
+            "link_url": "shopify://collections/all",
+            "link_style": "link",
+            "text_position": "place-self-center text-center",
+            "overlay_color": "#000000",
+            "overlay_opacity": 10
+          }
+        }
+      },
+      "block_order": [
+        "image_2",
+        "image_3"
+      ],
+      "name": "t:sections.media_grid.presets.media_grid.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "desktop_row_height": 400,
+        "mobile_row_height": 200,
+        "section_width": "full",
+        "spacing": "none",
+        "subheading": "",
+        "title": "",
+        "heading_style": "h2",
+        "content": ""
+      }
+    },
+    "media_grid_2": {
+      "type": "media-grid",
+      "blocks": {
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/instagram-3.jpg",
+            "column_count": "6",
+            "row_count": 2,
+            "add_padding": false,
+            "title": "RING",
+            "heading_tag": "h2",
+            "content": "",
+            "link_text": "Shop",
+            "link_url": "shopify://collections/all",
+            "link_style": "link",
+            "text_position": "place-self-center text-center",
+            "overlay_color": "#000000",
+            "overlay_opacity": 0
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "scheme-4",
+            "image": "shopify://shop_images/symbiosis-earrings-brown-tiger-eye-02.jpg",
+            "column_count": "6",
+            "row_count": 2,
+            "add_padding": false,
+            "title": "Earrings",
+            "heading_tag": "h2",
+            "content": "",
+            "link_text": "Shop",
+            "link_url": "shopify://collections/all",
+            "link_style": "link",
+            "text_position": "place-self-center text-center",
+            "overlay_color": "#000000",
+            "overlay_opacity": 20
+          }
+        }
+      },
+      "block_order": [
+        "image_2",
+        "image_3"
+      ],
+      "name": "t:sections.media_grid.presets.media_grid.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "desktop_row_height": 400,
+        "mobile_row_height": 200,
+        "section_width": "full",
+        "spacing": "none",
+        "subheading": "",
+        "title": "",
+        "heading_style": "h2",
+        "content": ""
+      }
+    },
+    "featured_collections_2": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_DXF6Kz": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "products_count": 8,
+            "title": "",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        },
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "products_count": 2,
+            "title": "trending",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        }
+      },
+      "block_order": [
+        "collection_DXF6Kz",
+        "collection_1"
+      ],
+      "name": "t:sections.featured_collections.presets.featured_collections.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.2,
+        "header_alignment": "center",
+        "heading_style": "h2",
+        "subheading": "",
+        "hide_collection_title": false
+      }
+    },
+    "images_with_text_scroll_1": {
+      "type": "images-with-text-scroll",
+      "blocks": {
+        "content_1": {
+          "type": "image_with_text",
+          "settings": {
+            "subheading": "",
+            "title": "The Design",
+            "content": "<p>Strass embodies \"casual luxury\" through fluid creations in 18k gold and natural stones, designed to be worn like a second skin. More than jewelry, we create modern amulets that capture the glow and warmth of sunny days.</p>",
+            "link_text": "",
+            "link_url": "",
+            "link_style": "solid"
+          }
+        },
+        "content_2": {
+          "type": "image_with_text",
+          "settings": {
+            "subheading": "",
+            "title": "our approach",
+            "content": "<p>Each jewel is designed to stand the test of time: a rigorous double control guarantees impeccable quality. We also favor a more responsible jewelry by selecting stones from an ethical supply, manufacturing to order to avoid stocks and using up to 100% recycled gold and platinum.</p>",
+            "link_text": "",
+            "link_url": "",
+            "link_style": "solid"
+          }
+        }
+      },
+      "block_order": [
+        "content_1",
+        "content_2"
+      ],
+      "name": "t:sections.images_with_text_scroll.presets.images_with_text_scroll.name",
+      "settings": {
+        "color_scheme": "",
+        "background_image": "shopify://shop_images/home-images-with-text-scroll-background-image-desktop.jpg",
+        "image_position": "start",
+        "text_alignment": "center",
+        "heading_tag": "h2",
+        "overlay_color": "#000000",
+        "overlay_opacity": 40
+      }
+    },
+    "shop_the_look_1": {
+      "type": "shop-the-look",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {
+            "hot_spots_background": "#fdfdfc",
+            "product_1": "",
+            "product_1_horizontal_position": 42,
+            "product_1_vertical_position": 24,
+            "product_2": "",
+            "product_2_horizontal_position": 57,
+            "product_2_vertical_position": 59,
+            "product_3": "",
+            "product_3_horizontal_position": 66,
+            "product_3_vertical_position": 42,
+            "product_4": "",
+            "product_4_horizontal_position": 85,
+            "product_4_vertical_position": 85
+          }
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {
+            "hot_spots_background": "#fdfdfc",
+            "product_1": "",
+            "product_1_horizontal_position": 71,
+            "product_1_vertical_position": 37,
+            "product_2": "",
+            "product_2_horizontal_position": 38,
+            "product_2_vertical_position": 77,
+            "product_3": "",
+            "product_3_horizontal_position": 65,
+            "product_3_vertical_position": 60,
+            "product_4": "",
+            "product_4_horizontal_position": 85,
+            "product_4_vertical_position": 85
+          }
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2"
+      ],
+      "name": "t:sections.shop_the_look.presets.shop_the_look.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "subheading": "",
+        "title": "Shop your set",
+        "heading_style": "h2",
+        "content": "",
+        "popover_title": "Shop your set"
+      }
+    },
+    "countdown_1": {
+      "type": "countdown",
+      "name": "t:sections.countdown_timer.presets.countdown_timer.name",
+      "settings": {
+        "color_scheme": "scheme-3",
+        "separate_section_with_border": true,
+        "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_03_16_30_PM.png",
+        "image_size": "auto",
+        "subheading": "Special",
+        "title": "summer sales",
+        "heading_style": "h1",
+        "content": "<p>Shop our selection of exclusive rings, earrings, bracelets and necklaces at reduced prices during the summer sales. Hurry up!</p>",
+        "button_link": "",
+        "button_text": "",
+        "expiration_date": "2027-12-31",
+        "expiration_behavior": "leave",
+        "timer_position": "end",
+        "animate_number": false,
+        "flip_background": "",
+        "flip_background_opacity": 44,
+        "flip_text_color": "",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30
+      }
+    },
+    "blog_posts_1": {
+      "type": "blog-posts",
+      "name": "t:sections.blog_posts.presets.blog_posts.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "blog": "news",
+        "posts_count": 3,
+        "stack_on_mobile": false,
+        "show_category": true,
+        "show_date": true,
+        "show_excerpt": false,
+        "show_read_more": true,
+        "subheading": "",
+        "title": "magazine",
+        "heading_style": "h2",
+        "content": "",
+        "button_link": "",
+        "button_text": "View all"
+      }
+    },
+    "image_with_text_block_1": {
+      "type": "image-with-text-block",
+      "blocks": {
+        "subheading_1": {
+          "type": "subheading",
+          "settings": {
+            "text": "Handmade with passion and expertise"
+          }
+        },
+        "richtext_1": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>From design to manufacturing, our collections are entirely made in our Parisian workshop.</p>"
+          }
+        },
+        "link_1": {
+          "type": "link",
+          "settings": {
+            "text": "Learn more",
+            "url": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_1",
+        "richtext_1",
+        "link_1"
+      ],
+      "name": "t:sections.image_with_text_block.presets.image_with_text_block.name",
+      "settings": {
+        "color_scheme": "",
+        "image_size": "auto",
+        "content_width": "md",
+        "enable_parallax": false,
+        "remove_vertical_spacing": true
+      }
+    },
+    "testimonials_1": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>It's simple, I love it! Strass does not disappoint me, the quality is there. I wear their jewelry on all occasions.</p>",
+            "logo_max_width": 60,
+            "logo_mobile_max_width": 60,
+            "author": "Alison | Customer"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>Such a beautiful and timeless piece. Love it . Chic, elegant, comfortable, classy. Very pleased!</p>",
+            "logo_max_width": 60,
+            "logo_mobile_max_width": 60,
+            "author": "Gillian | Customer"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2"
+      ],
+      "name": "t:sections.testimonials.presets.testimonials.name",
+      "settings": {
+        "color_scheme": "scheme-ec0b8eaa-22ef-462b-96e1-f6243b3bbcd3",
+        "separate_section_with_border": false,
+        "auto_rotate_between_testimonials": false,
+        "cycle_speed": 5,
+        "font_size_factor": 1,
+        "subheading": "",
+        "title": "",
+        "heading_style": "h2",
+        "content": ""
+      }
+    },
+    "multi_column_1": {
+      "type": "multi-column",
+      "blocks": {
+        "column_1": {
+          "type": "image_with_text",
+          "settings": {
+            "title": "Solid 18k Gold",
+            "heading_tag": "h3",
+            "content": "<p>Crafted in recycled 18k gold and platinum, our pieces are designed to be a \"second skin\" that never loses its luster.</p>",
+            "link_url": "",
+            "link_text": ""
+          }
+        },
+        "column_2": {
+          "type": "image_with_text",
+          "settings": {
+            "title": "Modern Amulets",
+            "heading_tag": "h3",
+            "content": "<p>Jewelry designed to tell your story, capturing the warmth of sunny days and the fluid beauty of nature.</p>",
+            "link_url": "",
+            "link_text": ""
+          }
+        },
+        "column_4": {
+          "type": "image_with_text",
+          "settings": {
+            "title": "Ethical Sparkle",
+            "heading_tag": "h3",
+            "content": "<p>We prioritize the planet by using ethically sourced natural stones and 100% recycled precious metals.</p>",
+            "link_url": "",
+            "link_text": ""
+          }
+        },
+        "column_5": {
+          "type": "image_with_text",
+          "settings": {
+            "title": "Made for You",
+            "heading_tag": "h3",
+            "content": "<p>From fluid necklaces to bold rings, find the perfect modern heirloom to celebrate your unique journey and style.</p>",
+            "link_url": "",
+            "link_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_1",
+        "column_2",
+        "column_4",
+        "column_5"
+      ],
+      "name": "t:sections.multi_column.presets.multi_column.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "columns_per_row": 4,
+        "stack_on_mobile": false,
+        "overlap_image": false,
+        "content_alignment": "center",
+        "text_alignment": "center",
+        "spacing": "xs",
+        "subheading": "join us",
+        "title": "@strass",
+        "heading_style": "h2",
+        "content": ""
+      }
+    },
+    "1787126109d318dad6": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_667ce70_AVBgBb": {
+          "type": "ai_gen_block_667ce70",
+          "settings": {
+            "logo": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
+            "logo_height": 40,
+            "menu": "customer-account-main-menu",
+            "menu_font_size": 14,
+            "menu_font_weight": 400,
+            "menu_text_transform": "uppercase",
+            "menu_letter_spacing": 1,
+            "menu_spacing": 30,
+            "show_search": true,
+            "show_account": true,
+            "show_wishlist": true,
+            "wishlist_url": "",
+            "show_cart": true,
+            "icon_size": 20,
+            "icon_stroke_width": 1.5,
+            "icon_spacing": 16,
+            "background_color": "#ffffff",
+            "text_color": "#394943",
+            "text_hover_color": "#000000",
+            "icon_color": "#394943",
+            "icon_hover_color": "#000000",
+            "max_width": 1400,
+            "vertical_padding": 16,
+            "horizontal_padding": 30,
+            "animation_duration": 0.6,
+            "scroll_threshold": 200,
+            "shadow_intensity": 2,
+            "shadow_opacity": 0.1
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_667ce70_AVBgBb"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false
+      }
+    },
+    "1787130451f04287ed": {
+      "type": "_blocks",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "rich_text_1",
+    "featured_collections_1",
+    "scrolling_content_1",
+    "media_grid_1",
+    "media_grid_2",
+    "featured_collections_2",
+    "images_with_text_scroll_1",
+    "shop_the_look_1",
+    "countdown_1",
+    "blog_posts_1",
+    "image_with_text_block_1",
+    "testimonials_1",
+    "multi_column_1",
+    "1787126109d318dad6",
+    "1787130451f04287ed"
+  ]
+}

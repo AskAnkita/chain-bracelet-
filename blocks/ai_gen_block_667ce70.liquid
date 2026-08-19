@@ -1,0 +1,598 @@
+{% doc %}
+  @prompt
+    Create a custom sticky navigation bar that is hidden by default and slides down smoothly from the top of the page when the user scrolls down enough that the main header is no longer visible. The sticky nav should have: a solid white background, the store logo on the left, navigation menu links centered in the middle (same links as the main header menu), and icons (search, account, wishlist, cart) on the right side. The slide-in animation should be slow and elegant (ease-in-out). When the user scrolls back up and the main header comes back into view, the sticky nav should slide back up and hide. This should not interfere with or duplicate the existing main header.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sticky-nav-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: {{ block.settings.background_color }};
+    box-shadow: {{ block.settings.shadow_intensity }}px {{ block.settings.shadow_intensity | times: 2 }}px {{ block.settings.shadow_intensity | times: 3 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+    transform: translateY(-100%);
+    transition: transform {{ block.settings.animation_duration }}s ease-in-out;
+    display: block;
+    width: 100%;
+  }
+
+  .ai-sticky-nav-{{ ai_gen_id }}.visible {
+    transform: translateY(0);
+  }
+
+  .ai-sticky-nav-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.vertical_padding }}px {{ block.settings.horizontal_padding }}px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .ai-sticky-nav-logo-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-sticky-nav-logo-{{ ai_gen_id }} img {
+    max-height: {{ block.settings.logo_height }}px;
+    width: auto;
+    display: block;
+  }
+
+  .ai-sticky-nav-logo-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.logo_height | times: 2 }}px;
+    height: {{ block.settings.logo_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .ai-sticky-nav-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 80px;
+    max-height: 40px;
+  }
+
+  .ai-sticky-nav-menu-{{ ai_gen_id }} {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .ai-sticky-nav-menu-list-{{ ai_gen_id }} {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: {{ block.settings.menu_spacing }}px;
+    align-items: center;
+  }
+
+  .ai-sticky-nav-menu-item-{{ ai_gen_id }} {
+    margin: 0;
+  }
+
+  .ai-sticky-nav-menu-link-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.menu_font_size }}px;
+    font-weight: {{ block.settings.menu_font_weight }};
+    text-transform: {{ block.settings.menu_text_transform }};
+    letter-spacing: {{ block.settings.menu_letter_spacing }}px;
+    transition: color 0.3s ease;
+    display: block;
+    padding: 8px 0;
+  }
+
+  .ai-sticky-nav-menu-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.text_hover_color }};
+  }
+
+  .ai-sticky-nav-icons-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.icon_spacing }}px;
+  }
+
+  .ai-sticky-nav-icon-{{ ai_gen_id }} {
+    color: {{ block.settings.icon_color }};
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+  }
+
+  .ai-sticky-nav-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-sticky-nav-icon-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke-width: {{ block.settings.icon_stroke_width }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-sticky-nav-menu-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-sticky-nav-container-{{ ai_gen_id }} {
+      padding: {{ block.settings.vertical_padding | times: 0.8 }}px {{ block.settings.horizontal_padding | times: 0.8 }}px;
+    }
+
+    .ai-sticky-nav-logo-{{ ai_gen_id }} img {
+      max-height: {{ block.settings.logo_height | times: 0.8 }}px;
+    }
+
+    .ai-sticky-nav-icon-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.9 }}px;
+      height: {{ block.settings.icon_size | times: 0.9 }}px;
+    }
+
+    .ai-sticky-nav-icon-{{ ai_gen_id }} svg {
+      width: {{ block.settings.icon_size | times: 0.9 }}px;
+      height: {{ block.settings.icon_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<sticky-nav-{{ ai_gen_id }}
+  class="ai-sticky-nav-{{ ai_gen_id }}"
+  data-scroll-threshold="{{ block.settings.scroll_threshold }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-sticky-nav-container-{{ ai_gen_id }}">
+    <div class="ai-sticky-nav-logo-{{ ai_gen_id }}">
+      {% if block.settings.logo != blank %}
+        <a href="/">
+          <img
+            src="{{ block.settings.logo | image_url: width: 400 }}"
+            alt="{{ shop.name }}"
+            loading="lazy"
+            width="{{ block.settings.logo.width }}"
+            height="{{ block.settings.logo.height }}"
+          >
+        </a>
+      {% else %}
+        <a href="/">
+          <div class="ai-sticky-nav-logo-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+          </div>
+        </a>
+      {% endif %}
+    </div>
+
+    <nav class="ai-sticky-nav-menu-{{ ai_gen_id }}" aria-label="Sticky navigation">
+      {% if block.settings.menu != blank %}
+        <ul class="ai-sticky-nav-menu-list-{{ ai_gen_id }}">
+          {% for link in block.settings.menu.links %}
+            <li class="ai-sticky-nav-menu-item-{{ ai_gen_id }}">
+              <a
+                href="{{ link.url }}"
+                class="ai-sticky-nav-menu-link-{{ ai_gen_id }}"
+                {% if link.current %}aria-current="page"{% endif %}
+              >
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </nav>
+
+    <div class="ai-sticky-nav-icons-{{ ai_gen_id }}">
+      {% if block.settings.show_search %}
+        <a
+          href="/search"
+          class="ai-sticky-nav-icon-{{ ai_gen_id }}"
+          aria-label="Search"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if block.settings.show_account %}
+        <a
+          href="/account"
+          class="ai-sticky-nav-icon-{{ ai_gen_id }}"
+          aria-label="Account"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if block.settings.show_wishlist %}
+        <a
+          href="{{ block.settings.wishlist_url }}"
+          class="ai-sticky-nav-icon-{{ ai_gen_id }}"
+          aria-label="Wishlist"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </a>
+      {% endif %}
+
+      {% if block.settings.show_cart %}
+        <a
+          href="/cart"
+          class="ai-sticky-nav-icon-{{ ai_gen_id }}"
+          aria-label="Cart"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</sticky-nav-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StickyNav{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.scrollThreshold = parseInt(this.dataset.scrollThreshold) || 200;
+        this.isVisible = false;
+        this.mainHeader = null;
+        this.ticking = false;
+      }
+
+      connectedCallback() {
+        this.mainHeader = document.querySelector('header.header, .shopify-section-group-header-group header, [data-section-type="header"]');
+        
+        if (!this.mainHeader) {
+          this.mainHeader = document.querySelector('header');
+        }
+
+        this.handleScroll = this.handleScroll.bind(this);
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+        this.handleScroll();
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('scroll', this.handleScroll);
+      }
+
+      handleScroll() {
+        if (!this.ticking) {
+          window.requestAnimationFrame(() => {
+            this.updateVisibility();
+            this.ticking = false;
+          });
+          this.ticking = true;
+        }
+      }
+
+      updateVisibility() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        let shouldShow = false;
+
+        if (this.mainHeader) {
+          const headerRect = this.mainHeader.getBoundingClientRect();
+          const headerBottom = headerRect.bottom;
+          shouldShow = headerBottom < 0;
+        } else {
+          shouldShow = scrollY > this.scrollThreshold;
+        }
+
+        if (shouldShow && !this.isVisible) {
+          this.classList.add('visible');
+          this.isVisible = true;
+        } else if (!shouldShow && this.isVisible) {
+          this.classList.remove('visible');
+          this.isVisible = false;
+        }
+      }
+    }
+
+    customElements.define('sticky-nav-{{ ai_gen_id }}', StickyNav{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sticky slide-down nav",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Navigation menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "range",
+      "id": "menu_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "menu_font_weight",
+      "label": "Font weight",
+      "min": 300,
+      "max": 700,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "select",
+      "id": "menu_text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "menu_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "menu_spacing",
+      "label": "Space between links",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist icon",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "wishlist_url",
+      "label": "Wishlist URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart icon",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "label": "Icon stroke width",
+      "min": 1,
+      "max": 2,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1.5
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Space between icons",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Menu text",
+      "default": "#394943"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Menu text hover",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#394943"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Vertical padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Horizontal padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Slide duration",
+      "min": 0.3,
+      "max": 1,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.6
+    },
+    {
+      "type": "range",
+      "id": "scroll_threshold",
+      "label": "Scroll threshold",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "header",
+      "content": "Shadow"
+    },
+    {
+      "type": "range",
+      "id": "shadow_intensity",
+      "label": "Shadow size",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Shadow opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky slide-down nav"
+    }
+  ]
+}
+{% endschema %}

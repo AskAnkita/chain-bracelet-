@@ -1,0 +1,159 @@
+{% doc %}
+  @prompt
+    When the user scrolls down and the sticky/compact header appears, animate it so it slides down smoothly from the top of the page with a slow, elegant transition (like it's falling into place from above). The main large header should scroll away naturally (no sticky). The compact sticky nav should start hidden above the viewport and transition downward into view with a slow ease-in animation. Do not change the layout or design of either header — only add the scroll-triggered slide-down animation for the sticky header.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sticky-header-animator-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  @keyframes ai-slide-down-{{ ai_gen_id }} {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .shopify-section-group-header-group.is-sticky .shopify-section--header {
+    animation: ai-slide-down-{{ ai_gen_id }} {{ block.settings.animation_duration }}s {{ block.settings.animation_easing }} forwards;
+  }
+
+  .shopify-section-group-header-group.is-sticky .shopify-section--header.is-visible {
+    animation: ai-slide-down-{{ ai_gen_id }} {{ block.settings.animation_duration }}s {{ block.settings.animation_easing }} forwards;
+  }
+{% endstyle %}
+
+<div class="ai-sticky-header-animator-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <script>
+    (function() {
+      class StickyHeaderAnimator{{ ai_gen_id }} extends HTMLElement {
+        constructor() {
+          super();
+          this.headerGroup = null;
+          this.isSticky = false;
+          this.scrollThreshold = {{ block.settings.scroll_threshold }};
+          this.lastScrollY = window.scrollY;
+        }
+
+        connectedCallback() {
+          this.headerGroup = document.querySelector('.shopify-section-group-header-group');
+          
+          if (!this.headerGroup) {
+            return;
+          }
+
+          this.setupScrollListener();
+        }
+
+        setupScrollListener() {
+          let ticking = false;
+
+          window.addEventListener('scroll', () => {
+            if (!ticking) {
+              window.requestAnimationFrame(() => {
+                this.handleScroll();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          });
+
+          this.handleScroll();
+        }
+
+        handleScroll() {
+          const currentScrollY = window.scrollY;
+          
+          if (currentScrollY > this.scrollThreshold && !this.isSticky) {
+            this.isSticky = true;
+            this.headerGroup.classList.add('is-sticky');
+          } else if (currentScrollY <= this.scrollThreshold && this.isSticky) {
+            this.isSticky = false;
+            this.headerGroup.classList.remove('is-sticky');
+          }
+
+          this.lastScrollY = currentScrollY;
+        }
+      }
+
+      customElements.define('sticky-header-animator-{{ ai_gen_id }}', StickyHeaderAnimator{{ ai_gen_id }});
+    })();
+  </script>
+</div>
+
+{% schema %}
+{
+  "name": "Sticky header animator",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation duration",
+      "min": 0.3,
+      "max": 2,
+      "step": 0.1,
+      "unit": "s",
+      "default": 0.8
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation style",
+      "options": [
+        {
+          "value": "ease",
+          "label": "Ease"
+        },
+        {
+          "value": "ease-in",
+          "label": "Ease in"
+        },
+        {
+          "value": "ease-out",
+          "label": "Ease out"
+        },
+        {
+          "value": "ease-in-out",
+          "label": "Ease in-out"
+        },
+        {
+          "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "label": "Smooth"
+        },
+        {
+          "value": "cubic-bezier(0.19, 1, 0.22, 1)",
+          "label": "Elegant"
+        }
+      ],
+      "default": "cubic-bezier(0.19, 1, 0.22, 1)"
+    },
+    {
+      "type": "range",
+      "id": "scroll_threshold",
+      "label": "Scroll distance to trigger",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 150
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky header animator"
+    }
+  ]
+}
+{% endschema %}
