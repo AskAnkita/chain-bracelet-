@@ -399,23 +399,44 @@
 
         {%- if menu.links.size > 0 and section.settings.layout != 'drawer' -%}
           <ul class="contents unstyled-list md-max:hidden">
+            {%- comment -%}Render luxury mega menu blocks that don't have a menu_item set (standalone){%- endcomment -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'luxury_mega_menu' and block.settings.menu_item == blank -%}
+                <li class="header__primary-nav-item">
+                  {%- render 'luxury-mega-menu', block: block -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+
             {%- for link in menu.links -%}
               {% liquid
                 assign link_title_downcase = link.title | strip | downcase
                 assign mega_menu_block = ''
+                assign luxury_mega_menu_block = ''
 
                 for block in section.blocks
-                  assign menu_item_downcase = block.settings.menu_item | strip | downcase
+                  assign block_menu_item_downcase = block.settings.menu_item | strip | downcase
 
-                  if menu_item_downcase == link_title_downcase
-                    assign mega_menu_block = block
-                    break
+                  if block.type == 'mega_menu'
+                    if block_menu_item_downcase == link_title_downcase
+                      assign mega_menu_block = block
+                      break
+                    endif
+                  endif
+
+                  if block.type == 'luxury_mega_menu'
+                    if block_menu_item_downcase == link_title_downcase
+                      assign luxury_mega_menu_block = block
+                      break
+                    endif
                   endif
                 endfor
               %}
 
               <li class="header__primary-nav-item">
-                {%- if link.levels == 0 and mega_menu_block == '' -%}
+                {%- if luxury_mega_menu_block != '' -%}
+                  {%- render 'luxury-mega-menu', block: luxury_mega_menu_block -%}
+                {%- elsif link.levels == 0 and mega_menu_block == '' -%}
                   <a
                     href="{{ link.url }}"
                     data-title="{{ link.title | escape }}"
@@ -476,6 +497,8 @@
                     >
                       {{- disclosure_content -}}
                     </mega-menu-disclosure>
+                  {%- elsif luxury_mega_menu_block != '' -%}
+                    {%- comment -%}Luxury mega menu is self-contained, no additional wrapper needed{%- endcomment -%}
                   {%- else -%}
                     <dropdown-menu-disclosure follow-summary-link trigger="{{ section.settings.menu_open_trigger }}">
                       {{- disclosure_content -}}
@@ -995,6 +1018,610 @@
           "type": "url",
           "id": "image_2_link",
           "label": "t:global.text.link"
+        }
+      ]
+    },
+    {
+      "type": "luxury_mega_menu",
+      "name": "Luxury Mega Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu item to attach to",
+          "info": "Match this to an existing menu item (e.g., 'Chains', 'Bracelet', 'Ring', 'Earring'). Leave blank to create a new nav item."
+        },
+        {
+          "type": "text",
+          "id": "nav_label",
+          "label": "Navigation link label",
+          "default": "Categories",
+          "info": "Text shown in the main navigation (only used if menu_item is blank)"
+        },
+        {
+          "type": "url",
+          "id": "nav_link",
+          "label": "Navigation link URL",
+          "info": "Where the main nav link points to"
+        },
+        {
+          "type": "header",
+          "content": "Column 1 - Group 1"
+        },
+        {
+          "type": "text",
+          "id": "col1_heading1",
+          "label": "Heading",
+          "default": "Metal Type"
+        },
+        {
+          "type": "text",
+          "id": "col1_link1_label",
+          "label": "Link 1",
+          "default": "Gold"
+        },
+        {
+          "type": "url",
+          "id": "col1_link1_url",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link2_label",
+          "label": "Link 2",
+          "default": "Silver"
+        },
+        {
+          "type": "url",
+          "id": "col1_link2_url",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link3_label",
+          "label": "Link 3",
+          "default": "Platinum"
+        },
+        {
+          "type": "url",
+          "id": "col1_link3_url",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link4_label",
+          "label": "Link 4",
+          "default": "Rose Gold"
+        },
+        {
+          "type": "url",
+          "id": "col1_link4_url",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "header",
+          "content": "Column 1 - Group 2"
+        },
+        {
+          "type": "text",
+          "id": "col1_heading2",
+          "label": "Heading",
+          "default": "Stone"
+        },
+        {
+          "type": "text",
+          "id": "col1_link5_label",
+          "label": "Link 1",
+          "default": "Diamond"
+        },
+        {
+          "type": "url",
+          "id": "col1_link5_url",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link6_label",
+          "label": "Link 2",
+          "default": "Sapphire"
+        },
+        {
+          "type": "url",
+          "id": "col1_link6_url",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link7_label",
+          "label": "Link 3",
+          "default": "Emerald"
+        },
+        {
+          "type": "url",
+          "id": "col1_link7_url",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "col1_link8_label",
+          "label": "Link 4",
+          "default": "Ruby"
+        },
+        {
+          "type": "url",
+          "id": "col1_link8_url",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "header",
+          "content": "Column 2"
+        },
+        {
+          "type": "text",
+          "id": "col2_heading",
+          "label": "Heading",
+          "default": "Style"
+        },
+        {
+          "type": "text",
+          "id": "col2_link1_label",
+          "label": "Link 1",
+          "default": "Classic"
+        },
+        {
+          "type": "url",
+          "id": "col2_link1_url",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "col2_link2_label",
+          "label": "Link 2",
+          "default": "Modern"
+        },
+        {
+          "type": "url",
+          "id": "col2_link2_url",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "col2_link3_label",
+          "label": "Link 3",
+          "default": "Vintage"
+        },
+        {
+          "type": "url",
+          "id": "col2_link3_url",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "col2_link4_label",
+          "label": "Link 4",
+          "default": "Art Deco"
+        },
+        {
+          "type": "url",
+          "id": "col2_link4_url",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "text",
+          "id": "col2_link5_label",
+          "label": "Link 5",
+          "default": "Minimalist"
+        },
+        {
+          "type": "url",
+          "id": "col2_link5_url",
+          "label": "Link 5 URL"
+        },
+        {
+          "type": "header",
+          "content": "Column 3"
+        },
+        {
+          "type": "text",
+          "id": "col3_heading",
+          "label": "Heading",
+          "default": "Eternity"
+        },
+        {
+          "type": "text",
+          "id": "col3_link1_label",
+          "label": "Link 1",
+          "default": "Full Eternity"
+        },
+        {
+          "type": "url",
+          "id": "col3_link1_url",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "col3_link2_label",
+          "label": "Link 2",
+          "default": "Half Eternity"
+        },
+        {
+          "type": "url",
+          "id": "col3_link2_url",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "col3_link3_label",
+          "label": "Link 3",
+          "default": "Three Quarter"
+        },
+        {
+          "type": "url",
+          "id": "col3_link3_url",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "col3_link4_label",
+          "label": "Link 4",
+          "default": "Anniversary"
+        },
+        {
+          "type": "url",
+          "id": "col3_link4_url",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "header",
+          "content": "Featured Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "featured_image1",
+          "label": "Featured image 1",
+          "info": "Recommended: 400x600px"
+        },
+        {
+          "type": "url",
+          "id": "featured_image1_url",
+          "label": "Featured image 1 link"
+        },
+        {
+          "type": "image_picker",
+          "id": "featured_image2",
+          "label": "Featured image 2",
+          "info": "Recommended: 400x600px"
+        },
+        {
+          "type": "url",
+          "id": "featured_image2_url",
+          "label": "Featured image 2 link"
+        },
+        {
+          "type": "header",
+          "content": "Best Sellers Section"
+        },
+        {
+          "type": "text",
+          "id": "buttons_heading",
+          "label": "Section heading",
+          "default": "Best Sellers"
+        },
+        {
+          "type": "text",
+          "id": "button1_label",
+          "label": "Button 1",
+          "default": "Engagement Rings"
+        },
+        {
+          "type": "url",
+          "id": "button1_url",
+          "label": "Button 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "button2_label",
+          "label": "Button 2",
+          "default": "Wedding Bands"
+        },
+        {
+          "type": "url",
+          "id": "button2_url",
+          "label": "Button 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "button3_label",
+          "label": "Button 3",
+          "default": "Necklaces"
+        },
+        {
+          "type": "url",
+          "id": "button3_url",
+          "label": "Button 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "button4_label",
+          "label": "Button 4",
+          "default": "Earrings"
+        },
+        {
+          "type": "url",
+          "id": "button4_url",
+          "label": "Button 4 URL"
+        },
+        {
+          "type": "text",
+          "id": "button5_label",
+          "label": "Button 5",
+          "default": "Bracelets"
+        },
+        {
+          "type": "url",
+          "id": "button5_url",
+          "label": "Button 5 URL"
+        },
+        {
+          "type": "header",
+          "content": "Styling"
+        },
+        {
+          "type": "color",
+          "id": "panel_background",
+          "label": "Panel background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "link_color",
+          "label": "Link color",
+          "default": "#666666"
+        },
+        {
+          "type": "color",
+          "id": "link_hover_color",
+          "label": "Link hover color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "divider_color",
+          "label": "Divider color",
+          "default": "#e5e5e5"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button text color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "button_border_color",
+          "label": "Button border color",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "button_hover_background",
+          "label": "Button hover background",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "button_hover_text_color",
+          "label": "Button hover text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_hover_border_color",
+          "label": "Button hover border color",
+          "default": "#000000"
+        },
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "content_max_width",
+          "min": 1000,
+          "max": 1600,
+          "step": 50,
+          "unit": "px",
+          "label": "Content max width",
+          "default": 1400
+        },
+        {
+          "type": "range",
+          "id": "panel_padding_vertical",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "unit": "px",
+          "label": "Panel padding (vertical)",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "panel_padding_horizontal",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "unit": "px",
+          "label": "Panel padding (horizontal)",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "column_gap",
+          "min": 10,
+          "max": 50,
+          "step": 5,
+          "unit": "px",
+          "label": "Column gap",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "column_padding",
+          "min": 0,
+          "max": 30,
+          "step": 5,
+          "unit": "px",
+          "label": "Column padding",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "group_spacing",
+          "min": 10,
+          "max": 40,
+          "step": 5,
+          "unit": "px",
+          "label": "Group spacing",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "section_spacing",
+          "min": 10,
+          "max": 50,
+          "step": 5,
+          "unit": "px",
+          "label": "Section spacing",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "button_gap",
+          "min": 10,
+          "max": 30,
+          "step": 5,
+          "unit": "px",
+          "label": "Button gap",
+          "default": 15
+        },
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "range",
+          "id": "heading_font_size",
+          "min": 10,
+          "max": 18,
+          "step": 1,
+          "unit": "px",
+          "label": "Heading font size",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "heading_font_weight",
+          "min": 400,
+          "max": 700,
+          "step": 100,
+          "label": "Heading font weight",
+          "default": 600
+        },
+        {
+          "type": "range",
+          "id": "heading_letter_spacing",
+          "min": 0,
+          "max": 3,
+          "step": 0.5,
+          "unit": "px",
+          "label": "Heading letter spacing",
+          "default": 0.5
+        },
+        {
+          "type": "range",
+          "id": "heading_margin_bottom",
+          "min": 5,
+          "max": 30,
+          "step": 5,
+          "unit": "px",
+          "label": "Heading margin bottom",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "link_font_size",
+          "min": 12,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "label": "Link font size",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "link_spacing",
+          "min": 5,
+          "max": 15,
+          "step": 1,
+          "unit": "px",
+          "label": "Link spacing",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "button_font_size",
+          "min": 12,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "label": "Button font size",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "button_padding_vertical",
+          "min": 8,
+          "max": 20,
+          "step": 2,
+          "unit": "px",
+          "label": "Button padding (vertical)",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "button_padding_horizontal",
+          "min": 12,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "label": "Button padding (horizontal)",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "button_border_width",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "unit": "px",
+          "label": "Button border width",
+          "default": 1
+        },
+        {
+          "type": "range",
+          "id": "button_border_radius",
+          "min": 0,
+          "max": 20,
+          "step": 2,
+          "unit": "px",
+          "label": "Button border radius",
+          "default": 0
         }
       ]
     }
