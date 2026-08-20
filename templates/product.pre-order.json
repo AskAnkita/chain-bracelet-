@@ -71,7 +71,8 @@
       ],
       "settings": {
         "allow_transparent_header": true,
-        "transparent_header_use_primary_colors": true
+        "transparent_header_use_primary_colors": true,
+        "desktop_media_grid_gap": 8
       }
     },
     "related-products": {

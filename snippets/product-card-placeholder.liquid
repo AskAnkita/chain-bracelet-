@@ -36,8 +36,7 @@
 
   <div class="product-card__figure">
     <a href="#" class="product-card__media">
-      {%- capture product_placeholder -%}product-{{ loop_index | modulo: 6 | plus: 1 | default: 1 }}{%- endcapture -%}
-      {{- product_placeholder | placeholder_svg_tag: 'product-card__image product-card__image--primary placeholder' -}}
+      {%- render 'jewelry-placeholder-icon', index: loop_index, class: 'product-card__image product-card__image--primary placeholder' -%}
     </a>
   </div>
 

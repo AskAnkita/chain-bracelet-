@@ -430,7 +430,7 @@
         "enable_search": true,
         "about_label": "About C&B",
         "about_url": "",
-        "center_icon": "",
+        "center_icon": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "center_icon_width": 40,
         "utility_icon_size": 22,
         "utility_text_size": 0.8,

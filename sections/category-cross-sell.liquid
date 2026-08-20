@@ -1,0 +1,204 @@
+{%- comment -%}
+  Shows one product from each of the store's other jewelry categories (Necklaces,
+  Bracelets, Rings, Earrings), based on which category the current product belongs
+  to -- e.g. on a bracelet, it shows a ring, a necklace, and an earring. Fully
+  dynamic: nothing here is picked by hand, so it works unchanged across every
+  product without per-product setup.
+
+  Category is detected from collection membership, matching the same four
+  collection handles (necklaces, bracelets, rings, earrings) the main nav uses --
+  see the left_nav_items/right_nav_items in sections/header.liquid. A product not
+  in any of the four collections has no "other" categories to infer, so the
+  section renders nothing rather than guessing.
+{%- endcomment -%}
+
+{%- liquid
+  assign categories = 'necklaces,bracelets,rings,earrings' | split: ','
+  assign current_category = blank
+
+  for handle in categories
+    for product_collection in product.collections
+      if product_collection.handle == handle
+        assign current_category = handle
+        break
+      endif
+    endfor
+
+    unless current_category == blank
+      break
+    endunless
+  endfor
+-%}
+
+{%- if current_category != blank -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --product-list-items-per-row: 1;
+      --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
+      --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} {
+        --product-list-items-per-row: {{ section.settings.products_per_row_desktop }};
+      }
+    }
+  </style>
+
+  {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="container">
+      <div class="section-stack">
+        {%- render 'section-header',
+          subheading: section.settings.subheading,
+          heading: section.settings.heading,
+          heading_style: section.settings.heading_style,
+          content: section.settings.content
+        -%}
+
+        <div class="product-list justify-center">
+          {%- assign card_position = 0 -%}
+
+          {%- for handle in categories -%}
+            {%- unless handle == current_category -%}
+              {%- assign other_collection = collections[handle] -%}
+
+              {%- if other_collection != blank and other_collection.products.size > 0 -%}
+                {%- assign card_position = card_position | plus: 1 -%}
+                {%- render 'product-card',
+                  product: other_collection.products.first,
+                  position: card_position,
+                  reveal: settings.stagger_products_apparition,
+                  section: section
+                -%}
+              {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Category cross-sell",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "class": "shopify-section--category-cross-sell",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows one product from each of the other three jewelry categories (Necklaces, Bracelets, Rings, Earrings), chosen automatically from the category the current product isn't in. Nothing to pick by hand -- add this once and it adapts per product."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:global.product_list.product_list_category"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row_desktop",
+      "min": 2,
+      "max": 4,
+      "label": "t:global.product_list.products_per_row_desktop",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "t:global.product_list.spacing_category",
+      "info": "t:global.product_list.spacing_category_info"
+    },
+    {
+      "type": "range",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "id": "horizontal_spacing_factor",
+      "label": "t:global.product_list.horizontal_spacing_factor",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "id": "vertical_spacing_factor",
+      "label": "t:global.product_list.vertical_spacing_factor",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "t:global.section.header_category"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "t:global.text.subheading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:global.text.heading",
+      "default": "Extend the harmony with"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:global.text.style",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category cross-sell",
+      "category": "t:global.categories.products"
+    }
+  ]
+}
+{% endschema %}

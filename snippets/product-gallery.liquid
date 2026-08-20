@@ -61,6 +61,19 @@
   goes around that, Prestige offers a hack using alt tags whose usage is described here: https://support.maestrooo.com/article/721-variant-images-set
   The implementation is rather complex and inefficient due to a lot of string parsings, but it is, unfortunately, the
   only way to do it on Shopify right now.
+
+  THEME CUSTOMISATION: the parsing below has been hardened compared to the stock Prestige implementation:
+
+    1. An image is only ever filtered when its tag names an option that actually exists on the product. Stock
+       Prestige hides any image whose alt text merely contains a "#" (for instance "Ranked #1 bestseller"), because
+       the unmatched option resolves to nil and never equals the tag value.
+    2. Option values may contain underscores and spaces ("#Color_Rose_Gold", "#Color_Rose Gold"). Stock Prestige
+       splits on every underscore and keeps the last fragment, so "Rose_Gold" was read as "Gold".
+    3. Option names are matched case and whitespace insensitively against the product options.
+    4. An image may carry several tags ("#Color_Gold #Size_Large") and is shown only when all of them match the
+       currently selected options.
+    5. Only the fragments that follow a "#" are parsed as tags, so an underscore in the descriptive part of the alt
+       text ("Size_chart reference #Color_Gold") can no longer be mistaken for a tag.
 {%- endcomment -%}
 
 {% liquid
@@ -70,17 +83,58 @@
 
   if product.variants.size > 1
     for media in product.media
-      if media.alt contains '#' and media.alt != product.title
-        assign alt_parts = media.alt | split: '#'
-        assign media_group_parts = alt_parts.last | split: '_'
-        assign option = product.options_by_name[media_group_parts.first]
-        assign option_value = option.selected_value | downcase
-        assign downcase_group_value = media_group_parts.last | strip | downcase
+      unless media.alt contains '#'
+        continue
+      endunless
 
-        if option_value != downcase_group_value and media != default_media
-          assign media_position = media.position | sort
-          assign filtered_indexes = filtered_indexes | concat: media_position
+      if media.alt == product.title
+        continue
+      endif
+
+      assign media_is_filtered = false
+      assign alt_parts = media.alt | split: '#'
+
+      for alt_part in alt_parts
+        if forloop.index0 == 0
+          continue
         endif
+
+        assign media_group = alt_part | strip
+
+        unless media_group contains '_'
+          continue
+        endunless
+
+        assign media_group_option_name = media_group | split: '_' | first
+        assign media_group_value = media_group | remove_first: media_group_option_name | remove_first: '_' | strip | downcase
+        assign media_group_option_name = media_group_option_name | strip | downcase
+
+        assign has_matched_option = false
+        assign matched_option_value = ''
+
+        for product_option in product.options_with_values
+          assign product_option_name = product_option.name | strip | downcase
+
+          if product_option_name == media_group_option_name
+            assign has_matched_option = true
+            assign matched_option_value = product_option.selected_value | strip | downcase
+            break
+          endif
+        endfor
+
+        unless has_matched_option
+          continue
+        endunless
+
+        if matched_option_value != media_group_value
+          assign media_is_filtered = true
+          break
+        endif
+      endfor
+
+      if media_is_filtered and media != default_media
+        assign media_position = media.position | sort
+        assign filtered_indexes = filtered_indexes | concat: media_position
       endif
     endfor
   endif

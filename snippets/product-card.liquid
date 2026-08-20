@@ -52,55 +52,59 @@
     --------------------------------------------------------------------------------------------------------------------
   {%- endcomment -%}
 
-  {%- if product.media.size > 0 -%}
     <div class="product-card__figure">
       {%- if show_badges -%}
         {%- render 'product-badges', product: product, vertical: true, context: 'card' -%}
       {%- endif -%}
 
       <a href="{{ product.url }}" class="product-card__media" draggable="false" data-instant>
-        {%- capture sizes -%}
-          {%- assign products_per_row_desktop = section.settings.products_per_row_desktop | default: 3 -%}
+        {%- if product.media.size > 0 -%}
+          {%- capture sizes -%}
+            {%- assign products_per_row_desktop = section.settings.products_per_row_desktop | default: 3 -%}
 
-          {%- if stacked -%}
-            (max-width: 699px) calc(100vw / {{ section.settings.products_per_row_mobile | default: 2 }}), (max-width: 999px) calc(100vw / {{ 3 | at_most: products_per_row_desktop }} - 64px), calc((100vw - 96px) / {{ products_per_row_desktop }} - (24px / {{ products_per_row_desktop }} * {{ products_per_row_desktop | minus: 1 }}))
-          {%- else -%}
-            (max-width: 699px) 74vw, (max-width: 999px) 38vw, calc((100vw - 96px) / {{ products_per_row_desktop }} - (24px / {{ products_per_row_desktop }} * {{ products_per_row_desktop | minus: 1 }}))
-          {%- endif -%}
-        {%- endcapture -%}
+            {%- if stacked -%}
+              (max-width: 699px) calc(100vw / {{ section.settings.products_per_row_mobile | default: 2 }}), (max-width: 999px) calc(100vw / {{ 3 | at_most: products_per_row_desktop }} - 64px), calc((100vw - 96px) / {{ products_per_row_desktop }} - (24px / {{ products_per_row_desktop }} * {{ products_per_row_desktop | minus: 1 }}))
+            {%- else -%}
+              (max-width: 699px) 74vw, (max-width: 999px) 38vw, calc((100vw - 96px) / {{ products_per_row_desktop }} - (24px / {{ products_per_row_desktop }} * {{ products_per_row_desktop | minus: 1 }}))
+            {%- endif -%}
+          {%- endcapture -%}
 
-        {%- liquid
-          assign main_media_loading_strategy = null
+          {%- liquid
+            assign main_media_loading_strategy = null
 
-          if section.index > 3 or position > 3
-            assign main_media_loading_strategy = 'lazy'
-          endif
-
-          # If the "custom.card_image" metafield exists for this product we use this one, otherwise we default as the featured image
-          assign featured_media = product.metafields.custom.card_image.value | default: product.featured_media
-        -%}
-
-        {%- capture main_image_classes -%}product-card__image product-card__image--primary {% if settings.product_image_aspect_ratio contains 'crop' %}object-cover{% endif %} aspect-{{ settings.product_image_aspect_ratio | split: '_' | first }}{%- endcapture -%}
-        {{-
-          featured_media
-          | image_url: width: featured_media.width
-          | image_tag:
-            loading: main_media_loading_strategy,
-            sizes: sizes,
-            widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800',
-            draggable: 'false',
-            class: main_image_classes
-        -}}
-
-        {%- liquid
-          if show_secondary_image and product.media.size > 1
-            assign next_media = product.metafields.custom.card_hover_image.value | default: product.media[product.featured_media.position] | default: product.media[1]
-
-            if next_media != blank
-              echo next_media | image_url: width: next_media.width | image_tag: class: 'product-card__image product-card__image--secondary', loading: 'lazy', fetchpriority: 'low', sizes: sizes, widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800', draggable: 'false', aria-hidden: 'true'
+            if section.index > 3 or position > 3
+              assign main_media_loading_strategy = 'lazy'
             endif
-          endif
-        -%}
+
+            # If the "custom.card_image" metafield exists for this product we use this one, otherwise we default as the featured image
+            assign featured_media = product.metafields.custom.card_image.value | default: product.featured_media
+          -%}
+
+          {%- capture main_image_classes -%}product-card__image product-card__image--primary {% if settings.product_image_aspect_ratio contains 'crop' %}object-cover{% endif %} aspect-{{ settings.product_image_aspect_ratio | split: '_' | first }}{%- endcapture -%}
+          {{-
+            featured_media
+            | image_url: width: featured_media.width
+            | image_tag:
+              loading: main_media_loading_strategy,
+              sizes: sizes,
+              widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800',
+              draggable: 'false',
+              class: main_image_classes
+          -}}
+
+          {%- liquid
+            if show_secondary_image and product.media.size > 1
+              assign next_media = product.metafields.custom.card_hover_image.value | default: product.media[product.featured_media.position] | default: product.media[1]
+
+              if next_media != blank
+                echo next_media | image_url: width: next_media.width | image_tag: class: 'product-card__image product-card__image--secondary', loading: 'lazy', fetchpriority: 'low', sizes: sizes, widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800', draggable: 'false', aria-hidden: 'true'
+              endif
+            endif
+          -%}
+        {%- else -%}
+          {%- comment -%} No image uploaded yet for this product: reuse the jewelry placeholder icon so the card isn't blank {%- endcomment -%}
+          {%- render 'jewelry-placeholder-icon', index: position, class: 'product-card__image product-card__image--primary placeholder' -%}
+        {%- endif -%}
       </a>
 
       {%- if show_quick_buy and product.available -%}
@@ -134,7 +138,6 @@
         {%- endif -%}
       {%- endif -%}
     </div>
-  {%- endif -%}
 
   {%- comment -%}
     --------------------------------------------------------------------------------------------------------------------

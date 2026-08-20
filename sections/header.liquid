@@ -76,6 +76,12 @@
 
   {%- comment -%}Utility rows (about + icons, then rules + mark).{%- endcomment -%}
   #shopify-section-{{ section.id }} .header__utility {
+    {%- comment -%}
+      The utility rows are a sibling of .header, not a child, so theme.css's default
+      on .header never reaches them. Declared here so the mark's two icons have a
+      base state to swap from; the transparent rule further down flips it to 1.
+    {%- endcomment -%}
+    --header-show-transparent-logo: 0;
     background: rgb(var(--background));
     color: rgb(var(--text-color));
     position: relative;
@@ -122,12 +128,31 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
+    position: relative;
   }
 
   #shopify-section-{{ section.id }} .header__utility-mark :is(img, svg) {
     width: {{ section.settings.center_icon_width }}px;
     height: auto;
     display: block;
+  }
+
+  {%- comment -%}
+    Same two-image cross-fade theme.css uses for the wordmark: both marks are stacked,
+    and --header-show-transparent-logo drives which one is opaque. The :not(:only-of-type)
+    guard means a mark with no transparent counterpart stays at full opacity.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} :is(.header__utility-mark, .header__compact-mark) .header__mark-image:where(:not(:only-of-type)) {
+    opacity: calc(1 - var(--header-show-transparent-logo));
+    transition: opacity .2s;
+  }
+
+  #shopify-section-{{ section.id }} :is(.header__utility-mark, .header__compact-mark) .header__mark-image--transparent {
+    opacity: var(--header-show-transparent-logo);
+    pointer-events: none;
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
   }
 
   {%- comment -%}The icon row moved out of x-header, so it lays itself out here.{%- endcomment -%}
@@ -171,6 +196,7 @@
     over the hero rather than two separately-shaded strips.
   {%- endcomment -%}
   :has(.shopify-section:first-child [allow-transparent-header]):not(:has(.shopify-section--header ~ .shopify-section-group-header-group)) #shopify-section-{{ section.id }}:not(:hover) .header__utility {
+    --header-show-transparent-logo: 1;
     background: rgb(var(--header-overlay));
     color: rgb(var(--header-transparent-header-text-color));
   }
@@ -231,8 +257,31 @@
       top: calc(var(--announcement-bar-is-sticky, 0) * var(--announcement-bar-height, 0px));
     }
 
+    {%- comment -%}
+      theme.css gives .header equal top/bottom padding via --header-padding-block.
+      This used to zero out just the top half, which is what pinned the bar's
+      content flush against the very top edge with no breathing room -- the bottom
+      kept its padding, so the row read as bottom-heavy. Matching top to bottom
+      here gives it the same symmetric spacing as the home sticky bar.
+    {%- endcomment -%}
     #shopify-section-{{ section.id }} .header-compact .header {
-      padding-block-start: 0;
+      padding-block-start: var(--header-padding-block);
+    }
+
+    {%- comment -%}
+      Inner pages have no hero to gate transparency behind, and the bar IS the site's
+      only nav on these pages, so it starts transparent unconditionally rather than
+      waiting for a [allow-transparent-header] section like the home masthead does.
+      Same open-menu/open-search exclusion as that rule, so an open dropdown still
+      forces solid and stays readable.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
+      --header-show-transparent-logo: 1;
+      --header-separation-border-color: 0 0 0 / 0;
+      --background: 0 0 0 / 0;
+      --background-gradient: 0 0 0 / 0;
+      --border-color: 0 0 0 / 0;
+      --text-color: var(--header-transparent-header-text-color);
     }
 
     {%- comment -%}
@@ -240,16 +289,20 @@
       home page that state is suppressed further down (the masthead is not pinned, so
       it only caused a flash on the way out). Here the bar IS pinned, so the scrolled
       state is the point: it drops the transparency for a white background once the
-      page moves under it. Beats the transparent-header rules below, which do not
-      exclude .is-solid.
+      page moves under it. Beats the transparent rule above, which does not exclude
+      .is-solid, and also restores the scheme's normal text color -- that rule sets
+      --text-color to the transparent (white) value and nothing else in this state
+      was resetting it back.
     {%- endcomment -%}
     #shopify-section-{{ section.id }} .header-compact .header.is-solid {
       --header-show-transparent-logo: 0 !important;
       --header-separation-border-color: {% if section.settings.show_separation_border %}{{ section.settings.color_scheme.settings.text_color.rgb }} / 0.15{% else %}0 0 0 / 0{% endif %} !important;
       --background: 255 255 255 !important;
       --background-gradient: 0 0 0 / 0 !important;
+      --text-color: {{ header_scheme.settings.text_color.rgb }} !important;
 
       background: rgb(255 255 255) !important;
+      color: rgb(var(--text-color)) !important;
     }
 
     {%- comment -%}The mark and icons sit in the menu row's own grid areas.{%- endcomment -%}
@@ -264,10 +317,12 @@
 
     {%- comment -%}
       The mark is a lone brand cue in a single-row bar here, not the centrepiece of a
-      three-row masthead, so it reads at 60% of the size the merchant set for the home
-      page. Derived rather than hardcoded so it still tracks that setting.
+      three-row masthead, so it's scaled off the size the merchant set for the home
+      page rather than a hardcoded px value -- it still tracks that setting if it
+      changes. 0.9 (was 0.6) reads closer to full size, since on the compact bar the
+      mark is the only brand element in the row.
     {%- endcomment -%}
-    {%- assign compact_mark_width = section.settings.center_icon_width | times: 0.6 | round -%}
+    {%- assign compact_mark_width = section.settings.center_icon_width | times: 0.9 | round -%}
     #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
       width: {{ compact_mark_width }}px;
       height: auto;
@@ -450,7 +505,15 @@
 
         <a href="{{ routes.root_url }}" class="header__utility-mark" aria-label="{{ shop.name }}">
           {%- if section.settings.center_icon -%}
-            {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+            {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
+
+            {%- comment -%}
+              The light mark for the transparent header. Decorative: the <a> carries the
+              label and the solid mark above already names the shop, so alt stays empty.
+            {%- endcomment -%}
+            {%- if section.settings.transparent_center_icon -%}
+              {{- section.settings.transparent_center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
+            {%- endif -%}
           {%- else -%}
             {%- render 'icon' with 'gem' -%}
           {%- endif -%}
@@ -506,7 +569,11 @@
       {%- endcomment -%}
       <a href="{{ routes.root_url }}" class="header__compact-mark" aria-label="{{ shop.name }}">
         {%- if section.settings.center_icon -%}
-          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
+
+          {%- if section.settings.transparent_center_icon -%}
+            {{- section.settings.transparent_center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
+          {%- endif -%}
         {%- else -%}
           {%- render 'icon' with 'gem' -%}
         {%- endif -%}
@@ -764,6 +831,13 @@
       "id": "center_icon",
       "label": "Center mark image",
       "info": "Falls back to a diamond icon when empty."
+    },
+    {
+      "type": "image_picker",
+      "id": "transparent_center_icon",
+      "label": "Center mark image (transparent header)",
+      "info": "Light version shown while the header sits over a hero image. Falls back to the mark above when empty.",
+      "visible_if": "{{ section.settings.center_icon != blank }}"
     },
     {
       "type": "range",

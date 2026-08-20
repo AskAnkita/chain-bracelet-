@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(shopify theme check)",
+      "Bash(shopify theme check *)",
+      "Bash(grep *)",
+      "Bash(sed -n *)",
+      "Bash(tail *)",
+      "Bash(wc *)"
+    ]
+  }
+}

@@ -55,6 +55,17 @@
         "complementary_products": {
           "type": "complementary_products",
           "settings": {}
+        },
+        "disclosures": {
+          "type": "disclosures",
+          "settings": {}
+        },
+        "shipping_returns": {
+          "type": "accordion",
+          "settings": {
+            "show_below_gallery": false,
+            "title": "Shipping & Returns"
+          }
         }
       },
       "block_order": [
@@ -67,20 +78,30 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "complementary_products"
+        "complementary_products",
+        "disclosures",
+        "shipping_returns"
       ],
       "settings": {
         "allow_transparent_header": true,
-        "transparent_header_use_primary_colors": true
+        "transparent_header_use_primary_colors": true,
+        "desktop_media_grid_gap": 8
       }
+    },
+    "category-cross-sell": {
+      "type": "category-cross-sell",
+      "settings": {}
     },
     "related-products": {
       "type": "related-products",
-      "settings": {}
+      "settings": {
+        "title": "You may also like"
+      }
     }
   },
   "order": [
     "main",
+    "category-cross-sell",
     "related-products"
   ]
 }
