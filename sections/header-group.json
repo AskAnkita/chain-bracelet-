@@ -47,7 +47,7 @@
         "chains_mega_menu": {
           "type": "luxury_mega_menu",
           "settings": {
-            "menu_item": "Chains",
+            "menu_item": "CHAINS",
             "nav_label": "Chains",
             "nav_link": "",
             "col1_heading1": "Metal Type",
@@ -137,7 +137,7 @@
         "bracelet_mega_menu": {
           "type": "luxury_mega_menu",
           "settings": {
-            "menu_item": "Bracelet",
+            "menu_item": "BRACELET",
             "nav_label": "Bracelet",
             "nav_link": "",
             "col1_heading1": "Bracelet Type",
@@ -227,7 +227,7 @@
         "ring_mega_menu": {
           "type": "luxury_mega_menu",
           "settings": {
-            "menu_item": "Ring",
+            "menu_item": "RING",
             "nav_label": "Ring",
             "nav_link": "",
             "col1_heading1": "Ring Type",
@@ -317,7 +317,7 @@
         "earring_mega_menu": {
           "type": "luxury_mega_menu",
           "settings": {
-            "menu_item": "Earring",
+            "menu_item": "EARRING",
             "nav_label": "Earring",
             "nav_link": "",
             "col1_heading1": "Earring Type",
