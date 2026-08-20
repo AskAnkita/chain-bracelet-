@@ -15,13 +15,14 @@
         "slide_1": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_12_38_45_PM.png",
-            "subheading": "Modern handmade jewellery",
-            "title": "THE TENNIS BRACELET EDIT",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_03_34_PM.png",
+            "subheading": "Mineral alliance",
+            "title": "<strong>modern handmade  jewellery </strong>",
             "heading_style": "h1",
             "mobile_text_position": "place-self-center-start text-start",
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 780,
+            "button_size": "base",
             "button_1_text": "Shop Tennis Bracelets",
             "button_1_link": "shopify://collections",
             "button_1_style": "outline",
@@ -36,19 +37,22 @@
             "background_opacity": 33,
             "text_color": "#ffffff",
             "border_color": "",
-            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)"
+            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)",
+            "enable_text_shadow": true,
+            "text_shadow_opacity": 80
           }
         },
         "slide_2": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_12_24_46_PM.png",
-            "subheading": "Modern handmade jewellery",
-            "title": "CHAINS MADE TO SHINE",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_23_02_PM.png",
+            "subheading": "Fine jewelry",
+            "title": "<strong>modern handmade  jewellery </strong>",
             "heading_style": "h1",
             "mobile_text_position": "place-self-center-start text-start",
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 920,
+            "button_size": "base",
             "button_1_text": "Shop The shine",
             "button_1_link": "shopify://collections/all",
             "button_1_style": "outline",
@@ -63,7 +67,9 @@
             "background_opacity": 38,
             "text_color": "#ffffff",
             "border_color": "",
-            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)"
+            "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)",
+            "enable_text_shadow": true,
+            "text_shadow_opacity": 80
           }
         }
       },
@@ -632,6 +638,7 @@
             "logo": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
             "logo_height": 40,
             "menu": "customer-account-main-menu",
+            "menu_font": "heading",
             "menu_font_size": 14,
             "menu_font_weight": 400,
             "menu_text_transform": "uppercase",
