@@ -71,7 +71,7 @@
                ============================================================ */
 
             #shopify-section-sections--23238268223731__header x-header {
-              --header-padding-block: 2rem !important;
+              --header-padding-block: 0.75rem !important;
               border-bottom: 1px solid rgba(0,0,0,0.1);
             }
 
@@ -82,15 +82,15 @@
                 --header-grid:
                   "primary-nav logo secondary-nav"
                   / minmax(0,1fr) auto minmax(0,1fr) !important;
-                align-items: end;
+                align-items: center;
               }
 
               /* nav spans the full row so it can centre around the logo */
               #shopify-section-sections--23238268223731__header .header__primary-nav {
                 grid-column: 1 / -1;
                 grid-row: 1;
-                align-self: end;
-                padding-block-end: 0.6rem;          /* KNOB 1 — vertical position */
+                align-self: center;                 /* sit on the wordmark's line */
+                padding-block-end: 0;
                 pointer-events: none;
               }
 
@@ -122,17 +122,14 @@
                 position: relative;
                 z-index: 2;
                 justify-self: center;
+                align-self: center;                 /* share the nav's line */
+                margin-block: 0;
                 pointer-events: auto;
               }
 
-              #shopify-section-sections--23238268223731__header .header__secondary-nav {
-                grid-area: secondary-nav;
-                grid-row: 1;
-                align-self: start;
-                padding-block-end: 0.6rem;          /* match KNOB 1 */
-                position: relative;
-                z-index: 2;
-                gap: 1.5rem;
+              /* the wordmark and the links sit on one optical line */
+              #shopify-section-sections--23238268223731__header .header__logo :is(img, .header__logo-text) {
+                display: block;
               }
             }
 
@@ -207,8 +204,6 @@
         }
       }
 
-      /* small logo shown on scroll */
-      .header-sc
     </style>
   </head>
 

@@ -86,12 +86,25 @@
     color: {{ block.settings.text_color }};
     text-decoration: none;
     font-size: {{ block.settings.menu_font_size }}px;
-    font-weight: {{ block.settings.menu_font_weight }};
-    text-transform: {{ block.settings.menu_text_transform }};
     letter-spacing: {{ block.settings.menu_letter_spacing }}px;
     transition: color 0.3s ease;
     display: block;
     padding: 8px 0;
+
+    {%- if block.settings.menu_font == 'heading' -%}
+      {%- comment -%}
+        Match the main header nav, whose links carry the .h6 class and so inherit
+        the theme's heading face (see .heading in theme.css). Without this the
+        links fall back to the body font and read as a different typeface.
+      {%- endcomment -%}
+      font-family: var(--heading-font-family);
+      font-weight: var(--heading-font-weight);
+      font-style: var(--heading-font-style);
+      text-transform: var(--heading-text-transform);
+    {%- else -%}
+      font-weight: {{ block.settings.menu_font_weight }};
+      text-transform: {{ block.settings.menu_text_transform }};
+    {%- endif -%}
   }
 
   .ai-sticky-nav-menu-link-{{ ai_gen_id }}:hover {
@@ -124,6 +137,26 @@
     width: {{ block.settings.icon_size }}px;
     height: {{ block.settings.icon_size }}px;
     stroke-width: {{ block.settings.icon_stroke_width }};
+  }
+
+  .ai-sticky-nav-icon-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-sticky-nav-badge-{{ ai_gen_id }} {
+    position: absolute;
+    inset-block-start: -.35rem;
+    inset-inline-end: -.5rem;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    padding-inline: .15rem;
+    border-radius: 999px;
+    background: {{ block.settings.icon_color }};
+    color: {{ block.settings.background_color }};
+    font-size: .55rem;
+    line-height: 1.05rem;
+    letter-spacing: 0;
+    text-align: center;
   }
 
   @media screen and (max-width: 989px) {
@@ -224,27 +257,38 @@
 
       {% if block.settings.show_wishlist %}
         <a
-          href="{{ block.settings.wishlist_url }}"
+          href="{{ block.settings.wishlist_url | default: '#' }}"
           class="ai-sticky-nav-icon-{{ ai_gen_id }}"
           aria-label="Wishlist"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
+          <wishlist-count class="ai-sticky-nav-badge-{{ ai_gen_id }}"></wishlist-count>
         </a>
       {% endif %}
 
       {% if block.settings.show_cart %}
+        {%- comment -%}
+          Matches the main header: opens the cart drawer instead of navigating to
+          /cart, and shows a live count. cart-count is the theme's own element, so
+          it stays in sync with add-to-cart elsewhere on the page.
+        {%- endcomment -%}
         <a
-          href="/cart"
+          href="{{ routes.cart_url }}"
           class="ai-sticky-nav-icon-{{ ai_gen_id }}"
+          {% if settings.cart_type != 'page' and request.page_type != 'cart' %}
+            aria-controls="cart-drawer"
+          {% endif %}
           aria-label="Cart"
+          data-no-instant
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
+          <cart-count class="ai-sticky-nav-badge-{{ ai_gen_id }}">{{ cart.item_count }}</cart-count>
         </a>
       {% endif %}
     </div>
@@ -346,6 +390,23 @@
       "id": "menu",
       "label": "Menu",
       "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "menu_font",
+      "label": "Font",
+      "info": "Heading matches the main header navigation.",
+      "options": [
+        {
+          "value": "heading",
+          "label": "Heading"
+        },
+        {
+          "value": "body",
+          "label": "Body"
+        }
+      ],
+      "default": "heading"
     },
     {
       "type": "range",

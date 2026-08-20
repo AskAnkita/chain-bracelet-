@@ -172,6 +172,18 @@
       {%- endcase -%}
     </svg>
 
+  {%- when 'gem' -%}
+    <svg aria-hidden="true" fill="none" focusable="false" width="{{ width | default: 24 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
+      <path d="M6 3h12l4 6-10 13L2 9Z" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11 3 8 9l4 13 4-13-3-6" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2 9h20" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+  {%- when 'wishlist' -%}
+    <svg aria-hidden="true" fill="none" focusable="false" width="{{ width | default: 24 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
+      <path d="M12 20.5s-7.75-4.7-10.05-9.35C.65 8.4 1.85 4.7 5.3 3.8c2.15-.55 4.15.45 5.2 2.3.15.28.35.63.5.9.15-.27.35-.62.5-.9 1.05-1.85 3.05-2.85 5.2-2.3 3.45.9 4.65 4.6 3.35 7.35C18.4 15.9 12 20.5 12 20.5v0Z" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
   {%- when 'info-bubble' -%}
     <svg aria-hidden="true" fill="none" focusable="false" width="{{ width | default: 13 }}" class="{{ class | strip }}" viewBox="0 0 13 14">
       <circle cx="6.5" cy="7" r="6.5" fill="currentColor" />

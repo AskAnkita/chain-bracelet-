@@ -7,6 +7,11 @@
     --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) auto minmax(0, 1fr);
     --header-padding-block: 1rem;
     --header-transparent-header-text-color: {{ section.settings.transparent_header_text_color.rgb }};
+    {%- comment -%}
+      Scrim painted behind the header while it sits over a hero image, so the links
+      stay readable against a busy photo. Alpha 0 gives the fully see-through header.
+    {%- endcomment -%}
+    --header-overlay: {{ section.settings.transparent_overlay_color.rgb }} / {{ section.settings.transparent_overlay_opacity | divided_by: 100.0 }};
     --header-separation-border-color: {% if section.settings.show_separation_border %}{{ section.settings.color_scheme.settings.text_color.rgb }} / 0.15{% else %}0 0 0 / 0{% endif %};
 
     position: relative;
@@ -50,6 +55,144 @@
     }
   {%- endif -%}
 
+  {%- comment -%}Utility rows (about + icons, then rules + mark).{%- endcomment -%}
+  #shopify-section-{{ section.id }} .header__utility {
+    background: rgb(var(--background));
+    color: rgb(var(--text-color));
+    position: relative;
+    z-index: 5;
+    font-size: {{ section.settings.utility_text_size }}rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    transition: background .2s, color .2s;
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-row {
+    display: flex;
+    align-items: center;
+    padding-inline: var(--container-gutter);
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-row--top {
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: {{ section.settings.utility_padding }}rem calc({{ section.settings.utility_padding }}rem / 2);
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-row--rule {
+    gap: 1.5rem;
+    padding-block-end: calc({{ section.settings.utility_padding }}rem / 2);
+  }
+
+  {%- comment -%}
+    Space between the mark row and the menu row. Set here rather than via
+    --header-padding-block, which theme.css also uses for the header's bottom
+    padding and grid row-gap; this keeps the two independently adjustable.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .header {
+    padding-block-start: {{ section.settings.menu_top_space }}rem;
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-rule {
+    flex: 1 1 auto;
+    height: 1px;
+    background: rgb(var(--text-color) / .15);
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-mark {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-mark :is(img, svg) {
+    width: {{ section.settings.center_icon_width }}px;
+    height: auto;
+    display: block;
+  }
+
+  {%- comment -%}The icon row moved out of x-header, so it lays itself out here.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .header__utility .header__secondary-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    grid-area: auto;
+    justify-self: auto;
+  }
+
+  #shopify-section-{{ section.id }} .header__utility .header__nav-icon {
+    width: {{ section.settings.utility_icon_size }}px;
+    height: auto;
+  }
+
+  #shopify-section-{{ section.id }} .header__utility-badge {
+    position: absolute;
+    inset-block-start: -.45rem;
+    inset-inline-end: -.6rem;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    padding-inline: .15rem;
+    /* Fixed, not scheme-derived, so counts stay legible over a photo too. */
+    background: #1c1c1c;
+    color: #fff;
+    border-radius: 999px;
+    font-size: .55rem;
+    letter-spacing: 0;
+    line-height: 1.05rem;
+    text-align: center;
+  }
+
+  {%- comment -%}
+    Hover is scoped to the whole section, not to each row. theme.css tests :hover on
+    .header alone, so pointing at the utility rows used to flip only those to solid
+    while the menu row stayed transparent. Keying both off the section means every
+    row changes together, as one navbar.
+
+    Both rows paint the same --header-overlay scrim, so they read as one tinted band
+    over the hero rather than two separately-shaded strips.
+  {%- endcomment -%}
+  :has(.shopify-section:first-child [allow-transparent-header]):not(:has(.shopify-section--header ~ .shopify-section-group-header-group)) #shopify-section-{{ section.id }}:not(:hover) .header__utility {
+    background: rgb(var(--header-overlay));
+    color: rgb(var(--header-transparent-header-text-color));
+  }
+
+  :has(.shopify-section:first-child [allow-transparent-header]):not(:has(.shopify-section--header ~ .shopify-section-group-header-group)) #shopify-section-{{ section.id }}:not(:hover) .header__utility .header__utility-rule {
+    background: rgb(var(--header-transparent-header-text-color) / .3);
+  }
+
+  {%- comment -%}
+    x-header adds .is-solid once #header-scroll-tracker leaves the viewport, and
+    theme.css drops transparency for that class — which makes the bar flash white
+    as it scrolls away. The header is not sticky, so that solid state serves no
+    purpose here. This keeps every row transparent while scrolling, and still lets
+    an open dropdown or the search drawer force solid (kept from the theme's rule).
+  {%- endcomment -%}
+  :has(.shopify-section:first-child [allow-transparent-header]):not(:has(.shopify-section--header ~ .shopify-section-group-header-group)) #shopify-section-{{ section.id }}:not(:hover) .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
+    --header-show-transparent-logo: 1;
+    --header-separation-border-color: 0 0 0 / 0;
+    --background: var(--header-overlay);
+    --background-gradient: 0 0 0 / 0;
+    --border-color: 0 0 0 / 0;
+    --text-color: var(--header-transparent-header-text-color);
+  }
+
+  {%- comment -%}
+    The other half of the same problem: theme.css keeps .header transparent whenever
+    .header itself is not hovered, so hovering the utility rows left the menu row
+    see-through. This restores the scheme's solid colors on .header the moment any
+    part of the section is hovered. It carries an id, so it outranks that rule.
+  {%- endcomment -%}
+  {%- assign header_scheme = section.settings.color_scheme -%}
+  #shopify-section-{{ section.id }}:hover .header,
+  #shopify-section-{{ section.id }}:hover .header__utility {
+    --header-show-transparent-logo: 0;
+    --background: {{ header_scheme.settings.background.rgb }} / {{ header_scheme.settings.background.alpha }};
+    --text-color: {{ header_scheme.settings.text_color.rgb }};
+
+    background: rgb(var(--background));
+    color: rgb(var(--text-color));
+  }
+
   {%- if section.settings.logo != blank -%}
     #shopify-section-{{ section.id }} {
       --header-logo-width: {{ section.settings.logo_mobile_max_width }}px;
@@ -64,6 +207,126 @@
 </style>
 
 <height-observer variable="header">
+  {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    UTILITY ROWS (row 1: about + icons, row 2: rules + mark)
+
+    These live inside the same height-observer as x-header, so --header-height covers
+    all three rows and theme.css's own transparent-header margin pulls the hero up by
+    the full amount with no override needed.
+    --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- liquid
+    if section.settings.show_country_selector and localization.available_countries.size > 1
+      assign show_country_selector = true
+    endif
+
+    if section.settings.show_locale_selector and localization.available_languages.size > 1
+      assign show_locale_selector = true
+    endif
+  -%}
+
+  <div class="header__utility color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
+    <div class="header__utility-row header__utility-row--top">
+      {%- if section.settings.about_label != blank -%}
+        <a href="{{ section.settings.about_url | default: '#' }}" class="header__utility-about">
+          {{- section.settings.about_label -}}
+        </a>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+
+      <nav class="header__secondary-nav" aria-label="{{ 'header.general.secondary_navigation' | t | escape }}">
+        <ul class="contents unstyled-list">
+          {%- if show_country_selector or show_locale_selector -%}
+            <li class="localization-selectors md-max:hidden">
+              {%- if show_country_selector -%}
+                {%- render 'localization-selector',
+                  type: 'country',
+                  placement: 'bottom-end',
+                  show_country_name: section.settings.show_country_name,
+                  show_country_flag: section.settings.show_country_flag,
+                  id_prefix: 'header-nav'
+                -%}
+              {%- endif -%}
+
+              {%- if show_locale_selector -%}
+                {%- render 'localization-selector', type: 'locale', placement: 'bottom-end', id_prefix: 'header-nav' -%}
+              {%- endif -%}
+            </li>
+          {%- endif -%}
+
+          {%- comment -%}Offer a hook for apps to integrate into the header to add their own icon, for instance{%- endcomment -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <li>
+                {%- render block -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if section.settings.enable_search -%}
+            <li class="header__search-link">
+              <a href="{{ routes.search_url }}" aria-controls="header-search-{{ section.id }}">
+                <span class="sr-only">{{ 'header.general.search' | t }}</span>
+                {%- render 'icon' with 'search', class: 'header__nav-icon' -%}
+              </a>
+            </li>
+          {%- endif -%}
+
+          {%- if shop.customer_accounts_enabled -%}
+            <li class="header__account-link">
+              <shopify-account menu="{{ section.settings.customer_account_menu }}">
+                <div slot="signed-out-avatar">
+                  {%- render 'icon' with 'account', class: 'header__nav-icon' -%}
+                </div>
+              </shopify-account>
+            </li>
+          {%- endif -%}
+
+          {%- if section.settings.show_wishlist -%}
+            <li class="relative header__wishlist-link">
+              <a href="{{ section.settings.wishlist_url | default: '#' }}">
+                <span class="sr-only">{{ section.settings.wishlist_label | default: 'Wishlist' }}</span>
+                {%- render 'icon' with 'wishlist', class: 'header__nav-icon' -%}
+                <wishlist-count class="header__utility-badge"></wishlist-count>
+              </a>
+            </li>
+          {%- endif -%}
+
+          <li class="relative header__cart-link">
+            <a
+              href="{{ routes.cart_url }}"
+              {% if settings.cart_type != 'page' and request.page_type != 'cart' %}
+                aria-controls="cart-drawer"
+              {% endif %}
+              data-no-instant
+            >
+              <span class="sr-only">{{ 'header.general.cart' | t }}</span>
+              {%- render 'icon' with 'cart', class: 'header__nav-icon' -%}
+              <cart-count class="header__utility-badge">{{ cart.item_count }}</cart-count>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="header__utility-row header__utility-row--rule">
+      <span class="header__utility-rule" aria-hidden="true"></span>
+
+      <a href="{{ routes.root_url }}" class="header__utility-mark" aria-label="{{ shop.name }}">
+        {%- if section.settings.center_icon -%}
+          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+        {%- else -%}
+          {%- render 'icon' with 'gem' -%}
+        {%- endif -%}
+      </a>
+
+      <span class="header__utility-rule" aria-hidden="true"></span>
+    </div>
+  </div>
+
   <x-header
     {% if section.settings.hide_on_scroll and section.settings.enable_sticky %}
       hide-on-scroll
@@ -89,7 +352,7 @@
           {{- section.settings.transparent_logo | image_url: width: section.settings.transparent_logo.width | image_tag: sizes: sizes, widths: widths, class: 'header__logo-image header__logo-image--transparent' -}}
         {%- endif -%}
       {%- else -%}
-        <span class="header__logo-text h5">{{ shop.name }}</span>
+        <span class="header__logo-text h5">{{ section.settings.logo_text | default: shop.name }}</span>
       {%- endif -%}
     {%- endcapture -%}
     {% comment %} <a href="{{ routes.root_url }}" class="header-scroll-logo" aria-label="{{ shop.name }}">
@@ -226,121 +489,8 @@
       </nav>
     {%- endif -%}
 
-    {%- comment -%}
-      --------------------------------------------------------------------------------------------------------------------
-      SECONDARY NAVIGATION AREA
-      --------------------------------------------------------------------------------------------------------------------
-    {%- endcomment -%}
-
-    <nav class="header__secondary-nav" aria-label="{{ 'header.general.secondary_navigation' | t | escape }}">
-      {%- liquid
-        if section.settings.show_country_selector and localization.available_countries.size > 1
-          assign show_country_selector = true
-        endif
-
-        if section.settings.show_locale_selector and localization.available_languages.size > 1
-          assign show_locale_selector = true
-        endif
-      -%}
-
-      <ul class="contents unstyled-list">
-        {%- if show_country_selector or show_locale_selector -%}
-          <li class="localization-selectors md-max:hidden">
-            {%- if show_country_selector -%}
-              {%- render 'localization-selector',
-                type: 'country',
-                placement: 'bottom-end',
-                show_country_name: section.settings.show_country_name,
-                show_country_flag: section.settings.show_country_flag,
-                id_prefix: 'header-nav'
-              -%}
-            {%- endif -%}
-
-            {%- if show_locale_selector -%}
-              {%- render 'localization-selector', type: 'locale', placement: 'bottom-end', id_prefix: 'header-nav' -%}
-            {%- endif -%}
-          </li>
-        {%- endif -%}
-
-        {%- comment -%}Offer a hook for apps to integrate into the header to add their own icon, for instance{%- endcomment -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == '@app' -%}
-            <li>
-              {%- render block -%}
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-
-        {%- if shop.customer_accounts_enabled -%}
-          <li class="header__account-link sm-max:hidden">
-            <shopify-account menu="{{ section.settings.customer_account_menu }}">
-              <div slot="signed-out-avatar">
-                {%- if section.settings.show_icons -%}
-                  {%- render 'icon' with 'account', class: 'header__nav-icon' -%}
-                {%- else -%}
-                  <span class="md:hidden">{%- render 'icon' with 'account', class: 'header__nav-icon' -%}</span>
-
-                  <span
-                    class="{% if section.settings.menu_text_font == 'heading' %}h6{% endif %} link-faded md-max:hidden"
-                    aria-hidden="true"
-                  >
-                    {{- 'header.general.login' | t -}}
-                  </span>
-                {%- endif -%}
-              </div>
-            </shopify-account>
-          </li>
-        {%- endif -%}
-
-        {%- if section.settings.enable_search -%}
-          <li class="header__search-link">
-            <a href="{{ routes.search_url }}" aria-controls="header-search-{{ section.id }}">
-              <span class="sr-only">{{ 'header.general.search' | t }}</span>
-
-              {%- if section.settings.show_icons -%}
-                {%- render 'icon' with 'search', class: 'header__nav-icon' -%}
-              {%- else -%}
-                <span class="md:hidden">{%- render 'icon' with 'search', class: 'header__nav-icon' -%}</span>
-                <span
-                  class="{% if section.settings.menu_text_font == 'heading' %}h6{% endif %} link-faded md-max:hidden"
-                  aria-hidden="true"
-                >
-                  {{- 'header.general.search' | t -}}
-                </span>
-              {%- endif -%}
-            </a>
-          </li>
-        {%- endif -%}
-
-        <li class="relative header__cart-link">
-          <a
-            href="{{ routes.cart_url }}"
-            {% if settings.cart_type != 'page' and request.page_type != 'cart' %}
-              aria-controls="cart-drawer"
-            {% endif %}
-            data-no-instant
-          >
-            <span class="sr-only">{{ 'header.general.cart' | t }}</span>
-
-            {%- if section.settings.show_icons -%}
-              {%- render 'icon' with 'cart', class: 'header__nav-icon' -%}
-            {%- else -%}
-              <span class="md:hidden">{%- render 'icon' with 'cart', class: 'header__nav-icon' -%}</span>
-              <span class="{% if section.settings.menu_text_font == 'heading' %}h6{% endif %} link-faded md-max:hidden">
-                {{- 'header.general.cart' | t }} (<cart-count>{{ cart.item_count }}</cart-count>)</span
-              >
-            {%- endif -%}
-
-            <cart-dot
-              class="header__cart-dot {% unless cart.empty? %}is-visible{% endunless %} {% unless section.settings.show_icons %}md:hidden{% endunless %}"
-            ></cart-dot>
-          </a>
-        </li>
-      </ul>
-    </nav>
-
     {%- if section.settings.enable_search -%}
-      {%- render 'header-search' -%}
+      {%- render 'header-search', section: section -%}
     {%- endif -%}
 
     {%- assign sidebar_menu = section.settings.sidebar_menu | default: section.settings.menu -%}
@@ -362,6 +512,39 @@
     `${document.getElementById('shopify-section-{{ section.id }}').clientHeight.toFixed(2)}px`
   );
 </script>
+
+{%- if section.settings.show_wishlist -%}
+  <script>
+    if (!customElements.get('wishlist-count')) {
+      class WishlistCount extends HTMLElement {
+        connectedCallback() {
+          this.update = this.update.bind(this);
+          this.update();
+          window.addEventListener('storage', this.update);
+          document.addEventListener('wishlist:updated', this.update);
+        }
+
+        disconnectedCallback() {
+          window.removeEventListener('storage', this.update);
+          document.removeEventListener('wishlist:updated', this.update);
+        }
+
+        update() {
+          let count = 0;
+          try {
+            const stored = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            count = Array.isArray(stored) ? stored.length : 0;
+          } catch (error) {
+            count = 0;
+          }
+          this.textContent = count;
+        }
+      }
+
+      customElements.define('wishlist-count', WishlistCount);
+    }
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -411,6 +594,13 @@
       "info": "t:sections.header.logo_size_recommendation"
     },
     {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "info": "Shown when no logo image is set. Defaults to the store name.",
+      "visible_if": "{{ section.settings.logo == blank }}"
+    },
+    {
       "type": "range",
       "id": "logo_max_width",
       "min": 20,
@@ -429,6 +619,94 @@
       "unit": "px",
       "label": "t:global.image.mobile_width",
       "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Utility rows"
+    },
+    {
+      "type": "text",
+      "id": "about_label",
+      "label": "About link label",
+      "default": "About C&B"
+    },
+    {
+      "type": "url",
+      "id": "about_url",
+      "label": "About link"
+    },
+    {
+      "type": "image_picker",
+      "id": "center_icon",
+      "label": "Center mark image",
+      "info": "Falls back to a diamond icon when empty."
+    },
+    {
+      "type": "range",
+      "id": "center_icon_width",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Center mark width",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "utility_icon_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "utility_text_size",
+      "min": 0.5,
+      "max": 1.2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Utility text size",
+      "default": 0.8
+    },
+    {
+      "type": "range",
+      "id": "menu_top_space",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Space above menu row",
+      "default": 0.3
+    },
+    {
+      "type": "range",
+      "id": "utility_padding",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Utility row vertical padding",
+      "default": 0.7
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist icon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "wishlist_label",
+      "label": "Wishlist label",
+      "default": "Wishlist"
+    },
+    {
+      "type": "url",
+      "id": "wishlist_url",
+      "label": "Wishlist link"
     },
     {
       "type": "header",
@@ -615,6 +893,24 @@
       "id": "transparent_header_text_color",
       "label": "t:global.colors.text",
       "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "transparent_overlay_color",
+      "label": "Overlay color",
+      "info": "Tint painted behind the header while it sits over a hero image.",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "transparent_overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "info": "0% is fully see-through.",
+      "default": 25
     },
     {
       "type": "image_picker",
