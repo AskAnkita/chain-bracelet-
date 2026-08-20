@@ -13,8 +13,7 @@
       "type": "collection-banner",
       "settings": {
         "color_scheme": "",
-        "image": "shopify://shop_images/collection-bracelets-collection_-banner-desktop.jpg",
-        "image_size": "auto",
+        "image_size": "lg",
         "allow_transparent_header": true,
         "show_image": true,
         "reveal": true,

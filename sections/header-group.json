@@ -409,7 +409,7 @@
         "enable_sticky": false,
         "hide_on_scroll": false,
         "show_separation_border": true,
-        "reduce_padding": true,
+        "reduce_padding": false,
         "logo": "shopify://shop_images/chain-and-bracelet-wordmark-green.svg",
         "logo_text": "Chain & Bracelet",
         "logo_max_width": 230,
