@@ -69,7 +69,10 @@
         "buy_buttons",
         "complementary_products"
       ],
-      "settings": {}
+      "settings": {
+        "allow_transparent_header": true,
+        "transparent_header_use_primary_colors": true
+      }
     },
     "related-products": {
       "type": "related-products",

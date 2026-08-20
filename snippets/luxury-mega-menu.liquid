@@ -37,9 +37,10 @@
   }
 
   .ai-mm-panel-{{ uid }} {
-    position: absolute;
+    position: fixed;
     left: 0;
-    top: 100%;
+    right: 0;
+    top: var(--header-height, 100px);
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     background-color: {{ s.panel_background }};

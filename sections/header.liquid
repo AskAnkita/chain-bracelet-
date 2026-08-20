@@ -1,6 +1,25 @@
+{%- comment -%}
+  The home page gets the tall three-row masthead (about + icons, rule + mark, then
+  wordmark + menu). Every other page gets the compact single-row bar instead: mark
+  hard left, menu centred, icons hard right. Keyed off page_type so the storefront
+  keeps one full-dress header and the inner pages stay out of the content's way.
+{%- endcomment -%}
+{%- liquid
+  assign compact_header = true
+  if request.page_type == 'index'
+    assign compact_header = false
+  endif
+-%}
+
 <style>
   :root {
-    --header-is-sticky: {% if section.settings.enable_sticky %}1{% else %}0{% endif %};
+    {%- comment -%}
+      The compact bar is pinned below regardless of the merchant's sticky setting, so
+      it has to report itself as sticky here too. --sticky-area-height is derived from
+      this flag, and anything else that sticks (product info, collection toolbar) uses
+      that to clear the header — leaving it at 0 would let them slide underneath.
+    {%- endcomment -%}
+    --header-is-sticky: {% if section.settings.enable_sticky or compact_header %}1{% else %}0{% endif %};
   }
 
   #shopify-section-{{ section.id }} {
@@ -193,6 +212,112 @@
     color: rgb(var(--text-color));
   }
 
+  {%- if compact_header -%}
+    {%- comment -%}
+      Compact bar. These fight the layout rules in theme.liquid, which are written as
+      `#shopify-section-… x-header { … !important }`. Carrying the same id plus the
+      .header-compact class outranks them, so the wordmark grid does not leak in here.
+
+      The bar is also pinned, so the menu stays reachable on long inner pages. That is
+      scoped here rather than flipping the merchant's `enable_sticky`, which would pin
+      the tall home masthead too.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} {
+      position: sticky;
+      top: 0;
+    }
+
+    .shopify-section--announcement-bar ~ #shopify-section-{{ section.id }} {
+      top: calc(var(--announcement-bar-is-sticky, 0) * var(--announcement-bar-height, 0px));
+    }
+
+    #shopify-section-{{ section.id }} .header-compact .header {
+      padding-block-start: 0;
+    }
+
+    {%- comment -%}
+      x-header adds .is-solid once #header-scroll-tracker leaves the viewport. On the
+      home page that state is suppressed further down (the masthead is not pinned, so
+      it only caused a flash on the way out). Here the bar IS pinned, so the scrolled
+      state is the point: it drops the transparency for a white background once the
+      page moves under it. Beats the transparent-header rules below, which do not
+      exclude .is-solid.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .header-compact .header.is-solid {
+      --header-show-transparent-logo: 0 !important;
+      --header-separation-border-color: {% if section.settings.show_separation_border %}{{ section.settings.color_scheme.settings.text_color.rgb }} / 0.15{% else %}0 0 0 / 0{% endif %} !important;
+      --background: 255 255 255 !important;
+      --background-gradient: 0 0 0 / 0 !important;
+
+      background: rgb(255 255 255) !important;
+    }
+
+    {%- comment -%}The mark and icons sit in the menu row's own grid areas.{%- endcomment -%}
+    #shopify-section-{{ section.id }} .header-compact .header__compact-mark {
+      grid-area: logo;
+      grid-row: 1;
+      align-self: center;
+      justify-self: start;
+      display: flex;
+      align-items: center;
+    }
+
+    {%- comment -%}
+      The mark is a lone brand cue in a single-row bar here, not the centrepiece of a
+      three-row masthead, so it reads at 60% of the size the merchant set for the home
+      page. Derived rather than hardcoded so it still tracks that setting.
+    {%- endcomment -%}
+    {%- assign compact_mark_width = section.settings.center_icon_width | times: 0.6 | round -%}
+    #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
+      width: {{ compact_mark_width }}px;
+      height: auto;
+      display: block;
+    }
+
+    #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
+      grid-row: 1;
+      align-self: center;
+      flex-wrap: nowrap;
+      gap: 1.5rem;
+    }
+
+    #shopify-section-{{ section.id }} .header-compact .header__nav-icon {
+      width: {{ section.settings.utility_icon_size }}px;
+      height: auto;
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} .header-compact x-header {
+        --header-grid: "logo primary-nav secondary-nav" / auto minmax(0, 1fr) auto !important;
+        --header-padding-block: 1.2rem !important;
+        align-items: center !important;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav {
+        grid-area: primary-nav !important;
+        grid-column: primary-nav !important;
+        grid-row: 1 !important;
+        align-self: center !important;
+        padding-block: 0 !important;
+        pointer-events: auto !important;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav :is(ul, menu) {
+        gap: 2rem !important;
+        max-width: none !important;
+        flex-wrap: nowrap;
+      }
+
+      {%- comment -%}
+        No centred wordmark to make room for, so close the gap theme.liquid opens
+        after the second link.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav :is(ul, menu) > li:nth-child(2) {
+        margin-inline-end: 0 !important;
+      }
+    }
+  {%- endif -%}
+
   {%- if section.settings.logo != blank -%}
     #shopify-section-{{ section.id }} {
       --header-logo-width: {{ section.settings.logo_mobile_max_width }}px;
@@ -206,7 +331,7 @@
   {%- endif -%}
 </style>
 
-<height-observer variable="header">
+<height-observer variable="header" {% if compact_header %}class="header-compact"{% endif %}>
   {%- comment -%}
     --------------------------------------------------------------------------------------------------------------------
     UTILITY ROWS (row 1: about + icons, row 2: rules + mark)
@@ -214,6 +339,9 @@
     These live inside the same height-observer as x-header, so --header-height covers
     all three rows and theme.css's own transparent-header margin pulls the hero up by
     the full amount with no override needed.
+
+    Home page only. On the compact bar the icon nav is captured below and re-emitted
+    inside x-header instead, so it lands in that row's `secondary-nav` grid area.
     --------------------------------------------------------------------------------------------------------------------
   {%- endcomment -%}
 
@@ -227,16 +355,7 @@
     endif
   -%}
 
-  <div class="header__utility color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
-    <div class="header__utility-row header__utility-row--top">
-      {%- if section.settings.about_label != blank -%}
-        <a href="{{ section.settings.about_url | default: '#' }}" class="header__utility-about">
-          {{- section.settings.about_label -}}
-        </a>
-      {%- else -%}
-        <span></span>
-      {%- endif -%}
-
+  {%- capture secondary_nav -%}
       <nav class="header__secondary-nav" aria-label="{{ 'header.general.secondary_navigation' | t | escape }}">
         <ul class="contents unstyled-list">
           {%- if show_country_selector or show_locale_selector -%}
@@ -310,22 +429,37 @@
           </li>
         </ul>
       </nav>
-    </div>
+  {%- endcapture -%}
 
-    <div class="header__utility-row header__utility-row--rule">
-      <span class="header__utility-rule" aria-hidden="true"></span>
-
-      <a href="{{ routes.root_url }}" class="header__utility-mark" aria-label="{{ shop.name }}">
-        {%- if section.settings.center_icon -%}
-          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+  {%- unless compact_header -%}
+    <div class="header__utility color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
+      <div class="header__utility-row header__utility-row--top">
+        {%- if section.settings.about_label != blank -%}
+          <a href="{{ section.settings.about_url | default: '#' }}" class="header__utility-about">
+            {{- section.settings.about_label -}}
+          </a>
         {%- else -%}
-          {%- render 'icon' with 'gem' -%}
+          <span></span>
         {%- endif -%}
-      </a>
 
-      <span class="header__utility-rule" aria-hidden="true"></span>
+        {{ secondary_nav }}
+      </div>
+
+      <div class="header__utility-row header__utility-row--rule">
+        <span class="header__utility-rule" aria-hidden="true"></span>
+
+        <a href="{{ routes.root_url }}" class="header__utility-mark" aria-label="{{ shop.name }}">
+          {%- if section.settings.center_icon -%}
+            {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+          {%- else -%}
+            {%- render 'icon' with 'gem' -%}
+          {%- endif -%}
+        </a>
+
+        <span class="header__utility-rule" aria-hidden="true"></span>
+      </div>
     </div>
-  </div>
+  {%- endunless -%}
 
   <x-header
     {% if section.settings.hide_on_scroll and section.settings.enable_sticky %}
@@ -364,13 +498,24 @@
       >
     </a> {% endcomment %}
 
-    {%- if request.page_type == 'index' -%}
+    {%- if compact_header -%}
+      {%- comment -%}
+        The compact bar drops the wordmark for the small mark, which is what lets the
+        three rows collapse into one. Same source as the utility mark on the home page:
+        the merchant's center_icon when they have set one, the theme's gem otherwise.
+      {%- endcomment -%}
+      <a href="{{ routes.root_url }}" class="header__compact-mark" aria-label="{{ shop.name }}">
+        {%- if section.settings.center_icon -%}
+          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy' -}}
+        {%- else -%}
+          {%- render 'icon' with 'gem' -%}
+        {%- endif -%}
+      </a>
+    {%- else -%}
       <h1 class="header__logo">
         <a href="{{ routes.root_url }}">{{ logo_content }}</a>
       </h1>
-    {% else %}
-      <a href="{{ routes.root_url }}" class="header__logo">{{ logo_content }}</a>
-    {% endif %}
+    {%- endif -%}
 
     {%- comment -%}
       --------------------------------------------------------------------------------------------------------------------
@@ -397,7 +542,7 @@
           {%- render 'icon' with 'hamburger', class: 'header__nav-icon' -%}
         </button>
 
-        {%- if menu.links.size > 0 and section.settings.layout != 'drawer' -%}
+        {%- if section.settings.layout != 'drawer' -%}
           <ul class="contents unstyled-list md-max:hidden">
             {%- comment -%}Render luxury mega menu blocks that don't have a menu_item set (standalone){%- endcomment -%}
             {%- for block in section.blocks -%}
@@ -408,22 +553,17 @@
               {%- endif -%}
             {%- endfor -%}
 
-            {%- for link in menu.links -%}
+            {%- comment -%}Left nav items (Necklaces, Bracelets){%- endcomment -%}
+            {%- assign left_nav_items = "NECKLACES|/collections/necklaces,BRACELETS|/collections/bracelets" | split: "," -%}
+            {%- for item in left_nav_items -%}
+              {%- assign item_parts = item | split: "|" -%}
+              {%- assign link_title = item_parts[0] -%}
+              {%- assign link_url = item_parts[1] -%}
               {% liquid
-                assign link_title_downcase = link.title | strip | downcase
-                assign mega_menu_block = ''
+                assign link_title_downcase = link_title | strip | downcase
                 assign luxury_mega_menu_block = ''
-
                 for block in section.blocks
                   assign block_menu_item_downcase = block.settings.menu_item | strip | downcase
-
-                  if block.type == 'mega_menu'
-                    if block_menu_item_downcase == link_title_downcase
-                      assign mega_menu_block = block
-                      break
-                    endif
-                  endif
-
                   if block.type == 'luxury_mega_menu'
                     if block_menu_item_downcase == link_title_downcase
                       assign luxury_mega_menu_block = block
@@ -432,84 +572,45 @@
                   endif
                 endfor
               %}
-
               <li class="header__primary-nav-item">
-                {%- if luxury_mega_menu_block != '' -%}
-                  {%- render 'luxury-mega-menu', block: luxury_mega_menu_block -%}
-                {%- elsif link.levels == 0 and mega_menu_block == '' -%}
-                  <a
-                    href="{{ link.url }}"
-                    data-title="{{ link.title | escape }}"
-                    class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}"
-                    {% if link.current %}
-                      aria-current="page"
-                    {% endif %}
-                  >
-                    {{- link.title -}}
-                  </a>
-                {%- else -%}
-                  {%- capture disclosure_content -%}
-                    <details class="header__menu-disclosure">
-                      <summary data-follow-link="{{ link.url }}" {% if section.settings.menu_text_font == 'heading' %}class="h6"{% endif %} data-title="{{ link.title | escape }}">
-                        {{- link.title -}}
-                      </summary>
+                <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
+              </li>
+            {%- endfor -%}
 
-                      {%- if mega_menu_block != '' -%}
-                        {%- render 'mega-menu', link: link, block: mega_menu_block -%}
-                      {%- else -%}
-                        <ul class="header__dropdown-menu {% if link.levels <= 1 %}header__dropdown-menu--restrictable{% endif %} unstyled-list" role="list">
-                          {%- for sub_link in link.links -%}
-                            <li>
-                              {%- if sub_link.levels == 0 -%}
-                                <a href="{{ sub_link.url }}" class="link-faded-reverse" {% if sub_link.current %}aria-current="page"{% endif %}>{{ sub_link.title }}</a>
-                              {%- else -%}
-                                <dropdown-menu-disclosure follow-summary-link trigger="{{ section.settings.menu_open_trigger }}" class="contents">
-                                  <details class="header__menu-disclosure">
-                                    <summary data-follow-link="{{ sub_link.url }}" class="link-faded-reverse">
-                                      <div class="h-stack gap-4 justify-between">
-                                        {{- sub_link.title -}}
-                                        {%- render 'icon' with 'arrow-right', width: 8, direction_aware: true -%}
-                                      </div>
-                                    </summary>
-
-                                    <ul class="header__dropdown-menu unstyled-list" role="list">
-                                      {%- for sub_sub_link in sub_link.links -%}
-                                        <li>
-                                          <a href="{{ sub_sub_link.url }}" class="link-faded-reverse" {% if sub_sub_link.current %}aria-current="page"{% endif %}>{{ sub_sub_link.title }}</a>
-                                        </li>
-                                      {%- endfor -%}
-                                    </ul>
-                                  </details>
-                                </dropdown-menu-disclosure>
-                              {%- endif -%}
-                            </li>
-                          {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
-                    </details>
-                  {%- endcapture -%}
-
-                  {% if mega_menu_block != '' %}
-                    <mega-menu-disclosure
-                      follow-summary-link
-                      trigger="{{ section.settings.menu_open_trigger }}"
-                      class="contents"
-                    >
-                      {{- disclosure_content -}}
-                    </mega-menu-disclosure>
-                  {%- elsif luxury_mega_menu_block != '' -%}
-                    {%- comment -%}Luxury mega menu is self-contained, no additional wrapper needed{%- endcomment -%}
-                  {%- else -%}
-                    <dropdown-menu-disclosure follow-summary-link trigger="{{ section.settings.menu_open_trigger }}">
-                      {{- disclosure_content -}}
-                    </dropdown-menu-disclosure>
-                  {%- endif -%}
-                {%- endif -%}
+            {%- comment -%}Right nav items (Rings, Earrings){%- endcomment -%}
+            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings" | split: "," -%}
+            {%- for item in right_nav_items -%}
+              {%- assign item_parts = item | split: "|" -%}
+              {%- assign link_title = item_parts[0] -%}
+              {%- assign link_url = item_parts[1] -%}
+              {% liquid
+                assign link_title_downcase = link_title | strip | downcase
+                assign luxury_mega_menu_block = ''
+                for block in section.blocks
+                  assign block_menu_item_downcase = block.settings.menu_item | strip | downcase
+                  if block.type == 'luxury_mega_menu'
+                    if block_menu_item_downcase == link_title_downcase
+                      assign luxury_mega_menu_block = block
+                      break
+                    endif
+                  endif
+                endfor
+              %}
+              <li class="header__primary-nav-item">
+                <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
               </li>
             {%- endfor -%}
           </ul>
         {%- endif -%}
       </nav>
+    {%- endif -%}
+
+    {%- comment -%}
+      On the compact bar the icon nav belongs to this row, where theme.css's
+      `grid-area: secondary-nav` puts it hard right beside the menu.
+    {%- endcomment -%}
+    {%- if compact_header -%}
+      {{ secondary_nav }}
     {%- endif -%}
 
     {%- if section.settings.enable_search -%}

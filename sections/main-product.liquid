@@ -45,11 +45,22 @@
   {%- if section.settings.allow_transparent_header and section.settings.transparent_header_use_primary_colors -%}
     {%- comment -%}
     When this setting is enabled, we use the transparent header, but we force the header to use the primary colors and primary logo.
+
+    .header__utility is a *sibling* of .header, not a descendant, so it needs the
+    same variables set on it directly — otherwise the utility rows keep the white
+    transparent-header text while the menu row goes dark.
+
+    The colours come from this section's own scheme, which is the background the
+    gallery sits on, so the header reads correctly over a light product photo. The
+    overlay alpha is dropped to 0 so no scrim is painted behind either row.
     {%- endcomment -%}
 
-    .header {
+    {%- assign product_scheme = section.settings.color_scheme -%}
+    .header,
+    .header__utility {
       --header-show-transparent-logo: 0 !important;
-      --header-transparent-header-text-color: initial;
+      --header-transparent-header-text-color: {{ product_scheme.settings.text_color.rgb }};
+      --header-overlay: {{ product_scheme.settings.text_color.rgb }} / 0;
     }
   {%- endif -%}
 
