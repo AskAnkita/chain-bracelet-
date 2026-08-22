@@ -15,7 +15,7 @@
         "slide_1": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_03_34_PM.png",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_21_2026_06_18_04_PM.png",
             "subheading": "Mineral alliance",
             "title": "<strong>modern handmade  jewellery </strong>",
             "heading_style": "h1",
@@ -44,6 +44,7 @@
         },
         "slide_2": {
           "type": "image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_23_02_PM.png",
             "subheading": "Fine jewelry",
@@ -122,7 +123,7 @@
     "featured_collections_1": {
       "type": "featured-collections",
       "blocks": {
-        "collection_1": {
+        "collection_7NdrCm": {
           "type": "collection",
           "settings": {
             "collection": "pear-bracelet",
@@ -134,7 +135,7 @@
         }
       },
       "block_order": [
-        "collection_1"
+        "collection_7NdrCm"
       ],
       "settings": {
         "color_scheme": "",
@@ -164,6 +165,7 @@
       "block_order": [
         "text_1"
       ],
+      "disabled": true,
       "name": "t:sections.scrolling_content.presets.scrolling_content.name",
       "settings": {
         "separate_section_with_border": false,
@@ -192,11 +194,11 @@
             "column_count": "6",
             "row_count": 2,
             "add_padding": false,
-            "title": "Chains",
+            "title": "Necklaces",
             "heading_tag": "h2",
             "content": "",
             "link_text": "Shop",
-            "link_url": "shopify://collections/all",
+            "link_url": "shopify://collections/necklaces",
             "link_style": "link",
             "text_position": "place-self-center text-center",
             "overlay_color": "#000000",
@@ -215,7 +217,7 @@
             "heading_tag": "h2",
             "content": "",
             "link_text": "Shop",
-            "link_url": "shopify://collections/all",
+            "link_url": "shopify://collections/bracelets",
             "link_style": "link",
             "text_position": "place-self-center text-center",
             "overlay_color": "#000000",
@@ -287,6 +289,7 @@
         "image_2",
         "image_3"
       ],
+      "disabled": true,
       "name": "t:sections.media_grid.presets.media_grid.name",
       "settings": {
         "color_scheme": "",
@@ -307,7 +310,7 @@
         "collection_DXF6Kz": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "bracelets",
             "products_count": 8,
             "title": "",
             "link_url": "",
@@ -317,7 +320,7 @@
         "collection_1": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "bracelets",
             "products_count": 2,
             "title": "trending",
             "link_url": "",
@@ -351,6 +354,7 @@
         "content_1": {
           "type": "image_with_text",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_59_14_PM.png",
             "subheading": "",
             "title": "The Design",
             "content": "<p>Strass embodies \"casual luxury\" through fluid creations in 18k gold and natural stones, designed to be worn like a second skin. More than jewelry, we create modern amulets that capture the glow and warmth of sunny days.</p>",
@@ -392,10 +396,11 @@
         "look_1": {
           "type": "look",
           "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_19_2026_06_16_54_PM.png",
             "hot_spots_background": "#fdfdfc",
-            "product_1": "",
-            "product_1_horizontal_position": 42,
-            "product_1_vertical_position": 24,
+            "product_1": "pear-bracelet",
+            "product_1_horizontal_position": 54,
+            "product_1_vertical_position": 37,
             "product_2": "",
             "product_2_horizontal_position": 57,
             "product_2_vertical_position": 59,
@@ -410,13 +415,14 @@
         "look_2": {
           "type": "look",
           "settings": {
+            "image": "shopify://shop_images/hero-coat-old.png",
             "hot_spots_background": "#fdfdfc",
-            "product_1": "",
+            "product_1": "emerald-cut-lab-grown-diamond-tennis-bracelet",
             "product_1_horizontal_position": 71,
-            "product_1_vertical_position": 37,
-            "product_2": "",
-            "product_2_horizontal_position": 38,
-            "product_2_vertical_position": 77,
+            "product_1_vertical_position": 77,
+            "product_2": "oval-halo-pendant-and-chain",
+            "product_2_horizontal_position": 45,
+            "product_2_vertical_position": 26,
             "product_3": "",
             "product_3_horizontal_position": 65,
             "product_3_vertical_position": 60,
@@ -468,6 +474,7 @@
     },
     "blog_posts_1": {
       "type": "blog-posts",
+      "disabled": true,
       "name": "t:sections.blog_posts.presets.blog_posts.name",
       "settings": {
         "color_scheme": "",
@@ -485,6 +492,38 @@
         "content": "",
         "button_link": "",
         "button_text": "View all"
+      }
+    },
+    "featured_collections_MMEWzD": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_UpbM8J": {
+          "type": "collection",
+          "settings": {
+            "collection": "pear-bracelet",
+            "products_count": 8,
+            "title": "",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        }
+      },
+      "block_order": [
+        "collection_UpbM8J"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "hide_product_information": true,
+        "stack_products": true,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.2,
+        "header_alignment": "center",
+        "heading_style": "h2",
+        "subheading": "",
+        "hide_collection_title": true
       }
     },
     "image_with_text_block_1": {
@@ -519,6 +558,7 @@
       "settings": {
         "color_scheme": "",
         "image_size": "auto",
+        "image": "shopify://shop_images/c743120d-f455-45fe-b83b-f43ba2d6731f.png",
         "content_width": "md",
         "enable_parallax": false,
         "remove_vertical_spacing": true
@@ -530,7 +570,7 @@
         "testimonial_1": {
           "type": "testimonial",
           "settings": {
-            "content": "<p>It's simple, I love it! Strass does not disappoint me, the quality is there. I wear their jewelry on all occasions.</p>",
+            "content": "<p>It's simple, I love it! does not disappoint me, the quality is there. I wear their jewelry on all occasions.</p>",
             "logo_max_width": 60,
             "logo_mobile_max_width": 60,
             "author": "Alison | Customer"
@@ -613,6 +653,7 @@
         "column_4",
         "column_5"
       ],
+      "disabled": true,
       "name": "t:sections.multi_column.presets.multi_column.name",
       "settings": {
         "color_scheme": "",
@@ -624,7 +665,7 @@
         "text_alignment": "center",
         "spacing": "xs",
         "subheading": "join us",
-        "title": "@strass",
+        "title": "",
         "heading_style": "h2",
         "content": ""
       }
@@ -677,15 +718,6 @@
         "remove_vertical_spacing": false,
         "remove_horizontal_spacing": false
       }
-    },
-    "1787130451f04287ed": {
-      "type": "_blocks",
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": true,
-        "remove_vertical_spacing": false,
-        "remove_horizontal_spacing": false
-      }
     }
   },
   "order": [
@@ -700,10 +732,10 @@
     "shop_the_look_1",
     "countdown_1",
     "blog_posts_1",
+    "featured_collections_MMEWzD",
     "image_with_text_block_1",
     "testimonials_1",
     "multi_column_1",
-    "1787126109d318dad6",
-    "1787130451f04287ed"
+    "1787126109d318dad6"
   ]
 }

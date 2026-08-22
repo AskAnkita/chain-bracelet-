@@ -701,6 +701,40 @@ shopify-accelerated-checkout, shopify-accelerated-checkout-cart {
   }
 }
 
+/* Hero slideshow: cap full-screen height at 70% of viewport instead of 100% */
+.slideshow .content-over-media--fill {
+  --content-over-media-height: calc(70vh - var(--sticky-area-height));
+}
+
+.shopify-section:first-child .slideshow .content-over-media--fill {
+  --content-over-media-height: calc(70vh - (var(--announcement-bar-height, 0px) + var(--header-height, 0px)));
+}
+
+.shopify-section:first-child:has([allow-transparent-header]) .slideshow .content-over-media--fill {
+  --content-over-media-height: calc(70vh - (var(--announcement-bar-height, 0px)));
+}
+
+@supports (height: 100svh) {
+  .slideshow .content-over-media--fill {
+    --content-over-media-height: calc(70svh - var(--sticky-area-height));
+  }
+
+  .shopify-section:first-child .slideshow .content-over-media--fill {
+    --content-over-media-height: calc(70svh - (var(--announcement-bar-height, 0px) + var(--header-height, 0px)));
+  }
+
+  .shopify-section:first-child:has([allow-transparent-header]) .slideshow .content-over-media--fill {
+    --content-over-media-height: calc(70svh - (var(--announcement-bar-height, 0px)));
+  }
+}
+
+/* Bias the crop toward the bottom of the photo so the product (ring/bracelet) stays
+   in frame on wide screens, instead of the default dead-center crop cutting it off. */
+.slideshow .content-over-media--fill > :is(img, video, iframe, svg, video-media, figure),
+.slideshow .content-over-media--fill > picture img {
+  object-position: center 85%;
+}
+
 @media screen and (min-width: 700px) {
   .content-over-media {
     --content-over-media-gap: 2rem;
