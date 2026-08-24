@@ -19,12 +19,23 @@
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__media {
+      position: relative;
       aspect-ratio: 3 / 4;
       overflow: hidden;
     }
 
+    {%- comment -%}
+      Absolutely positioning the photo (rather than a plain width/height: 100%) takes it
+      out of normal flow, so its own intrinsic aspect ratio can no longer inflate the
+      grid row's `auto` track size -- without this, a tall source photo was winning the
+      "auto" side of minmax(desktop_height, auto) and stretching the whole row far past
+      the height set in the theme editor, even though the center panel's real content
+      needed nowhere near that much room.
+    {%- endcomment -%}
     #shopify-section-{{ section.id }} .triptych-banner__media img,
     #shopify-section-{{ section.id }} .triptych-banner__media .placeholder {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -101,12 +112,16 @@
 
     @media screen and (min-width: 1000px) {
       {%- comment -%}
-        A hard `height` here let the center panel's content (logo, three heading lines,
-        body copy, button, product shot) overflow past the box whenever it needed more
-        room than desktop_height -- the section still reported the shorter height to the
-        page, so the next section started there and got visually overlapped by the
-        still-spilling content above it. grid-template-rows: minmax(…, auto) keeps
-        desktop_height as a floor but lets the row grow to fit, so overlap can't happen.
+        minmax(desktop_height, auto): desktop_height is a floor, not a hard cap. A hard
+        `{{ section.settings.desktop_height }}vh` row plus overflow: hidden was tried
+        here and it clipped the logo/kicker/first heading line clean off the top of the
+        panel on ordinary laptop-height screens -- the stacked content (logo, 3 heading
+        lines, body copy, button, product shot) simply doesn't fit a 50vh-tall panel at
+        normal type sizes, so something has to give. Between "sometimes a bit taller
+        than desktop_height" and "silently deletes part of the heading", auto is the one
+        that never hides content. The tightened sizes below are what keep the *typical*
+        case close to desktop_height; auto is the backstop for when it still isn't
+        enough room.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .triptych-banner {
         grid-template-columns: 1fr 1fr 1fr;
@@ -119,8 +134,40 @@
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content {
-        gap: .75rem;
-        padding: 1.5rem 2rem;
+        gap: .5rem;
+        padding: 1.25rem 1.5rem;
+      }
+
+      {%- comment -%}
+        Fixed, meaningfully smaller sizes (not the theme's normal .h1/.h6/logo_width) --
+        this panel is a third of a short banner, not a page heading, so it reads at its
+        own compact scale regardless of viewport height.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .triptych-banner__logo {
+        width: min({{ section.settings.logo_width }}px, 40px);
+      }
+
+      #shopify-section-{{ section.id }} :is(.triptych-banner__kicker, .triptych-banner__heading) {
+        font-size: 1.375rem;
+        line-height: 1.15;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__body {
+        font-size: .8rem;
+        line-height: 1.4;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content .h6 {
+        font-size: .7rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__product-image {
+        width: auto;
+        height: auto;
+        max-width: min(100%, {{ section.settings.product_image_width }}px);
+        max-height: 140px;
+        object-fit: contain;
+        margin-block-start: 0;
       }
     }
   </style>
@@ -130,7 +177,7 @@
       {%- comment -%}Left image{%- endcomment -%}
       {%- capture left_media -%}
         {%- if section.settings.left_image != blank -%}
-          {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', alt: section.settings.left_image_alt | default: '', loading: 'lazy' -}}
+          {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.left_image_alt | default: '' -}}
         {%- else -%}
           {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
         {%- endif -%}
@@ -175,14 +222,14 @@
         </div>
 
         {%- if section.settings.product_image != blank -%}
-          {{- section.settings.product_image | image_url: width: section.settings.product_image.width | image_tag: widths: '300,400,600,800', alt: section.settings.product_image_alt | default: '', loading: 'lazy', class: 'triptych-banner__product-image' -}}
+          {{- section.settings.product_image | image_url: width: section.settings.product_image.width | image_tag: widths: '300,400,600,800', loading: 'lazy', class: 'triptych-banner__product-image', alt: section.settings.product_image_alt | default: '' -}}
         {%- endif -%}
       </div>
 
       {%- comment -%}Right image{%- endcomment -%}
       {%- capture right_media -%}
         {%- if section.settings.right_image != blank -%}
-          {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', alt: section.settings.right_image_alt | default: '', loading: 'lazy' -}}
+          {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.right_image_alt | default: '' -}}
         {%- else -%}
           {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder' -}}
         {%- endif -%}
