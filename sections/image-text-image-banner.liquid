@@ -100,9 +100,17 @@
     }
 
     @media screen and (min-width: 1000px) {
+      {%- comment -%}
+        A hard `height` here let the center panel's content (logo, three heading lines,
+        body copy, button, product shot) overflow past the box whenever it needed more
+        room than desktop_height -- the section still reported the shorter height to the
+        page, so the next section started there and got visually overlapped by the
+        still-spilling content above it. grid-template-rows: minmax(…, auto) keeps
+        desktop_height as a floor but lets the row grow to fit, so overlap can't happen.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .triptych-banner {
         grid-template-columns: 1fr 1fr 1fr;
-        height: {{ section.settings.desktop_height }}px;
+        grid-template-rows: minmax({{ section.settings.desktop_height }}vh, auto);
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__media {
@@ -111,7 +119,8 @@
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content {
-        padding: 2rem;
+        gap: .75rem;
+        padding: 1.5rem 2rem;
       }
     }
   </style>
@@ -212,12 +221,12 @@
     {
       "type": "range",
       "id": "desktop_height",
-      "min": 400,
-      "max": 900,
-      "step": 10,
-      "unit": "px",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
       "label": "Desktop height",
-      "default": 640
+      "default": 60
     },
     {
       "type": "color",

@@ -195,16 +195,16 @@
       "settings": {
         "color_scheme": "scheme-1",
         "separate_section_with_border": false,
-        "desktop_height": 480,
+        "desktop_height": 50,
         "accent_color": "#b08d57",
-        "left_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_03_07_PM.png",
+        "left_image": "shopify://shop_images/eaeedf7f-3e38-4e4f-a4b0-4ebcb43babc1.png",
         "left_image_alt": "",
         "left_image_link": "",
-        "left_image_zoom": 120,
-        "right_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_04_36_PM.png",
+        "left_image_zoom": 100,
+        "right_image": "shopify://shop_images/dfe2db29-022b-4bc2-9e26-d5c6e736fdd8.png",
         "right_image_alt": "",
         "right_image_link": "",
-        "right_image_zoom": 120,
+        "right_image_zoom": 105,
         "center_background_color": "#f5f0e6",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "logo_width": 48,
@@ -214,8 +214,9 @@
         "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
         "button_text": "Shop the Collection",
         "button_link": "shopify://collections/bracelets",
+        "product_image": "shopify://shop_images/bracelet-tennis.png",
         "product_image_alt": "",
-        "product_image_width": 260
+        "product_image_width": 120
       }
     },
     "rich_text_1": {
