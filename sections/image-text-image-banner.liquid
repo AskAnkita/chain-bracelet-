@@ -5,10 +5,10 @@
   text block, never a text-only center panel flanked by two independent images.
 {%- endcomment -%}
 
-{%- if section.settings.left_image != blank or section.settings.right_image != blank or section.settings.heading_text != blank -%}
+{%- if section.settings.left_image != blank or section.settings.right_image != blank or section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank -%}
   <style>
     #shopify-section-{{ section.id }} {
-      --triptych-banner-center-background: {{ section.settings.color_scheme.settings.background.rgb }};
+      --triptych-banner-center-background: {{ section.settings.center_background_color.rgb }};
       --triptych-banner-center-text-color: {{ section.settings.color_scheme.settings.text_color.rgb }};
       --triptych-banner-accent-color: {{ section.settings.accent_color.rgb }};
     }
@@ -56,13 +56,21 @@
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__kicker {
-      letter-spacing: .18em;
-      text-transform: uppercase;
+      color: rgb(var(--triptych-banner-center-text-color));
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__heading {
       color: rgb(var(--triptych-banner-accent-color));
-      margin-block-start: -.75rem;
+    }
+
+    {%- comment -%}
+      All three heading lines (kicker + two heading lines) share the same font size --
+      they're separate <p> elements only so each can be forced onto its own line and
+      colored independently. Tightening the gap between them here makes them read as
+      one heading block instead of three separately-spaced paragraphs.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} :is(.triptych-banner__kicker, .triptych-banner__heading) + :is(.triptych-banner__kicker, .triptych-banner__heading) {
+      margin-block-start: -.5rem;
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__body {
@@ -120,11 +128,15 @@
 
         <div class="prose">
           {%- if section.settings.kicker_text != blank -%}
-            <p class="triptych-banner__kicker h5">{{- section.settings.kicker_text -}}</p>
+            <p class="triptych-banner__kicker h1">{{- section.settings.kicker_text -}}</p>
           {%- endif -%}
 
-          {%- if section.settings.heading_text != blank -%}
-            <p class="triptych-banner__heading h1">{{- section.settings.heading_text -}}</p>
+          {%- if section.settings.heading_line_1 != blank -%}
+            <p class="triptych-banner__heading h1">{{- section.settings.heading_line_1 -}}</p>
+          {%- endif -%}
+
+          {%- if section.settings.heading_line_2 != blank -%}
+            <p class="triptych-banner__heading h1">{{- section.settings.heading_line_2 -}}</p>
           {%- endif -%}
 
           {%- if section.settings.body_text != blank -%}
@@ -241,6 +253,12 @@
       "content": "Center content"
     },
     {
+      "type": "color",
+      "id": "center_background_color",
+      "label": "Background color",
+      "default": "#f5f0e6"
+    },
+    {
       "type": "image_picker",
       "id": "logo_image",
       "label": "Logo mark",
@@ -263,10 +281,16 @@
       "default": "Timeless"
     },
     {
-      "type": "inline_richtext",
-      "id": "heading_text",
-      "label": "t:global.text.heading",
-      "default": "Diamond Essentials"
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading, line 1",
+      "default": "Diamond"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading, line 2",
+      "default": "Essentials"
     },
     {
       "type": "richtext",
