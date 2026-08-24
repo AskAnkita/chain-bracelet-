@@ -200,11 +200,11 @@
         "left_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_03_07_PM.png",
         "left_image_alt": "",
         "left_image_link": "",
-        "left_image_zoom": 160,
+        "left_image_zoom": 120,
         "right_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_04_36_PM.png",
         "right_image_alt": "",
         "right_image_link": "",
-        "right_image_zoom": 150,
+        "right_image_zoom": 120,
         "center_background_color": "#f5f0e6",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "logo_width": 48,
@@ -463,6 +463,25 @@
     "shop_the_look_1": {
       "type": "shop-the-look",
       "blocks": {
+        "look_qzwiAY": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/e2f1bce6-70ee-4548-9c41-81230566fcce.png",
+            "hot_spots_background": "#fdfdfc",
+            "product_1": "emerald-cut-lab-grown-diamond-tennis-bracelet",
+            "product_1_horizontal_position": 55,
+            "product_1_vertical_position": 70,
+            "product_2": "oval-halo-pendant-and-chain",
+            "product_2_horizontal_position": 33,
+            "product_2_vertical_position": 24,
+            "product_3": "alternating-east-west-emerald-round-cut-lab-grown-diamond-tennis-bracelet",
+            "product_3_horizontal_position": 30,
+            "product_3_vertical_position": 62,
+            "product_4": "mixed-shape-oval-emerald-pear-cut-lab-grown-diamond-tennis-bracelet",
+            "product_4_horizontal_position": 52,
+            "product_4_vertical_position": 85
+          }
+        },
         "look_2": {
           "type": "look",
           "settings": {
@@ -503,6 +522,7 @@
         }
       },
       "block_order": [
+        "look_qzwiAY",
         "look_2",
         "look_1"
       ],
