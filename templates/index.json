@@ -90,6 +90,105 @@
         "controls_color": "#ffffff"
       }
     },
+    "media_grid_1": {
+      "type": "media-grid",
+      "blocks": {
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_16_53_PM.png",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "NECKLACES",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/necklaces",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_33_42_PM.png",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "BRACELETS",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/bracelets",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/symbiosis-earrings-brown-tiger-eye-02.jpg",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "EARRINGS",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/earrings",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "RINGS",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/rings",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
+          }
+        }
+      },
+      "block_order": [
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5"
+      ],
+      "name": "t:sections.media_grid.presets.media_grid.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "desktop_row_height": 480,
+        "mobile_row_height": 320,
+        "section_width": "full",
+        "spacing": "sm",
+        "subheading": "",
+        "title": "",
+        "heading_style": "h2",
+        "content": ""
+      }
+    },
     "image_text_image_banner_1": {
       "type": "image-text-image-banner",
       "settings": {
@@ -97,10 +196,10 @@
         "separate_section_with_border": false,
         "desktop_height": 640,
         "accent_color": "#b08d57",
-        "left_image": "",
+        "left_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_03_07_PM.png",
         "left_image_alt": "",
         "left_image_link": "",
-        "right_image": "",
+        "right_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_04_36_PM.png",
         "right_image_alt": "",
         "right_image_link": "",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
@@ -110,53 +209,8 @@
         "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
         "button_text": "Shop the Collection",
         "button_link": "shopify://collections/bracelets",
-        "product_image": "",
         "product_image_alt": "",
         "product_image_width": 260
-      }
-    },
-    "featured_collections_2": {
-      "type": "featured-collections",
-      "blocks": {
-        "collection_DXF6Kz": {
-          "type": "collection",
-          "settings": {
-            "collection": "bracelets",
-            "products_count": 8,
-            "title": "",
-            "link_url": "",
-            "link_text": "View all"
-          }
-        },
-        "collection_1": {
-          "type": "collection",
-          "settings": {
-            "collection": "bracelets",
-            "products_count": 2,
-            "title": "trending",
-            "link_url": "",
-            "link_text": "View all"
-          }
-        }
-      },
-      "block_order": [
-        "collection_DXF6Kz",
-        "collection_1"
-      ],
-      "name": "t:sections.featured_collections.presets.featured_collections.name",
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": true,
-        "hide_product_information": false,
-        "stack_products": false,
-        "products_per_row_mobile": "2",
-        "products_per_row_desktop": 4,
-        "horizontal_spacing_factor": 0.2,
-        "vertical_spacing_factor": 0.2,
-        "header_alignment": "center",
-        "heading_style": "h2",
-        "subheading": "",
-        "hide_collection_title": false
       }
     },
     "rich_text_1": {
@@ -222,6 +276,50 @@
         "hide_collection_title": true
       }
     },
+    "featured_collections_2": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_DXF6Kz": {
+          "type": "collection",
+          "settings": {
+            "collection": "bracelets",
+            "products_count": 8,
+            "title": "",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        },
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "collection": "bracelets",
+            "products_count": 2,
+            "title": "trending",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        }
+      },
+      "block_order": [
+        "collection_DXF6Kz",
+        "collection_1"
+      ],
+      "name": "t:sections.featured_collections.presets.featured_collections.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.2,
+        "header_alignment": "center",
+        "heading_style": "h2",
+        "subheading": "",
+        "hide_collection_title": false
+      }
+    },
     "scrolling_content_1": {
       "type": "scrolling-content",
       "blocks": {
@@ -251,106 +349,6 @@
         "item_horizontal_spacing_desktop": 95,
         "background": "",
         "text_color": ""
-      }
-    },
-    "media_grid_1": {
-      "type": "media-grid",
-      "blocks": {
-        "image_2": {
-          "type": "image",
-          "settings": {
-            "color_scheme": "",
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_16_53_PM.png",
-            "column_count": "3",
-            "row_count": 1,
-            "add_padding": false,
-            "title": "NECKLACES",
-            "heading_tag": "h4",
-            "content": "",
-            "link_text": "",
-            "link_url": "shopify://collections/necklaces",
-            "link_style": "link",
-            "text_position": "place-self-end-start text-start",
-            "overlay_color": "#000000",
-            "overlay_opacity": 15
-          }
-        },
-        "image_3": {
-          "type": "image",
-          "settings": {
-            "color_scheme": "",
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_33_42_PM.png",
-            "column_count": "3",
-            "row_count": 1,
-            "add_padding": false,
-            "title": "BRACELETS",
-            "heading_tag": "h4",
-            "content": "",
-            "link_text": "",
-            "link_url": "shopify://collections/bracelets",
-            "link_style": "link",
-            "text_position": "place-self-end-start text-start",
-            "overlay_color": "#000000",
-            "overlay_opacity": 15
-          }
-        },
-        "image_4": {
-          "type": "image",
-          "settings": {
-            "color_scheme": "",
-            "image": "shopify://shop_images/symbiosis-earrings-brown-tiger-eye-02.jpg",
-            "column_count": "3",
-            "row_count": 1,
-            "add_padding": false,
-            "title": "EARRINGS",
-            "heading_tag": "h4",
-            "content": "",
-            "link_text": "",
-            "link_url": "shopify://collections/earrings",
-            "link_style": "link",
-            "text_position": "place-self-end-start text-start",
-            "overlay_color": "#000000",
-            "overlay_opacity": 15
-          }
-        },
-        "image_5": {
-          "type": "image",
-          "settings": {
-            "color_scheme": "",
-            "image": "shopify://shop_images/collection-rings-collection_-banner-desktop_8eca2d08-7649-404b-ad38-78496e156ad0.jpg",
-            "column_count": "3",
-            "row_count": 1,
-            "add_padding": false,
-            "title": "RINGS",
-            "heading_tag": "h4",
-            "content": "",
-            "link_text": "",
-            "link_url": "shopify://collections/rings",
-            "link_style": "link",
-            "text_position": "place-self-end-start text-start",
-            "overlay_color": "#000000",
-            "overlay_opacity": 15
-          }
-        }
-      },
-      "block_order": [
-        "image_2",
-        "image_3",
-        "image_4",
-        "image_5"
-      ],
-      "name": "t:sections.media_grid.presets.media_grid.name",
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": false,
-        "desktop_row_height": 480,
-        "mobile_row_height": 320,
-        "section_width": "full",
-        "spacing": "sm",
-        "subheading": "",
-        "title": "",
-        "heading_style": "h2",
-        "content": ""
       }
     },
     "media_grid_2": {
@@ -606,6 +604,7 @@
       "block_order": [
         "collection_UpbM8J"
       ],
+      "disabled": true,
       "settings": {
         "color_scheme": "",
         "separate_section_with_border": false,
@@ -821,9 +820,9 @@
     "slideshow",
     "media_grid_1",
     "image_text_image_banner_1",
-    "featured_collections_2",
     "rich_text_1",
     "featured_collections_1",
+    "featured_collections_2",
     "scrolling_content_1",
     "media_grid_2",
     "images_with_text_scroll_1",
