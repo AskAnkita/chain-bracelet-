@@ -97,7 +97,7 @@
           "type": "image",
           "settings": {
             "color_scheme": "",
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_16_53_PM.png",
+            "image": "shopify://shop_images/1683baf2-9f89-47cf-9d71-35ec8238b993.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
@@ -116,7 +116,7 @@
           "type": "image",
           "settings": {
             "color_scheme": "",
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_33_42_PM.png",
+            "image": "shopify://shop_images/74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
@@ -128,14 +128,14 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 15
+            "overlay_opacity": 2
           }
         },
         "image_4": {
           "type": "image",
           "settings": {
             "color_scheme": "",
-            "image": "shopify://shop_images/symbiosis-earrings-brown-tiger-eye-02.jpg",
+            "image": "shopify://shop_images/841d5f8b-ee25-419c-8033-c968d70a9c3a.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
@@ -147,13 +147,14 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 15
+            "overlay_opacity": 2
           }
         },
         "image_5": {
           "type": "image",
           "settings": {
             "color_scheme": "",
+            "image": "shopify://shop_images/3112205e-855b-473e-a451-2929ed5f104f.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
@@ -165,7 +166,7 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 15
+            "overlay_opacity": 2
           }
         }
       },
@@ -196,13 +197,13 @@
         "separate_section_with_border": false,
         "desktop_height": 480,
         "accent_color": "#b08d57",
-        "center_background_color": "#f5f0e6",
         "left_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_03_07_PM.png",
         "left_image_alt": "",
         "left_image_link": "",
         "right_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_04_36_PM.png",
         "right_image_alt": "",
         "right_image_link": "",
+        "center_background_color": "#f5f0e6",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "logo_width": 48,
         "kicker_text": "Timeless",
@@ -555,7 +556,7 @@
       "name": "t:sections.image_with_text_overlay.presets.image_with_text_overlay.name",
       "settings": {
         "color_scheme": "",
-        "image_size": "lg",
+        "image_size": "md",
         "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_03_16_30_PM.png",
         "allow_transparent_header": false,
         "reveal_on_scroll": true,
