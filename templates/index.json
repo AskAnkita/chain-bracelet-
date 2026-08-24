@@ -16,7 +16,7 @@
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_21_2026_05_36_37_PM.png",
-            "subheading": "Mineral alliance",
+            "subheading": "",
             "title": "<strong>modern handmade  jewellery </strong>",
             "heading_style": "h1",
             "mobile_text_position": "place-self-center-start text-start",
@@ -90,11 +90,56 @@
         "controls_color": "#ffffff"
       }
     },
+    "featured_collections_2": {
+      "type": "featured-collections",
+      "blocks": {
+        "collection_DXF6Kz": {
+          "type": "collection",
+          "settings": {
+            "collection": "bracelets",
+            "products_count": 8,
+            "title": "",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        },
+        "collection_1": {
+          "type": "collection",
+          "settings": {
+            "collection": "bracelets",
+            "products_count": 2,
+            "title": "trending",
+            "link_url": "",
+            "link_text": "View all"
+          }
+        }
+      },
+      "block_order": [
+        "collection_DXF6Kz",
+        "collection_1"
+      ],
+      "name": "t:sections.featured_collections.presets.featured_collections.name",
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "hide_product_information": false,
+        "stack_products": false,
+        "products_per_row_mobile": "2",
+        "products_per_row_desktop": 4,
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.2,
+        "header_alignment": "center",
+        "heading_style": "h2",
+        "subheading": "",
+        "hide_collection_title": false
+      }
+    },
     "rich_text_1": {
       "type": "rich-text",
       "blocks": {
         "subheading_1": {
           "type": "subheading",
+          "disabled": true,
           "settings": {
             "text": "Our goal"
           }
@@ -229,6 +274,7 @@
         "image_2",
         "image_3"
       ],
+      "disabled": true,
       "name": "t:sections.media_grid.presets.media_grid.name",
       "settings": {
         "color_scheme": "",
@@ -302,50 +348,6 @@
         "title": "",
         "heading_style": "h2",
         "content": ""
-      }
-    },
-    "featured_collections_2": {
-      "type": "featured-collections",
-      "blocks": {
-        "collection_DXF6Kz": {
-          "type": "collection",
-          "settings": {
-            "collection": "bracelets",
-            "products_count": 8,
-            "title": "",
-            "link_url": "",
-            "link_text": "View all"
-          }
-        },
-        "collection_1": {
-          "type": "collection",
-          "settings": {
-            "collection": "bracelets",
-            "products_count": 2,
-            "title": "trending",
-            "link_url": "",
-            "link_text": "View all"
-          }
-        }
-      },
-      "block_order": [
-        "collection_DXF6Kz",
-        "collection_1"
-      ],
-      "name": "t:sections.featured_collections.presets.featured_collections.name",
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": true,
-        "hide_product_information": false,
-        "stack_products": false,
-        "products_per_row_mobile": "2",
-        "products_per_row_desktop": 4,
-        "horizontal_spacing_factor": 0.2,
-        "vertical_spacing_factor": 0.2,
-        "header_alignment": "center",
-        "heading_style": "h2",
-        "subheading": "",
-        "hide_collection_title": false
       }
     },
     "images_with_text_scroll_1": {
@@ -583,6 +585,7 @@
         "richtext_1",
         "link_1"
       ],
+      "disabled": true,
       "name": "t:sections.image_with_text_block.presets.image_with_text_block.name",
       "settings": {
         "color_scheme": "",
@@ -741,6 +744,7 @@
       "block_order": [
         "ai_gen_block_667ce70_AVBgBb"
       ],
+      "disabled": true,
       "settings": {
         "color_scheme": "",
         "separate_section_with_border": true,
@@ -751,12 +755,12 @@
   },
   "order": [
     "slideshow",
+    "featured_collections_2",
     "rich_text_1",
     "featured_collections_1",
     "scrolling_content_1",
     "media_grid_1",
     "media_grid_2",
-    "featured_collections_2",
     "images_with_text_scroll_1",
     "shop_the_look_1",
     "image_with_text_offer",
