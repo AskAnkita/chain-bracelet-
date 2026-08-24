@@ -1,14 +1,12 @@
 {%- comment -%}
-  The home page gets the tall three-row masthead (about + icons, rule + mark, then
-  wordmark + menu). Every other page gets the compact single-row bar instead: mark
-  hard left, menu centred, icons hard right. Keyed off page_type so the storefront
-  keeps one full-dress header and the inner pages stay out of the content's way.
+  Every page, including the home page, gets the compact single-row bar: logo hard
+  left, menu centred, icons hard right, transparent over a hero and solid white on
+  hover/scroll. Previously the home page kept a separate tall three-row masthead
+  (about + icons, rule + mark, then wordmark + menu); that's now unused in favor of
+  one consistent bar everywhere.
 {%- endcomment -%}
 {%- liquid
   assign compact_header = true
-  if request.page_type == 'index'
-    assign compact_header = false
-  endif
 -%}
 
 <style>

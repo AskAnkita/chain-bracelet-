@@ -38,7 +38,6 @@
         "message-2",
         "message-3"
       ],
-      "disabled": false,
       "settings": {
         "color_scheme": "scheme-3",
         "enable_sticky": true,

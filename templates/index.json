@@ -15,7 +15,7 @@
         "slide_1": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_21_2026_06_18_04_PM.png",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_21_2026_05_36_37_PM.png",
             "subheading": "Mineral alliance",
             "title": "<strong>modern handmade  jewellery </strong>",
             "heading_style": "h1",
@@ -23,7 +23,7 @@
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 780,
             "button_size": "base",
-            "button_1_text": "Shop Tennis Bracelets",
+            "button_1_text": "",
             "button_1_link": "shopify://collections",
             "button_1_style": "outline",
             "button_1_background": "#ffffff",
@@ -38,7 +38,7 @@
             "text_color": "#ffffff",
             "border_color": "",
             "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)",
-            "enable_text_shadow": true,
+            "enable_text_shadow": false,
             "text_shadow_opacity": 80
           }
         },
