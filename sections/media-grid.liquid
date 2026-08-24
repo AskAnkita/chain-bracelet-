@@ -32,6 +32,30 @@
         --media-grid-gap: {% if section.settings.spacing == 'xs' %}0.75rem{% elsif section.settings.spacing == 'sm' %}1.25rem{% elsif section.settings.spacing == 'md' %}1.875rem{% elsif section.settings.spacing == 'lg' %}2.5rem{% else %}0rem{% endif %};
       }
     }
+
+    {%- comment -%}
+      Bottom fade behind any overlaid caption, independent of each block's flat
+      overlay_opacity (that setting is meant for tinting the whole photo, and is often
+      left near 0 -- too subtle to carry a caption on a bright image on its own).
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .content-over-media:has(.prose) {
+      position: relative;
+    }
+
+    #shopify-section-{{ section.id }} .content-over-media:has(.prose):after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 60%;
+      background: linear-gradient(to top, rgb(0 0 0 / .65), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #shopify-section-{{ section.id }} .content-over-media .prose {
+      position: relative;
+      z-index: 2;
+    }
   </style>
 
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}

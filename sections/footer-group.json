@@ -17,25 +17,41 @@
         "icon-1": {
           "type": "item",
           "settings": {
-            "title": "Free delivery worldwide"
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Free delivery worldwide",
+            "content": "<p>Short content about your store</p>"
           }
         },
         "icon-2": {
           "type": "item",
           "settings": {
-            "title": "Satisfied or refunded"
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Satisfied or refunded",
+            "content": "<p>Short content about your store</p>"
           }
         },
         "icon-3": {
           "type": "item",
           "settings": {
-            "title": "Top-notch support"
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Top-notch support",
+            "content": "<p>Short content about your store</p>"
           }
         },
         "icon-4": {
           "type": "item",
           "settings": {
-            "title": "Secure payments"
+            "icon": "picto-award-gift",
+            "icon_width": 24,
+            "mobile_icon_width": 24,
+            "title": "Secure payments",
+            "content": "<p>Short content about your store</p>"
           }
         }
       },
@@ -45,27 +61,42 @@
         "icon-3",
         "icon-4"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": true,
+        "stack_on_mobile": false,
+        "icon_color": "",
+        "text_color": "",
+        "text_alignment": "center"
+      }
     },
     "footer": {
       "type": "footer",
       "blocks": {
         "newsletter": {
           "type": "newsletter",
-          "settings": {}
+          "settings": {
+            "title": "Newsletter",
+            "content": "<p>Sign up to our newsletter to receive exclusive offers.</p>",
+            "button_background": "",
+            "button_text_color": ""
+          }
         },
         "links": {
           "type": "links",
           "settings": {
             "menu": "footer",
-            "show_menu_title": true
+            "collapse_on_mobile": false,
+            "show_menu_title": true,
+            "menu_title": ""
           }
         },
         "text": {
           "type": "text",
           "settings": {
             "title": "About",
-            "content": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>"
+            "content": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>",
+            "enable_follow_on_shop": true
           }
         }
       },
@@ -74,7 +105,17 @@
         "links",
         "text"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "",
+        "separate_section_with_border": false,
+        "show_social_media": true,
+        "show_payment_icons": true,
+        "show_powered_by_shopify": true,
+        "show_country_selector": true,
+        "show_country_name": true,
+        "show_country_flag": true,
+        "show_locale_selector": true
+      }
     }
   },
   "order": [

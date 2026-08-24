@@ -31,6 +31,21 @@
       display: block;
     }
 
+    {%- comment -%}
+      These photos are isolated cutouts (transparent background around the subject),
+      not full-bleed rectangular shots -- object-fit: cover alone can't crop that empty
+      margin away since the subject doesn't fill the source image's own frame. Scaling
+      the image up within its (overflow: hidden) box crops the transparent edges out of
+      view instead, so only the product/model shows.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .triptych-banner__media--left img {
+      transform: scale({{ section.settings.left_image_zoom | divided_by: 100.0 }});
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__media--right img {
+      transform: scale({{ section.settings.right_image_zoom | divided_by: 100.0 }});
+    }
+
     #shopify-section-{{ section.id }} .triptych-banner__content {
       display: flex;
       flex-direction: column;
@@ -113,9 +128,9 @@
       {%- endcapture -%}
 
       {%- if section.settings.left_image_link != blank -%}
-        <a href="{{ section.settings.left_image_link }}" class="triptych-banner__media">{{- left_media -}}</a>
+        <a href="{{ section.settings.left_image_link }}" class="triptych-banner__media triptych-banner__media--left">{{- left_media -}}</a>
       {%- else -%}
-        <div class="triptych-banner__media">{{- left_media -}}</div>
+        <div class="triptych-banner__media triptych-banner__media--left">{{- left_media -}}</div>
       {%- endif -%}
 
       {%- comment -%}Center content{%- endcomment -%}
@@ -165,9 +180,9 @@
       {%- endcapture -%}
 
       {%- if section.settings.right_image_link != blank -%}
-        <a href="{{ section.settings.right_image_link }}" class="triptych-banner__media">{{- right_media -}}</a>
+        <a href="{{ section.settings.right_image_link }}" class="triptych-banner__media triptych-banner__media--right">{{- right_media -}}</a>
       {%- else -%}
-        <div class="triptych-banner__media">{{- right_media -}}</div>
+        <div class="triptych-banner__media triptych-banner__media--right">{{- right_media -}}</div>
       {%- endif -%}
     </div>
   </div>
@@ -230,6 +245,17 @@
       "label": "t:global.text.link"
     },
     {
+      "type": "range",
+      "id": "left_image_zoom",
+      "min": 100,
+      "max": 250,
+      "step": 5,
+      "unit": "%",
+      "label": "Zoom",
+      "info": "Crops in on the photo. Useful for cutout/isolated images with empty space around the subject.",
+      "default": 100
+    },
+    {
       "type": "header",
       "content": "Right image"
     },
@@ -247,6 +273,17 @@
       "type": "url",
       "id": "right_image_link",
       "label": "t:global.text.link"
+    },
+    {
+      "type": "range",
+      "id": "right_image_zoom",
+      "min": 100,
+      "max": 250,
+      "step": 5,
+      "unit": "%",
+      "label": "Zoom",
+      "info": "Crops in on the photo. Useful for cutout/isolated images with empty space around the subject.",
+      "default": 100
     },
     {
       "type": "header",

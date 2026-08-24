@@ -96,33 +96,33 @@
         "image_2": {
           "type": "image",
           "settings": {
-            "color_scheme": "",
+            "color_scheme": "scheme-4",
             "image": "shopify://shop_images/1683baf2-9f89-47cf-9d71-35ec8238b993.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
             "title": "NECKLACES",
             "heading_tag": "h4",
-            "content": "",
+            "content": "<p>Chains that catch the light</p>",
             "link_text": "",
             "link_url": "shopify://collections/necklaces",
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 15
+            "overlay_opacity": 2
           }
         },
         "image_3": {
           "type": "image",
           "settings": {
-            "color_scheme": "",
+            "color_scheme": "scheme-4",
             "image": "shopify://shop_images/74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
             "title": "BRACELETS",
             "heading_tag": "h4",
-            "content": "",
+            "content": "<p>Stack them or wear solo</p>",
             "link_text": "",
             "link_url": "shopify://collections/bracelets",
             "link_style": "link",
@@ -134,14 +134,14 @@
         "image_4": {
           "type": "image",
           "settings": {
-            "color_scheme": "",
+            "color_scheme": "scheme-4",
             "image": "shopify://shop_images/841d5f8b-ee25-419c-8033-c968d70a9c3a.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
             "title": "EARRINGS",
             "heading_tag": "h4",
-            "content": "",
+            "content": "<p>Studs, hoops & drops</p>",
             "link_text": "",
             "link_url": "shopify://collections/earrings",
             "link_style": "link",
@@ -153,14 +153,14 @@
         "image_5": {
           "type": "image",
           "settings": {
-            "color_scheme": "",
+            "color_scheme": "scheme-4",
             "image": "shopify://shop_images/3112205e-855b-473e-a451-2929ed5f104f.png",
             "column_count": "3",
             "row_count": 1,
             "add_padding": false,
             "title": "RINGS",
             "heading_tag": "h4",
-            "content": "",
+            "content": "<p>Bands, stacks & solitaires</p>",
             "link_text": "",
             "link_url": "shopify://collections/rings",
             "link_style": "link",
@@ -200,9 +200,11 @@
         "left_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_03_07_PM.png",
         "left_image_alt": "",
         "left_image_link": "",
+        "left_image_zoom": 160,
         "right_image": "shopify://shop_images/ChatGPT_Image_Aug_22_2026_03_04_36_PM.png",
         "right_image_alt": "",
         "right_image_link": "",
+        "right_image_zoom": 150,
         "center_background_color": "#f5f0e6",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "logo_width": 48,
@@ -446,6 +448,7 @@
         "content_1",
         "content_2"
       ],
+      "disabled": true,
       "name": "t:sections.images_with_text_scroll.presets.images_with_text_scroll.name",
       "settings": {
         "color_scheme": "",
@@ -460,25 +463,6 @@
     "shop_the_look_1": {
       "type": "shop-the-look",
       "blocks": {
-        "look_1": {
-          "type": "look",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_19_2026_06_16_54_PM.png",
-            "hot_spots_background": "#fdfdfc",
-            "product_1": "pear-bracelet",
-            "product_1_horizontal_position": 54,
-            "product_1_vertical_position": 37,
-            "product_2": "",
-            "product_2_horizontal_position": 57,
-            "product_2_vertical_position": 59,
-            "product_3": "",
-            "product_3_horizontal_position": 66,
-            "product_3_vertical_position": 42,
-            "product_4": "",
-            "product_4_horizontal_position": 85,
-            "product_4_vertical_position": 85
-          }
-        },
         "look_2": {
           "type": "look",
           "settings": {
@@ -497,11 +481,30 @@
             "product_4_horizontal_position": 85,
             "product_4_vertical_position": 85
           }
+        },
+        "look_1": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_19_2026_06_16_54_PM.png",
+            "hot_spots_background": "#fdfdfc",
+            "product_1": "pear-bracelet",
+            "product_1_horizontal_position": 54,
+            "product_1_vertical_position": 37,
+            "product_2": "",
+            "product_2_horizontal_position": 57,
+            "product_2_vertical_position": 59,
+            "product_3": "",
+            "product_3_horizontal_position": 66,
+            "product_3_vertical_position": 42,
+            "product_4": "",
+            "product_4_horizontal_position": 85,
+            "product_4_vertical_position": 85
+          }
         }
       },
       "block_order": [
-        "look_1",
-        "look_2"
+        "look_2",
+        "look_1"
       ],
       "name": "t:sections.shop_the_look.presets.shop_the_look.name",
       "settings": {
@@ -690,7 +693,9 @@
       ],
       "name": "t:sections.testimonials.presets.testimonials.name",
       "settings": {
-        "color_scheme": "scheme-ec0b8eaa-22ef-462b-96e1-f6243b3bbcd3",
+        "color_scheme": "scheme-3",
+        "background": "#f5f0e6",
+        "text_color": "#394943",
         "separate_section_with_border": false,
         "auto_rotate_between_testimonials": false,
         "cycle_speed": 5,
