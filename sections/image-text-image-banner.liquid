@@ -1,0 +1,317 @@
+{%- comment -%}
+  Three-panel banner: full-bleed image, a text panel (logo mark, two-line heading, body
+  copy, link, and a small product shot), full-bleed image. Built for a triptych layout
+  no existing section covers -- collection-list/media-grid only pair one image with one
+  text block, never a text-only center panel flanked by two independent images.
+{%- endcomment -%}
+
+{%- if section.settings.left_image != blank or section.settings.right_image != blank or section.settings.heading_text != blank -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --triptych-banner-center-background: {{ section.settings.color_scheme.settings.background.rgb }};
+      --triptych-banner-center-text-color: {{ section.settings.color_scheme.settings.text_color.rgb }};
+      --triptych-banner-accent-color: {{ section.settings.accent_color.rgb }};
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__media {
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__media img,
+    #shopify-section-{{ section.id }} .triptych-banner__media .placeholder {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1.25rem;
+      padding: 4rem 1.5rem;
+      background: rgb(var(--triptych-banner-center-background));
+      color: rgb(var(--triptych-banner-center-text-color));
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__logo {
+      width: {{ section.settings.logo_width }}px;
+      height: auto;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__rule {
+      width: 32px;
+      height: 1px;
+      background: currentColor;
+      opacity: .4;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__kicker {
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__heading {
+      color: rgb(var(--triptych-banner-accent-color));
+      margin-block-start: -.75rem;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__body {
+      max-width: 30ch;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__product-image {
+      width: 100%;
+      max-width: {{ section.settings.product_image_width }}px;
+      height: auto;
+      margin-block-start: .5rem;
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} .triptych-banner {
+        grid-template-columns: 1fr 1fr 1fr;
+        height: {{ section.settings.desktop_height }}px;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__media {
+        aspect-ratio: auto;
+        height: 100%;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content {
+        padding: 2rem;
+      }
+    }
+  </style>
+
+  <div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="triptych-banner">
+      {%- comment -%}Left image{%- endcomment -%}
+      {%- capture left_media -%}
+        {%- if section.settings.left_image != blank -%}
+          {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', alt: section.settings.left_image_alt | default: '', loading: 'lazy' -}}
+        {%- else -%}
+          {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- if section.settings.left_image_link != blank -%}
+        <a href="{{ section.settings.left_image_link }}" class="triptych-banner__media">{{- left_media -}}</a>
+      {%- else -%}
+        <div class="triptych-banner__media">{{- left_media -}}</div>
+      {%- endif -%}
+
+      {%- comment -%}Center content{%- endcomment -%}
+      <div class="triptych-banner__content">
+        {%- if section.settings.logo_image != blank -%}
+          {{- section.settings.logo_image | image_url: width: 160 | image_tag: widths: '80,160', alt: '', loading: 'lazy', class: 'triptych-banner__logo' -}}
+        {%- endif -%}
+
+        <span class="triptych-banner__rule" aria-hidden="true"></span>
+
+        <div class="prose">
+          {%- if section.settings.kicker_text != blank -%}
+            <p class="triptych-banner__kicker h5">{{- section.settings.kicker_text -}}</p>
+          {%- endif -%}
+
+          {%- if section.settings.heading_text != blank -%}
+            <p class="triptych-banner__heading h1">{{- section.settings.heading_text -}}</p>
+          {%- endif -%}
+
+          {%- if section.settings.body_text != blank -%}
+            <div class="triptych-banner__body">{{- section.settings.body_text -}}</div>
+          {%- endif -%}
+
+          {%- if section.settings.button_text != blank -%}
+            <p class="h6">
+              {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
+            </p>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.product_image != blank -%}
+          {{- section.settings.product_image | image_url: width: section.settings.product_image.width | image_tag: widths: '300,400,600,800', alt: section.settings.product_image_alt | default: '', loading: 'lazy', class: 'triptych-banner__product-image' -}}
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}Right image{%- endcomment -%}
+      {%- capture right_media -%}
+        {%- if section.settings.right_image != blank -%}
+          {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', alt: section.settings.right_image_alt | default: '', loading: 'lazy' -}}
+        {%- else -%}
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder' -}}
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- if section.settings.right_image_link != blank -%}
+        <a href="{{ section.settings.right_image_link }}" class="triptych-banner__media">{{- right_media -}}</a>
+      {%- else -%}
+        <div class="triptych-banner__media">{{- right_media -}}</div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Image / Text / Image",
+  "class": "shopify-section--image-text-image-banner",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 640
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Heading accent color",
+      "default": "#b08d57"
+    },
+    {
+      "type": "header",
+      "content": "Left image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "t:global.image.image"
+    },
+    {
+      "type": "text",
+      "id": "left_image_alt",
+      "label": "t:global.image.alt_text"
+    },
+    {
+      "type": "url",
+      "id": "left_image_link",
+      "label": "t:global.text.link"
+    },
+    {
+      "type": "header",
+      "content": "Right image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "t:global.image.image"
+    },
+    {
+      "type": "text",
+      "id": "right_image_alt",
+      "label": "t:global.image.alt_text"
+    },
+    {
+      "type": "url",
+      "id": "right_image_link",
+      "label": "t:global.text.link"
+    },
+    {
+      "type": "header",
+      "content": "Center content"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo mark",
+      "info": "Small mark shown above the heading. Falls back to nothing when empty."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 20,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo mark width",
+      "default": 48
+    },
+    {
+      "type": "text",
+      "id": "kicker_text",
+      "label": "Kicker line",
+      "default": "Timeless"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading_text",
+      "label": "t:global.text.heading",
+      "default": "Diamond Essentials"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "t:global.text.content",
+      "default": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "t:global.text.button_text",
+      "default": "Shop the Collection"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:global.text.button_link"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product shot",
+      "info": "Small image shown below the button, e.g. an isolated product photo."
+    },
+    {
+      "type": "text",
+      "id": "product_image_alt",
+      "label": "t:global.image.alt_text"
+    },
+    {
+      "type": "range",
+      "id": "product_image_width",
+      "min": 120,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Product shot width",
+      "default": 260
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image / Text / Image",
+      "category": "t:global.categories.storytelling"
+    }
+  ]
+}
+{% endschema %}

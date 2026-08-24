@@ -90,6 +90,31 @@
         "controls_color": "#ffffff"
       }
     },
+    "image_text_image_banner_1": {
+      "type": "image-text-image-banner",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "separate_section_with_border": false,
+        "desktop_height": 640,
+        "accent_color": "#b08d57",
+        "left_image": "",
+        "left_image_alt": "",
+        "left_image_link": "",
+        "right_image": "",
+        "right_image_alt": "",
+        "right_image_link": "",
+        "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
+        "logo_width": 48,
+        "kicker_text": "Timeless",
+        "heading_text": "Diamond Essentials",
+        "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
+        "button_text": "Shop the Collection",
+        "button_link": "shopify://collections/bracelets",
+        "product_image": "",
+        "product_image_alt": "",
+        "product_image_width": 260
+      }
+    },
     "featured_collections_2": {
       "type": "featured-collections",
       "blocks": {
@@ -236,18 +261,18 @@
           "settings": {
             "color_scheme": "",
             "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_16_53_PM.png",
-            "column_count": "6",
-            "row_count": 2,
+            "column_count": "3",
+            "row_count": 1,
             "add_padding": false,
-            "title": "Necklaces",
-            "heading_tag": "h2",
+            "title": "NECKLACES",
+            "heading_tag": "h4",
             "content": "",
-            "link_text": "Shop",
+            "link_text": "",
             "link_url": "shopify://collections/necklaces",
             "link_style": "link",
-            "text_position": "place-self-center text-center",
+            "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 10
+            "overlay_opacity": 15
           }
         },
         "image_3": {
@@ -255,34 +280,73 @@
           "settings": {
             "color_scheme": "",
             "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_02_33_42_PM.png",
-            "column_count": "6",
-            "row_count": 2,
+            "column_count": "3",
+            "row_count": 1,
             "add_padding": false,
-            "title": "Bracelets",
-            "heading_tag": "h2",
+            "title": "BRACELETS",
+            "heading_tag": "h4",
             "content": "",
-            "link_text": "Shop",
+            "link_text": "",
             "link_url": "shopify://collections/bracelets",
             "link_style": "link",
-            "text_position": "place-self-center text-center",
+            "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 10
+            "overlay_opacity": 15
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/symbiosis-earrings-brown-tiger-eye-02.jpg",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "EARRINGS",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/earrings",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "color_scheme": "",
+            "image": "shopify://shop_images/collection-rings-collection_-banner-desktop_8eca2d08-7649-404b-ad38-78496e156ad0.jpg",
+            "column_count": "3",
+            "row_count": 1,
+            "add_padding": false,
+            "title": "RINGS",
+            "heading_tag": "h4",
+            "content": "",
+            "link_text": "",
+            "link_url": "shopify://collections/rings",
+            "link_style": "link",
+            "text_position": "place-self-end-start text-start",
+            "overlay_color": "#000000",
+            "overlay_opacity": 15
           }
         }
       },
       "block_order": [
         "image_2",
-        "image_3"
+        "image_3",
+        "image_4",
+        "image_5"
       ],
-      "disabled": true,
       "name": "t:sections.media_grid.presets.media_grid.name",
       "settings": {
         "color_scheme": "",
         "separate_section_with_border": false,
-        "desktop_row_height": 400,
-        "mobile_row_height": 200,
+        "desktop_row_height": 480,
+        "mobile_row_height": 320,
         "section_width": "full",
-        "spacing": "none",
+        "spacing": "sm",
         "subheading": "",
         "title": "",
         "heading_style": "h2",
@@ -755,11 +819,12 @@
   },
   "order": [
     "slideshow",
+    "media_grid_1",
+    "image_text_image_banner_1",
     "featured_collections_2",
     "rich_text_1",
     "featured_collections_1",
     "scrolling_content_1",
-    "media_grid_1",
     "media_grid_2",
     "images_with_text_scroll_1",
     "shop_the_look_1",
