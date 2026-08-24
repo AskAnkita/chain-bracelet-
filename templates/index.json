@@ -447,29 +447,58 @@
         "popover_title": "Shop your set"
       }
     },
-    "countdown_1": {
-      "type": "countdown",
-      "name": "t:sections.countdown_timer.presets.countdown_timer.name",
+    "image_with_text_offer": {
+      "type": "image-with-text-overlay",
+      "blocks": {
+        "subheading_1": {
+          "type": "subheading",
+          "settings": {
+            "text": "We're now live"
+          }
+        },
+        "heading_1": {
+          "type": "heading",
+          "settings": {
+            "text": "Exclusive offer",
+            "heading_tag": "h1"
+          }
+        },
+        "richtext_1": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>To celebrate our launch, enjoy <strong>10% off</strong> your first order on rings, earrings, bracelets and necklaces. Use code <strong>WELCOME10</strong> at checkout.</p>"
+          }
+        },
+        "button_1": {
+          "type": "button",
+          "settings": {
+            "style": "solid",
+            "text": "Shop Now",
+            "url": "shopify://collections/all",
+            "background": "#ffffff",
+            "text_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "subheading_1",
+        "heading_1",
+        "richtext_1",
+        "button_1"
+      ],
+      "name": "t:sections.image_with_text_overlay.presets.image_with_text_overlay.name",
       "settings": {
-        "color_scheme": "scheme-3",
-        "separate_section_with_border": true,
+        "color_scheme": "",
+        "image_size": "lg",
         "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_03_16_30_PM.png",
-        "image_size": "auto",
-        "subheading": "Special",
-        "title": "summer sales",
-        "heading_style": "h1",
-        "content": "<p>Shop our selection of exclusive rings, earrings, bracelets and necklaces at reduced prices during the summer sales. Hurry up!</p>",
-        "button_link": "",
-        "button_text": "",
-        "expiration_date": "2027-12-31",
-        "expiration_behavior": "leave",
-        "timer_position": "end",
-        "animate_number": false,
-        "flip_background": "",
-        "flip_background_opacity": 44,
-        "flip_text_color": "",
+        "allow_transparent_header": false,
+        "reveal_on_scroll": true,
+        "remove_vertical_spacing": false,
+        "content_width": "sm",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
         "overlay_color": "#000000",
-        "overlay_opacity": 30
+        "overlay_opacity": 35
       }
     },
     "blog_posts_1": {
@@ -730,7 +759,7 @@
     "featured_collections_2",
     "images_with_text_scroll_1",
     "shop_the_look_1",
-    "countdown_1",
+    "image_with_text_offer",
     "blog_posts_1",
     "featured_collections_MMEWzD",
     "image_with_text_block_1",

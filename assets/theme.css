@@ -2525,7 +2525,7 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
     }
 
     .product-list__promo .content-over-media {
-      grid-row: span 1;
+      grid-row: span 2;
     }
   }
 }

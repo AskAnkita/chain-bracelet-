@@ -46,7 +46,31 @@
         "show_filter_group_name": false,
         "show_filter_values_count": true,
         "open_filters_by_default": false
-      }
+      },
+      "blocks": {
+        "push_promo_offer": {
+          "type": "push_promo",
+          "settings": {
+            "color_scheme": "scheme-3",
+            "bordered": false,
+            "position": 5,
+            "size": "2",
+            "media_type": "image",
+            "overlay_color": "rgb(0 0 0 / 0.3)",
+            "content_position": "align-self-center",
+            "alignment": "center",
+            "subheading": "We're now live",
+            "heading": "10% off your first order",
+            "heading_tag": "h4",
+            "style": "solid",
+            "link_text": "Shop now",
+            "url": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "push_promo_offer"
+      ]
     }
   },
   "order": [
