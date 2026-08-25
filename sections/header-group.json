@@ -433,7 +433,7 @@
         "wishlist_label": "Wishlist",
         "wishlist_url": "",
         "menu": "main-menu",
-        "sidebar_menu": "",
+        "sidebar_menu": "customer-account-main-menu",
         "customer_account_menu": "main-menu",
         "menu_open_trigger": "hover",
         "menu_text_font": "heading",
