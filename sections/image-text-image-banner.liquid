@@ -103,11 +103,28 @@
       max-width: 30ch;
     }
 
+    {%- comment -%}
+      max-height bounds this alongside max-width: the source photo is a closed
+      loop/oval shape (roughly square, not a thin flat strand), so scaling purely by
+      width also scales height nearly 1:1 -- a wide product_image_width alone can make
+      the shot dominate the panel and shove the button/heading apart. Capping height
+      keeps the shot compact regardless of how wide the setting goes.
+    {%- endcomment -%}
+    {%- comment -%}
+      transform: scale (rather than a bigger box) so the enlargement is purely visual
+      -- a scaled element still reserves its original, unscaled box in the flex layout,
+      so growing the shot this way can never push the section taller. It paints outside
+      its own box instead of inside it, which is fine here since nothing in this panel
+      clips overflow.
+    {%- endcomment -%}
     #shopify-section-{{ section.id }} .triptych-banner__product-image {
       width: 100%;
       max-width: {{ section.settings.product_image_width }}px;
+      max-height: 230px;
       height: auto;
+      object-fit: contain;
       margin-block-start: .5rem;
+      transform: scale(1.4);
     }
 
     @media screen and (min-width: 1000px) {
@@ -161,13 +178,21 @@
         font-size: .7rem;
       }
 
+      {%- comment -%}
+        No max-height cap here (unlike an earlier version of this rule) -- a fixed
+        height ceiling silently overrode the product_image_width setting whenever the
+        photo's aspect ratio made height the binding constraint under object-fit:
+        contain, so the width slider had no visible effect. Width alone is enough: the
+        grid row already grows past desktop_height via minmax(..., auto) if the taller
+        shot needs more room.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .triptych-banner__product-image {
         width: auto;
         height: auto;
         max-width: min(100%, {{ section.settings.product_image_width }}px);
-        max-height: 140px;
         object-fit: contain;
         margin-block-start: 0;
+        transform: scale(1.4);
       }
     }
   </style>

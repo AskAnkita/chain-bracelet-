@@ -216,7 +216,7 @@
         "button_link": "shopify://collections/bracelets",
         "product_image": "shopify://shop_images/bracelet-tennis.png",
         "product_image_alt": "",
-        "product_image_width": 120
+        "product_image_width": 240
       }
     },
     "rich_text_1": {
@@ -580,7 +580,7 @@
       "name": "t:sections.image_with_text_overlay.presets.image_with_text_overlay.name",
       "settings": {
         "color_scheme": "",
-        "image_size": "md",
+        "image_size": "xs",
         "image": "shopify://shop_images/ChatGPT_Image_Aug_18_2026_03_16_30_PM.png",
         "allow_transparent_header": false,
         "reveal_on_scroll": true,
