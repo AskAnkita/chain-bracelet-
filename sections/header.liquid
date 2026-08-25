@@ -21,7 +21,19 @@
   }
 
   #shopify-section-{{ section.id }} {
-    --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) auto minmax(0, 1fr);
+    {%- comment -%}
+      Both side columns are minmax(min-content, 1fr), not plain minmax(0, 1fr): this is
+      the only grid definition in effect below 1000px (the overrides further down only
+      kick in at 1000px+), and a floor of 0 let the icon row (search/account/wishlist/
+      cart) get squeezed narrower than its own content on small phones -- the icons
+      don't wrap, so they overflowed leftward out of their column and sat on top of the
+      logo mark next to them. min-content stops that; keeping BOTH sides as 1fr (rather
+      than making just secondary-nav `auto`, tried first) matters because that pair is
+      what centers the logo mark between them -- an `auto` side plus a `1fr` side made
+      the two tracks grow unevenly, which visibly dragged the mark off-center at
+      tablet widths where there's slack to divide unevenly in the first place.
+    {%- endcomment -%}
+    --header-grid: "primary-nav logo secondary-nav" / minmax(min-content, 1fr) auto minmax(min-content, 1fr);
     --header-padding-block: 1rem;
     --header-transparent-header-text-color: {{ section.settings.transparent_header_text_color.rgb }};
     {%- comment -%}

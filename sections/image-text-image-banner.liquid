@@ -18,9 +18,16 @@
       grid-template-columns: 1fr;
     }
 
+    {%- comment -%}
+      A fixed vh height (matching how desktop_height already controls the desktop row)
+      rather than aspect-ratio: 3/4 -- that ratio made the photo taller than the
+      viewport itself is wide, which on a phone is most of the screen for one side
+      image alone. vh puts height in the merchant's direct control regardless of
+      whatever aspect ratio the uploaded photo happens to be.
+    {%- endcomment -%}
     #shopify-section-{{ section.id }} .triptych-banner__media {
       position: relative;
-      aspect-ratio: 3 / 4;
+      height: {{ section.settings.mobile_media_height }}vh;
       overflow: hidden;
     }
 
@@ -63,15 +70,33 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 1.25rem;
-      padding: 4rem 1.5rem;
+      gap: .75rem;
+      padding: 2.5rem 1.5rem;
       background: rgb(var(--triptych-banner-center-background));
       color: rgb(var(--triptych-banner-center-text-color));
     }
 
+    {%- comment -%}
+      This panel is a third of a short banner even on a phone, not a full-width page
+      heading -- the theme's default .h1/logo_width sizes are tuned for the latter, so
+      using them here made this the tallest, heaviest section on the whole mobile
+      homepage despite having the least content. Scaled down close to the desktop
+      compact sizes (min-width: 1000px, further below) rather than reusing them
+      outright, since a phone still reads a bit larger comfortably than a laptop does.
+    {%- endcomment -%}
     #shopify-section-{{ section.id }} .triptych-banner__logo {
-      width: {{ section.settings.logo_width }}px;
+      width: min({{ section.settings.logo_width }}px, 40px);
       height: auto;
+    }
+
+    #shopify-section-{{ section.id }} :is(.triptych-banner__kicker, .triptych-banner__heading) {
+      font-size: 1.625rem;
+      line-height: 1.15;
+    }
+
+    #shopify-section-{{ section.id }} .triptych-banner__body {
+      font-size: .875rem;
+      line-height: 1.4;
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__rule {
@@ -202,7 +227,17 @@
       {%- comment -%}Left image{%- endcomment -%}
       {%- capture left_media -%}
         {%- if section.settings.left_image != blank -%}
-          {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.left_image_alt | default: '' -}}
+          <picture>
+            {%- if section.settings.left_image_mobile != blank -%}
+              <source
+                media="(max-width: 999px)"
+                srcset="{{ section.settings.left_image_mobile | image_url: width: 400 }} 400w, {{ section.settings.left_image_mobile | image_url: width: 600 }} 600w, {{ section.settings.left_image_mobile | image_url: width: 800 }} 800w, {{ section.settings.left_image_mobile | image_url: width: 1000 }} 1000w"
+                width="{{ section.settings.left_image_mobile.width }}"
+                height="{{ section.settings.left_image_mobile.height }}"
+              >
+            {%- endif -%}
+            {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.left_image_alt | default: '' -}}
+          </picture>
         {%- else -%}
           {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
         {%- endif -%}
@@ -254,7 +289,17 @@
       {%- comment -%}Right image{%- endcomment -%}
       {%- capture right_media -%}
         {%- if section.settings.right_image != blank -%}
-          {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.right_image_alt | default: '' -}}
+          <picture>
+            {%- if section.settings.right_image_mobile != blank -%}
+              <source
+                media="(max-width: 999px)"
+                srcset="{{ section.settings.right_image_mobile | image_url: width: 400 }} 400w, {{ section.settings.right_image_mobile | image_url: width: 600 }} 600w, {{ section.settings.right_image_mobile | image_url: width: 800 }} 800w, {{ section.settings.right_image_mobile | image_url: width: 1000 }} 1000w"
+                width="{{ section.settings.right_image_mobile.width }}"
+                height="{{ section.settings.right_image_mobile.height }}"
+              >
+            {%- endif -%}
+            {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.right_image_alt | default: '' -}}
+          </picture>
         {%- else -%}
           {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder' -}}
         {%- endif -%}
@@ -301,6 +346,17 @@
       "default": 60
     },
     {
+      "type": "range",
+      "id": "mobile_media_height",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "vh",
+      "label": "Mobile image height",
+      "info": "Height of the left and right images below 1000px. Desktop height above is separate.",
+      "default": 45
+    },
+    {
       "type": "color",
       "id": "accent_color",
       "label": "Heading accent color",
@@ -314,6 +370,12 @@
       "type": "image_picker",
       "id": "left_image",
       "label": "t:global.image.image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image_mobile",
+      "label": "t:global.image.mobile_image",
+      "info": "Shown below 1000px instead of the image above. Falls back to it when empty."
     },
     {
       "type": "text",
@@ -344,6 +406,12 @@
       "type": "image_picker",
       "id": "right_image",
       "label": "t:global.image.image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image_mobile",
+      "label": "t:global.image.mobile_image",
+      "info": "Shown below 1000px instead of the image above. Falls back to it when empty."
     },
     {
       "type": "text",
