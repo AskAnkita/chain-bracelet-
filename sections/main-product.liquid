@@ -72,7 +72,53 @@
     {%- endif -%}
   }
 
+  {%- if allow_transparent_header -%}
+    {%- comment -%}
+      The real reason padding on .section-spacing alone never created a visible gap:
+      theme.css also pulls .header up by its own full height with a negative
+      margin-block-end, whenever the page's first section has [allow-transparent-header]
+      -- that's what makes this section start at the very top of the page, floating
+      underneath the header for the hero look. Any padding added inside that section
+      is padding inside a box that's already tucked behind the nav, so it stays hidden
+      under it instead of pushing content below it. Cancelling that pull here (only
+      when this setting is on, so it's scoped to this product's page) is what actually
+      lets padding-block-start below produce a real, visible gap under the nav.
+    {%- endcomment -%}
+    .header {
+      margin-block-end: 0 !important;
+    }
+  {%- endif -%}
+
+  {%- comment -%}
+    theme.css zeroes this section's own top padding unconditionally (main-product gets
+    padding-block-start: 0, only restored to --container-gutter at 1000px+) -- on
+    mobile that leaves literally no gap below the nav bar, and even the desktop
+    restore is a small, generic value shared by every section on the site, not sized
+    for this one's own hero-ish gallery. Both bumped up here so the content reads as
+    clearly below the nav rather than butted against it.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .section-spacing {
+    padding-block-start: 0;
+  }
+
+  {%- comment -%}
+    Product details panel background. On mobile the columns stack, so painting
+    .product-info directly already covers its whole row edge to edge -- nothing more
+    is needed there. padding-block-start is left alone deliberately: theme.css already
+    animates it (calc(...) * --header-is-visible) as the sticky header shows/hides,
+    and overriding it here would kill that transition.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .product-info {
+    background: #F6F1E5;
+    padding-inline: 1.5rem;
+    padding-block-end: 2rem;
+  }
+
   @media screen and (min-width: 1000px) {
+    #shopify-section-{{ section.id }} .section-spacing {
+      padding-block-start: 0;
+    }
+
     #shopify-section-{{ section.id }} {
       {%- if has_content_below_gallery -%}
         --product-grid: "product-gallery product-info" auto "product-content product-info" minmax(0, 1fr) / minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ product_info_size | divided_by: 100.0 }}fr);
@@ -80,6 +126,35 @@
         --product-grid: "product-gallery product-info" / minmax(0, {{ 100.0 | minus: product_info_size | divided_by: 100.0 }}fr) minmax(0, {{ product_info_size | divided_by: 100.0 }}fr);
       {%- endif -%}
     }
+
+    {%- if allow_transparent_header -%}
+      {%- comment -%}
+        theme.css pulls .product-gallery up by -1 * container-gutter here (only when
+        allow-transparent-header is set) so the photo's top edge tucks in behind the
+        floating transparent header for a hero effect. That only reads right while the
+        header is actually see-through over it; zeroing the pull-up makes the gallery
+        start cleanly below the nav bar instead, matching the left column to how
+        product-info already starts (it gets a matching positive padding-block-start
+        of its own, untouched above).
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .product-gallery {
+        margin-block-start: 0;
+      }
+
+      {%- comment -%}
+        Fills the whole right column with the background, not just the .product-info
+        box -- that box is deliberately narrower than its column (width: min(75%,
+        28.5rem), centered) for text readability, so painting the box itself leaves
+        white gutters on either side instead of a clean edge-to-edge panel. A
+        hard-stop gradient on the grid container paints exactly up to the real column
+        boundary instead, and naturally spans the full row height (matching the
+        gallery) since that's the grid container's own box, unlike .product-info
+        which only self-sizes to its own (shorter) content.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .product {
+        background: linear-gradient(to right, transparent {{ 100.0 | minus: product_info_size }}%, #F6F1E5 {{ 100.0 | minus: product_info_size }}%);
+      }
+    {%- endif -%}
   }
 </style>
 

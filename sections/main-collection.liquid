@@ -45,7 +45,16 @@
 {%- endcomment -%}
 
 <style>
+  {%- comment -%}
+    --background is what .color-scheme actually paints (background-color: rgb(var(--background))).
+    This section's own color_scheme setting is left blank, which just inherits whatever
+    --background the theme's default color scheme set on <body> -- that's the light
+    grey. Overriding the variable here, scoped to this section only, changes every
+    collection/category page's background without touching the shared default scheme
+    that other pages/sections still rely on.
+  {%- endcomment -%}
   #shopify-section-{{ section.id }} {
+    --background: 246 241 229;
     --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
     --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
 

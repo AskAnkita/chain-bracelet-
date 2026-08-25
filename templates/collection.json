@@ -13,7 +13,7 @@
       "type": "collection-banner",
       "settings": {
         "color_scheme": "",
-        "image_size": "lg",
+        "image_size": "sm",
         "allow_transparent_header": true,
         "show_image": true,
         "reveal": true,

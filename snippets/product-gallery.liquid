@@ -106,7 +106,16 @@
         endunless
 
         assign media_group_option_name = media_group | split: '_' | first
-        assign media_group_value = media_group | remove_first: media_group_option_name | remove_first: '_' | strip | downcase
+
+        # replace: '_', ' ' -- a merchant writing a multi-word value naturally reaches
+        # for the same underscore the examples use for the name/value separator itself
+        # (e.g. "#Jewelry material_White_Gold" instead of "#Jewelry material_White
+        # Gold"). Without this, that value is compared as "white_gold" against
+        # Shopify's actual option value "white gold" and never matches -- which doesn't
+        # just mis-tag that one image, it makes it permanently "filtered" no matter
+        # which variant is selected, so switching options never reveals it and only the
+        # untagged default image ever shows.
+        assign media_group_value = media_group | remove_first: media_group_option_name | remove_first: '_' | replace: '_', ' ' | strip | downcase
         assign media_group_option_name = media_group_option_name | strip | downcase
 
         assign has_matched_option = false
