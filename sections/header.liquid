@@ -328,16 +328,26 @@
 
     {%- comment -%}
       The mark is a lone brand cue in a single-row bar here, not the centrepiece of a
-      three-row masthead, so it's scaled off the size the merchant set for the home
-      page rather than a hardcoded px value -- it still tracks that setting if it
-      changes. 0.9 (was 0.6) reads closer to full size, since on the compact bar the
-      mark is the only brand element in the row.
+      three-row masthead, so it's sized to fill the bar's height rather than pinned to
+      a small width -- the merchant's logo file is roughly square, so a width cap left
+      it far shorter than the nav links beside it. Driving it by height instead makes
+      it match the nav row; width follows the image's aspect ratio. Still derived from
+      the merchant's center_icon width setting so it tracks that knob, just read as a
+      height now. The width cap is a safety rail for very wide logo files.
     {%- endcomment -%}
-    {%- assign compact_mark_width = section.settings.center_icon_width | times: 0.9 | round -%}
+    {%- assign compact_mark_height = section.settings.center_icon_width | times: 1.1 | round -%}
     #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
-      width: {{ compact_mark_width }}px;
-      height: auto;
+      height: {{ compact_mark_height }}px;
+      width: auto;
+      max-width: {{ section.settings.center_icon_width | times: 3 | round }}px;
+      object-fit: contain;
       display: block;
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
+        height: {{ section.settings.center_icon_width | times: 1.35 | round }}px;
+      }
     }
 
     #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {

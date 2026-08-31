@@ -22,12 +22,13 @@
     --header-separation-border-color: 0 0 0 / 0.10 !important;
   }
 
+
   #shopify-section-{{ section.id }} {
     --sg-accent: {{ section.settings.color_scheme.settings.text_color.rgb }};
     --sg-surface: {{ section.settings.color_scheme.settings.background.rgb }};
   }
 
-  /* tab bar -- clean underline tabs, evenly spread, active one accented */
+  /* tab bar -- boxed (border all sides), dividers between, active tab accented */
   .sg .sg__tablist {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -35,13 +36,22 @@
     margin: 2.5rem 0 2.25rem !important;
     padding: 0 !important;
     list-style: none !important;
-    border-bottom: 1px solid rgb(var(--sg-accent) / .2);
-    overflow-x: auto;
-    scrollbar-width: none;
+    border: 1px solid rgb(var(--sg-accent) / .25);
+    border-radius: .5rem;
+    overflow: hidden;
   }
 
-  .sg .sg__tablist::-webkit-scrollbar {
-    display: none;
+  @media (max-width: 600px) {
+    .sg .sg__tablist {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sg .sg__tablist::-webkit-scrollbar {
+      display: none;
+    }
+    .sg .sg__tablist > li {
+      flex: 0 0 6rem !important;
+    }
   }
 
   .sg .sg__tablist > li {
@@ -50,7 +60,11 @@
     margin: 0 !important;
     padding: 0 !important;
     flex: 1 1 0 !important;
-    min-width: 5rem;
+    min-width: 0;
+  }
+
+  .sg .sg__tablist > li + li {
+    border-left: 1px solid rgb(var(--sg-accent) / .18);
   }
 
   .sg .sg__tablist > li::marker {
@@ -61,24 +75,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     gap: .5rem;
     width: 100%;
     height: 100%;
-    padding: .55rem .65rem .75rem;
-    margin-bottom: -1px;
+    min-height: 4.5rem;
+    padding: .8rem .6rem;
     border: 0;
-    border-bottom: 2px solid transparent;
     background: transparent;
     font: inherit;
-    font-size: .68rem;
+    font-size: .66rem;
     line-height: 1.25;
     letter-spacing: .09em;
     text-align: center;
     text-transform: uppercase;
     color: rgb(var(--sg-accent) / .5);
     cursor: pointer;
-    transition: color .15s, border-color .15s;
+    transition: color .15s, background .15s, box-shadow .15s;
   }
 
   .sg__tab svg {
@@ -91,23 +104,19 @@
 
   .sg__tab:hover {
     color: rgb(var(--sg-accent) / .85);
+    background: rgb(var(--sg-accent) / .04);
   }
 
   .sg__tab[aria-selected='true'] {
     color: rgb(var(--sg-accent));
-    border-bottom-color: rgb(var(--sg-accent));
+    background: rgb(var(--sg-accent) / .07);
     font-weight: 600;
+    box-shadow: inset 0 -3px 0 rgb(var(--sg-accent));
   }
 
   .sg__tab[aria-selected='true'] svg {
     opacity: 1;
     transform: scale(1.12);
-  }
-
-  @media (max-width: 600px) {
-    .sg .sg__tablist > li {
-      flex: 0 0 6rem !important;
-    }
   }
 
   .sg__panel[hidden] {
