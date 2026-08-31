@@ -74,6 +74,14 @@
        currently selected options.
     5. Only the fragments that follow a "#" are parsed as tags, so an underscore in the descriptive part of the alt
        text ("Size_chart reference #Color_Gold") can no longer be mistaken for a tag.
+    6. The metal option's legacy tag names ("Jewelry material", "Jewellery materials") are folded onto its current
+       name ("Material"), so alt text written before the option was renamed keeps working without re-tagging
+       every image.
+    7. For that metal option, values are matched by metal *family* rather than exact string: the variant values
+       carry a karat ("10k White Gold", "925 Sterling Silver") while the images are only tagged by colour
+       ("#Jewelry material_White_Gold", "#Jewelry material_Rose gold", "#Jewelry material_Gold"). Every white
+       karat resolves to the White_Gold images, every rose karat to the Rose gold images, both yellow karats to
+       the plain "Gold" images, and Sterling Silver (which has no images of its own) borrows the White_Gold set.
 {%- endcomment -%}
 
 {% liquid
@@ -118,13 +126,19 @@
         assign media_group_value = media_group | remove_first: media_group_option_name | remove_first: '_' | replace: '_', ' ' | strip | downcase
         assign media_group_option_name = media_group_option_name | strip | downcase
 
+        # The metal option was renamed from "Jewelry material" / "Jewellery materials"
+        # down to just "Material", but the image alt tags still carry the old name.
+        # Fold the legacy names onto the current one so existing alt text keeps working
+        # without having to re-tag every image.
+        assign media_group_option_name_normalised = media_group_option_name | replace: 'jewellery', 'jewelry' | replace: 'jewelry materials', 'material' | replace: 'jewelry material', 'material'
+
         assign has_matched_option = false
         assign matched_option_value = ''
 
         for product_option in product.options_with_values
           assign product_option_name = product_option.name | strip | downcase
 
-          if product_option_name == media_group_option_name
+          if product_option_name == media_group_option_name or product_option_name == media_group_option_name_normalised
             assign has_matched_option = true
             assign matched_option_value = product_option.selected_value | strip | downcase
             break
@@ -135,9 +149,52 @@
           continue
         endunless
 
-        if matched_option_value != media_group_value
-          assign media_is_filtered = true
-          break
+        if media_group_option_name_normalised == 'material'
+          # ---- Metal-family matching ------------------------------------------------
+          # Variant values carry the karat ("10k White Gold", "925 Sterling Silver")
+          # while the alt tags only name the metal colour ("#Jewelry material_White_Gold",
+          # "#Jewelry material_Rose gold", "#Jewelry material_Gold"). Compare the metal
+          # *family* of each side rather than the raw string: every white karat matches
+          # the White_Gold images, every rose karat the Rose gold images, and both
+          # yellow karats the plain "Gold" images. Sterling silver ships no images of
+          # its own, so it borrows the white-gold set. Order matters -- "white gold"
+          # and "rose gold" both contain "gold", so the specific colours are tested
+          # before the bare "gold" fallback.
+          assign selected_metal_family = matched_option_value
+          if matched_option_value contains 'rose'
+            assign selected_metal_family = 'rose gold'
+          elsif matched_option_value contains 'white'
+            assign selected_metal_family = 'white gold'
+          elsif matched_option_value contains 'silver'
+            assign selected_metal_family = 'white gold'
+          elsif matched_option_value contains 'yellow'
+            assign selected_metal_family = 'gold'
+          elsif matched_option_value contains 'gold'
+            assign selected_metal_family = 'gold'
+          endif
+
+          assign tag_metal_family = media_group_value
+          if media_group_value contains 'rose'
+            assign tag_metal_family = 'rose gold'
+          elsif media_group_value contains 'white'
+            assign tag_metal_family = 'white gold'
+          elsif media_group_value contains 'silver'
+            assign tag_metal_family = 'white gold'
+          elsif media_group_value contains 'yellow'
+            assign tag_metal_family = 'gold'
+          elsif media_group_value contains 'gold'
+            assign tag_metal_family = 'gold'
+          endif
+
+          if selected_metal_family != tag_metal_family
+            assign media_is_filtered = true
+            break
+          endif
+        else
+          if matched_option_value != media_group_value
+            assign media_is_filtered = true
+            break
+          endif
         endif
       endfor
 
