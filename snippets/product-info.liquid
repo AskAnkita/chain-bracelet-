@@ -576,6 +576,17 @@
                 {%- render 'icon' with 'chevron-right' -%}
               </a>
             {%- endif -%}
+
+          {%- when 'size_guide' -%}
+            {%- render 'size-guide-drawer',
+              product: product,
+              category: block.settings.category,
+              trigger_text: block.settings.trigger_text,
+              heading: block.settings.heading,
+              button_style: block.settings.button_style,
+              stretch: block.settings.stretch_button,
+              full_guide_url: block.settings.full_guide_page.url
+            -%}
         {%- endcase -%}
       {%- endcapture -%}
 

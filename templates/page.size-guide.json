@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "size_guide_tabs": {
+      "type": "size-guide-tabs",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "show_title": true,
+        "page_width": "md"
+      }
+    }
+  },
+  "order": ["size_guide_tabs"]
+}

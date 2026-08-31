@@ -1,0 +1,110 @@
+{%- doc -%}
+  Single source of truth for the jewellery size-guide content.
+
+  Outputs ONE field of ONE category as a string. Capture it:
+
+    {%- capture intro -%}
+      {%- render 'size-guide-data', category: 'rings', field: 'intro' -%}
+    {%- endcapture -%}
+
+  `category` may be "auto", in which case `product_type` is matched against known
+  keywords to pick the category.
+
+  @param {string} category - rings | bracelets | necklaces | pendants | earrings | auto
+  @param {string} field - title | intro | table | note
+  @param {string} [product_type] - product.type, used when category is "auto"
+{%- enddoc -%}
+
+{%- liquid
+  assign resolved = category | default: 'auto' | downcase
+
+  if resolved == 'auto'
+    assign type_haystack = product_type | default: '' | downcase
+    if type_haystack contains 'ring'
+      assign resolved = 'rings'
+    elsif type_haystack contains 'bangle' or type_haystack contains 'bracelet'
+      assign resolved = 'bracelets'
+    elsif type_haystack contains 'pendant'
+      assign resolved = 'pendants'
+    elsif type_haystack contains 'necklace' or type_haystack contains 'chain' or type_haystack contains 'choker'
+      assign resolved = 'necklaces'
+    elsif type_haystack contains 'earring' or type_haystack contains 'stud' or type_haystack contains 'hoop'
+      assign resolved = 'earrings'
+    else
+      assign resolved = 'rings'
+    endif
+  endif
+-%}
+{%- case resolved -%}
+  {%- when 'rings' -%}
+    {%- case field -%}
+      {%- when 'title' -%}Rings
+      {%- when 'intro' -%}<p>Wrap a strip of paper around the base of your finger, mark where it overlaps, then measure the length in millimetres against a ruler. That length is your finger circumference.</p>
+      {%- when 'note' -%}<p>Measure at the end of the day when your fingers are warmest, and size up for wide bands.</p>
+      {%- when 'table' -%}US / CA | UK / AU | Diameter (mm) | Circumference (mm)
+5 | J½ | 15.7 | 49.3
+6 | L½ | 16.5 | 51.9
+7 | N½ | 17.3 | 54.4
+8 | P½ | 18.1 | 57.0
+9 | R½ | 18.9 | 59.5
+10 | T½ | 19.8 | 62.1
+11 | V½ | 20.6 | 64.6
+12 | X½ | 21.4 | 67.2
+    {%- endcase -%}
+
+  {%- when 'bracelets' -%}
+    {%- case field -%}
+      {%- when 'title' -%}Bracelets
+      {%- when 'intro' -%}<p>Measure snugly around your wrist just below the wrist bone with a tape measure or a strip of paper, then choose your preferred fit below.</p>
+      {%- when 'note' -%}<p>For bangles that slip over the hand, measure the widest part of your hand with the thumb tucked in: 15–16 cm = S, 17–18 cm = M, 19–20 cm = L.</p>
+      {%- when 'table' -%}Wrist measurement | Snug fit | Comfort fit | Loose fit
+14 cm / 5.5" | 15 cm | 16 cm | 17 cm
+15 cm / 5.9" | 16 cm | 17 cm | 18 cm
+16 cm / 6.3" | 17 cm | 18 cm | 19 cm
+17 cm / 6.7" | 18 cm | 19 cm | 20 cm
+18 cm / 7.1" | 19 cm | 20 cm | 21 cm
+19 cm / 7.5" | 20 cm | 21 cm | 22 cm
+    {%- endcase -%}
+
+  {%- when 'necklaces' -%}
+    {%- case field -%}
+      {%- when 'title' -%}Necklaces
+      {%- when 'intro' -%}<p>Measure an existing necklace that sits well, or hold a tape measure against your neck and chest to see where each length falls.</p>
+      {%- when 'note' -%}<p>Add 2–5 cm to these lengths if you have a larger neck or prefer a looser drape.</p>
+      {%- when 'table' -%}Length | Style | Where it sits
+35 cm / 14" | Choker | Snug around the base of the neck
+40 cm / 16" | Collar | On the collarbone
+45 cm / 18" | Princess | Just below the collarbone (most popular)
+50 cm / 20" | Matinee | On the chest, below the collarbone
+55 cm / 22" | Matinee | Just above the neckline
+60 cm / 24" | Opera | At or just below the neckline
+75–90 cm / 30–36" | Rope | Below the bust — can be doubled
+    {%- endcase -%}
+
+  {%- when 'pendants' -%}
+    {%- case field -%}
+      {%- when 'title' -%}Pendants
+      {%- when 'intro' -%}<p>A pendant hangs from the bottom of the chain, so it sits a little lower than the chain length alone. Use your height and the look you want to pick a chain.</p>
+      {%- when 'note' -%}<p>Match the pendant size to your frame: petite pendants (under 15 mm) for a smaller build, statement pendants (25 mm+) for a larger build.</p>
+      {%- when 'table' -%}Height | Everyday chain | Longer / layered chain
+Under 160 cm / 5&#39;3" | 40–45 cm / 16–18" | 50–55 cm / 20–22"
+160–175 cm / 5&#39;3"–5&#39;9" | 45–50 cm / 18–20" | 55–65 cm / 22–26"
+Over 175 cm / 5&#39;9" | 50–55 cm / 20–22" | 60–70 cm / 24–28"
+    {%- endcase -%}
+
+  {%- when 'earrings' -%}
+    {%- case field -%}
+      {%- when 'title' -%}Earrings
+      {%- when 'intro' -%}<p>Drop length is measured from the top of the earring where it meets the ear to the lowest point. Hoop size is the outer diameter.</p>
+      {%- when 'note' -%}<p>Lightweight styles under 4 g per earring are the most comfortable for all-day wear.</p>
+      {%- when 'table' -%}Style | Drop / diameter | Where it sits
+Stud | 0 cm | On the lobe
+Huggie | 1 cm / 0.4" | Hugs the lobe
+Small drop | 2–3 cm / 0.8–1.2" | Just below the lobe
+Mid drop | 4–5 cm / 1.6–2" | Mid-jaw
+Statement / chandelier | 6 cm+ / 2.4"+ | At or below the jawline
+Small hoop | 10–20 mm | On and just below the lobe
+Medium hoop | 30–40 mm | Below the lobe
+Large hoop | 50 mm+ | At or below the jawline
+    {%- endcase -%}
+{%- endcase -%}

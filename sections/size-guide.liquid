@@ -1,0 +1,302 @@
+{%- comment -%}
+  Jewellery size guide — one page, tabbed by category.
+
+  Desktop: tabbed layout (one tab per category block).
+  Mobile:  accordion layout.
+
+  Each block is one category. Pick a "Category" preset (Rings, Bracelets, Necklaces,
+  Pendants, Earrings) to pull ready-made copy and a size chart from
+  `snippets/size-guide-data.liquid`, or choose "Custom" and fill the fields in yourself.
+  Any field left blank on a preset category falls back to the shared default.
+
+  Size chart format (the "Size chart" field):
+    - one row per line
+    - cells separated by a pipe "|"
+    - the first non-empty line is the header row
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+  {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+
+  <style>
+    #shopify-section-{{ section.id }} .size-guide__table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-block: 1.5rem;
+    }
+
+    #shopify-section-{{ section.id }} .size-guide__table {
+      width: 100%;
+      min-width: 30rem;
+    }
+
+    #shopify-section-{{ section.id }} .size-guide__table th[scope='row'] {
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .size-guide__media {
+      display: block;
+      margin-block-end: 1.5rem;
+      border-radius: var(--rounded-sm, 0);
+    }
+
+    #shopify-section-{{ section.id }} .size-guide__note {
+      font-size: var(--text-sm);
+      opacity: .8;
+    }
+  </style>
+
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="container container--md">
+      <div class="section-stack">
+        {%- render 'section-header',
+          subheading: section.settings.subheading,
+          heading: section.settings.title,
+          heading_style: section.settings.heading_style,
+          content: section.settings.content,
+          text_alignment: section.settings.text_alignment
+        -%}
+
+        <!-- DESKTOP LAYOUT -->
+        <x-tabs class="content-tabs {% if section.settings.text_alignment == 'center' %}content-tabs--center{% endif %} hidden sm:block">
+          <template shadowrootmode="open">
+            <slot role="tablist" part="tab-list" name="title"></slot>
+            <slot part="tab-panel-list" name="content"></slot>
+          </template>
+
+          {%- for block in section.blocks -%}
+            {%- capture tab_title -%}
+              {%- if block.settings.title != blank -%}
+                {{- block.settings.title -}}
+              {%- else -%}
+                {%- render 'size-guide-data', category: block.settings.category, field: 'title' -%}
+              {%- endif -%}
+            {%- endcapture -%}
+            {%- assign tab_title = tab_title | strip -%}
+            {%- if tab_title == blank -%}{%- continue -%}{%- endif -%}
+
+            <button class="h6" type="button" role="tab" slot="title" {{ block.shopify_attributes }}>{{ tab_title }}</button>
+          {%- endfor -%}
+
+          {%- for block in section.blocks -%}
+            {%- liquid
+              capture panel_title
+                if block.settings.title != blank
+                  echo block.settings.title
+                else
+                  render 'size-guide-data', category: block.settings.category, field: 'title'
+                endif
+              endcapture
+              assign panel_title = panel_title | strip
+            -%}
+            {%- if panel_title == blank -%}{%- continue -%}{%- endif -%}
+
+            {%- capture panel_intro -%}
+              {%- if block.settings.intro != blank -%}{{ block.settings.intro }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'intro' -%}{%- endif -%}
+            {%- endcapture -%}
+            {%- capture panel_table -%}
+              {%- if block.settings.table_data != blank -%}{{ block.settings.table_data }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'table' -%}{%- endif -%}
+            {%- endcapture -%}
+            {%- capture panel_note -%}
+              {%- if block.settings.note != blank -%}{{ block.settings.note }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'note' -%}{%- endif -%}
+            {%- endcapture -%}
+
+            <div role="tabpanel" slot="content" {% unless forloop.first %}hidden{% endunless %} {{ block.shopify_attributes }}>
+              <div class="prose">
+                {%- render 'size-guide-panel',
+                  intro: panel_intro,
+                  table_data: panel_table,
+                  note: panel_note,
+                  image: block.settings.image
+                -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </x-tabs>
+
+        <!-- MOBILE LAYOUT -->
+        <div class="accordion-group sm:hidden">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              capture m_title
+                if block.settings.title != blank
+                  echo block.settings.title
+                else
+                  render 'size-guide-data', category: block.settings.category, field: 'title'
+                endif
+              endcapture
+              assign m_title = m_title | strip
+            -%}
+            {%- if m_title == blank -%}{%- continue -%}{%- endif -%}
+
+            {%- capture m_intro -%}
+              {%- if block.settings.intro != blank -%}{{ block.settings.intro }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'intro' -%}{%- endif -%}
+            {%- endcapture -%}
+            {%- capture m_table -%}
+              {%- if block.settings.table_data != blank -%}{{ block.settings.table_data }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'table' -%}{%- endif -%}
+            {%- endcapture -%}
+            {%- capture m_note -%}
+              {%- if block.settings.note != blank -%}{{ block.settings.note }}{%- else -%}{%- render 'size-guide-data', category: block.settings.category, field: 'note' -%}{%- endif -%}
+            {%- endcapture -%}
+
+            {%- capture mobile_content -%}
+              {%- render 'size-guide-panel',
+                intro: m_intro,
+                table_data: m_table,
+                note: m_note,
+                image: block.settings.image,
+                image_sizes: '100vw'
+              -%}
+            {%- endcapture -%}
+
+            {%- render 'accordion',
+              title: m_title,
+              content: mobile_content,
+              open: block.settings.open_on_mobile,
+              prose_content: true
+            -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Size guide",
+  "class": "shopify-section--size-guide",
+  "tag": "section",
+  "max_blocks": 8,
+  "disabled_on": {
+    "groups": ["header", "custom.overlay"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "t:global.text.subheading",
+      "default": "Find your fit"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "t:global.text.heading",
+      "default": "Jewellery size guide"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:global.text.style",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:global.text.alignment",
+      "options": [
+        { "value": "start", "label": "t:global.position.left" },
+        { "value": "center", "label": "t:global.position.center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content",
+      "default": "<p>All measurements are approximate. If you are between sizes, we recommend choosing the larger size.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Category",
+          "info": "Pulls ready-made copy and a size chart. Choose Custom to write your own.",
+          "options": [
+            { "value": "rings", "label": "Rings" },
+            { "value": "bracelets", "label": "Bracelets" },
+            { "value": "necklaces", "label": "Necklaces" },
+            { "value": "pendants", "label": "Pendants" },
+            { "value": "earrings", "label": "Earrings" },
+            { "value": "custom", "label": "Custom" }
+          ],
+          "default": "rings"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab title",
+          "info": "Leave blank to use the category name."
+        },
+        {
+          "type": "richtext",
+          "id": "intro",
+          "label": "How to measure",
+          "info": "Leave blank to use the default for the chosen category."
+        },
+        {
+          "type": "textarea",
+          "id": "table_data",
+          "label": "Size chart",
+          "info": "One row per line. Separate cells with a pipe ( | ). The first line is the header row. Leave blank to use the default."
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Footnote",
+          "info": "Leave blank to use the default for the chosen category."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Diagram image"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_on_mobile",
+          "label": "Open on mobile by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size guide",
+      "category": "t:global.categories.content",
+      "blocks": [
+        { "type": "category", "settings": { "category": "rings" } },
+        { "type": "category", "settings": { "category": "bracelets" } },
+        { "type": "category", "settings": { "category": "necklaces" } },
+        { "type": "category", "settings": { "category": "pendants" } },
+        { "type": "category", "settings": { "category": "earrings" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

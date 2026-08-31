@@ -8,6 +8,19 @@
   <style>
     #shopify-section-{{ section.id }} {
       --testimonials-font-size: calc(clamp(1.125rem, 1.064516129032258rem + 0.25806451612903225vw, 1.25rem) * {{ section.settings.font_size_factor }});
+
+      {%- comment -%}
+        The theme pads this section by --section-vertical-spacing + 20px, which leaves a
+        very tall band around what is usually two lines of quote. Halve it, and tighten
+        the stack between quote, author and carousel dots to match. The ID selector
+        outranks the .shopify-section--testimonials rule that sets the default.
+      {%- endcomment -%}
+      --section-vertical-spacing-override: calc(var(--section-vertical-spacing) / 2);
+      --section-stack-gap: var(--section-stack-gap-tight);
+    }
+
+    #shopify-section-{{ section.id }} .testimonial-item {
+      gap: 1.25rem;
     }
   </style>
 

@@ -1,0 +1,109 @@
+{%- doc -%}
+  A "Size guide" trigger + right-hand drawer for the product page.
+
+  Resolves the jewellery category from `category` (or, when that is "auto", from the
+  product's type) and shows just that category's chart, pulled from
+  `snippets/size-guide-data.liquid`. Falls back gracefully if nothing matches.
+
+  @param {object} product - the current product
+  @param {string} [category] - rings | bracelets | necklaces | pendants | earrings | auto (default: auto)
+  @param {string} [trigger_text] - the trigger label (default: "Size guide")
+  @param {string} [heading] - the drawer heading (default: "Size guide")
+  @param {string} [button_style] - "solid", "outline" or "link" (default: "link")
+  @param {boolean} [stretch] - stretch the trigger to full width
+  @param {string} [full_guide_url] - optional link to the full size-guide page, shown in the drawer
+{%- enddoc -%}
+
+{%- liquid
+  assign sg_category = category | default: 'auto'
+
+  if product != blank
+    assign sg_drawer_id = 'size-guide-drawer-' | append: product.id
+  else
+    assign sg_drawer_id = 'size-guide-drawer'
+  endif
+
+  capture sg_resolved_title
+    render 'size-guide-data', category: sg_category, product_type: product.type, field: 'title'
+  endcapture
+  assign sg_resolved_title = sg_resolved_title | strip
+
+  capture sg_intro
+    render 'size-guide-data', category: sg_category, product_type: product.type, field: 'intro'
+  endcapture
+
+  capture sg_table
+    render 'size-guide-data', category: sg_category, product_type: product.type, field: 'table'
+  endcapture
+
+  capture sg_note
+    render 'size-guide-data', category: sg_category, product_type: product.type, field: 'note'
+  endcapture
+-%}
+
+{%- if sg_table != blank -%}
+  <style>
+    .size-guide-drawer__trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .size-guide-drawer-panel .size-guide__table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-block: 1.25rem;
+    }
+
+    .size-guide-drawer-panel .size-guide__table {
+      width: 100%;
+      min-width: 22rem;
+    }
+
+    .size-guide-drawer-panel .size-guide__table th[scope='row'] {
+      white-space: nowrap;
+    }
+
+    .size-guide-drawer-panel .size-guide__media {
+      display: block;
+      margin-block-end: 1.25rem;
+    }
+
+    .size-guide-drawer-panel .size-guide__note {
+      font-size: var(--text-sm);
+      opacity: .8;
+    }
+  </style>
+
+  <div class="size-guide-drawer">
+    {%- render 'button',
+      content: trigger_text | default: 'Size guide',
+      style: button_style | default: 'link',
+      stretch: stretch,
+      icon: 'picto-info',
+      aria_controls: sg_drawer_id
+    -%}
+
+    <x-drawer id="{{ sg_drawer_id | escape }}" class="drawer color-scheme color-scheme--dialog">
+      <span class="h5" slot="header">
+        {{- heading | default: 'Size guide' -}}
+        {%- if sg_resolved_title != blank %} &ndash; {{ sg_resolved_title }}{% endif -%}
+      </span>
+
+      <div class="prose size-guide-drawer-panel">
+        {%- render 'size-guide-panel',
+          intro: sg_intro,
+          table_data: sg_table,
+          note: sg_note,
+          image_sizes: '100vw'
+        -%}
+
+        {%- if full_guide_url != blank -%}
+          <p>
+            <a href="{{ full_guide_url }}">{{ 'View the full size guide' }} &rarr;</a>
+          </p>
+        {%- endif -%}
+      </div>
+    </x-drawer>
+  </div>
+{%- endif -%}

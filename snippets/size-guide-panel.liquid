@@ -1,0 +1,79 @@
+{%- doc -%}
+  Renders the body of one size-guide category: optional diagram image, a
+  "how to measure" intro, a size chart table built from plain text, and a footnote.
+
+  Pass the values directly, or pass a `block` and they are read from its settings.
+
+  @param {string} [intro] - "how to measure" copy (HTML)
+  @param {string} [table_data] - size chart: one row per line, cells split by "|", first line = header
+  @param {string} [note] - footnote (HTML)
+  @param {object} [image] - optional diagram image
+  @param {object} [block] - a size-guide "category" block to read the above from when not passed directly
+  @param {string} [image_sizes] - the `sizes` attribute for the diagram image
+{%- enddoc -%}
+
+{%- liquid
+  assign sg_panel_intro = intro | default: block.settings.intro
+  assign sg_panel_table = table_data | default: block.settings.table_data
+  assign sg_panel_note = note | default: block.settings.note
+  assign sg_panel_image = image | default: block.settings.image
+-%}
+
+{%- if sg_panel_image != blank -%}
+  {{-
+    sg_panel_image
+    | image_url: width: 900
+    | image_tag:
+      loading: 'lazy',
+      sizes: image_sizes | default: '(min-width: 750px) 700px, 100vw',
+      widths: '300, 450, 600, 750, 900',
+      class: 'size-guide__media'
+  -}}
+{%- endif -%}
+
+{%- if sg_panel_intro != blank -%}
+  {{ sg_panel_intro }}
+{%- endif -%}
+
+{%- if sg_panel_table != blank -%}
+  {%- assign rows = sg_panel_table | split: '
+' -%}
+  <div class="size-guide__table-scroll">
+    <table class="size-guide__table table--bordered">
+      {%- assign row_index = 0 -%}
+      {%- for row in rows -%}
+        {%- assign trimmed_row = row | strip -%}
+        {%- if trimmed_row == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign cells = trimmed_row | split: '|' -%}
+
+        {%- if row_index == 0 -%}
+          <thead>
+            <tr>
+              {%- for cell in cells -%}
+                <th scope="col">{{ cell | strip }}</th>
+              {%- endfor -%}
+            </tr>
+          </thead>
+          <tbody>
+        {%- else -%}
+          <tr>
+            {%- for cell in cells -%}
+              {%- if forloop.first -%}
+                <th scope="row">{{ cell | strip }}</th>
+              {%- else -%}
+                <td>{{ cell | strip }}</td>
+              {%- endif -%}
+            {%- endfor -%}
+          </tr>
+        {%- endif -%}
+
+        {%- assign row_index = row_index | plus: 1 -%}
+      {%- endfor -%}
+      {%- if row_index > 0 -%}</tbody>{%- endif -%}
+    </table>
+  </div>
+{%- endif -%}
+
+{%- if sg_panel_note != blank -%}
+  <div class="size-guide__note">{{ sg_panel_note }}</div>
+{%- endif -%}

@@ -655,8 +655,8 @@
               </li>
             {%- endfor -%}
 
-            {%- comment -%}Right nav items (Rings, Earrings){%- endcomment -%}
-            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings" | split: "," -%}
+            {%- comment -%}Right nav items (Rings, Earrings, Size Guide){%- endcomment -%}
+            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings,SIZE GUIDE|/pages/size-guide" | split: "," -%}
             {%- for item in right_nav_items -%}
               {%- assign item_parts = item | split: "|" -%}
               {%- assign link_title = item_parts[0] -%}

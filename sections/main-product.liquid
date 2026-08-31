@@ -1872,6 +1872,66 @@
       ]
     },
     {
+      "type": "size_guide",
+      "name": "Size guide",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows a trigger that opens a right-hand drawer with the size chart for the matching jewellery category."
+        },
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Category",
+          "info": "\"Automatic\" matches the product's Type (Ring, Bracelet, Necklace, Pendant, Earring).",
+          "options": [
+            { "value": "auto", "label": "Automatic (from product type)" },
+            { "value": "rings", "label": "Rings" },
+            { "value": "bracelets", "label": "Bracelets" },
+            { "value": "necklaces", "label": "Necklaces" },
+            { "value": "pendants", "label": "Pendants" },
+            { "value": "earrings", "label": "Earrings" }
+          ],
+          "default": "auto"
+        },
+        {
+          "type": "text",
+          "id": "trigger_text",
+          "label": "Trigger text",
+          "default": "Size guide"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Drawer heading",
+          "default": "Size guide"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "t:global.text.style",
+          "options": [
+            { "value": "link", "label": "t:global.text.link_style_options.link" },
+            { "value": "outline", "label": "t:global.text.link_style_options.outline" },
+            { "value": "solid", "label": "t:global.text.link_style_options.solid" }
+          ],
+          "default": "link"
+        },
+        {
+          "type": "checkbox",
+          "id": "stretch_button",
+          "label": "t:sections.main_product.blocks.button.stretch",
+          "default": false
+        },
+        {
+          "type": "page",
+          "id": "full_guide_page",
+          "label": "Full size-guide page",
+          "info": "Optional. Adds a link to the complete guide at the bottom of the drawer."
+        }
+      ]
+    },
+    {
       "type": "image",
       "name": "t:sections.main_product.blocks.image.name",
       "settings": [

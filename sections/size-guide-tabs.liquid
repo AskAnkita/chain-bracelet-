@@ -1,0 +1,476 @@
+{%- comment -%}
+  Size guide page.
+
+  Renders the page's own content (edited in Admin -> Content -> Pages) and, where
+  JavaScript is available, turns each <h2> into a switchable tab with a small icon
+  and a measuring diagram. With no JS it degrades to the normal stacked article.
+
+  It also forces the header to a solid white background -- but only on whatever
+  template uses this section, because the section's <style> only loads there.
+{%- endcomment -%}
+
+<style>
+  /* ---- Solid white header, this template only ---- */
+  .header,
+  .header__utility {
+    --background: 255 255 255 / 1 !important;
+    --background-gradient: 0 0 0 / 0 !important;
+    --text-color: 28 28 28 !important;
+    --header-transparent-header-text-color: 28 28 28 !important;
+    --header-overlay: 255 255 255 / 1 !important;
+    --header-show-transparent-logo: 0 !important;
+    --header-separation-border-color: 0 0 0 / 0.10 !important;
+  }
+
+  #shopify-section-{{ section.id }} {
+    --sg-accent: {{ section.settings.color_scheme.settings.text_color.rgb }};
+    --sg-surface: {{ section.settings.color_scheme.settings.background.rgb }};
+  }
+
+  /* tab bar -- clean underline tabs, evenly spread, active one accented */
+  .sg .sg__tablist {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0 !important;
+    margin: 2.5rem 0 2.25rem !important;
+    padding: 0 !important;
+    list-style: none !important;
+    border-bottom: 1px solid rgb(var(--sg-accent) / .2);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sg .sg__tablist::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sg .sg__tablist > li {
+    display: block !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 1 1 0 !important;
+    min-width: 5rem;
+  }
+
+  .sg .sg__tablist > li::marker {
+    content: "" !important;
+  }
+
+  .sg__tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    width: 100%;
+    height: 100%;
+    padding: .55rem .65rem .75rem;
+    margin-bottom: -1px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    font: inherit;
+    font-size: .68rem;
+    line-height: 1.25;
+    letter-spacing: .09em;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgb(var(--sg-accent) / .5);
+    cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+
+  .sg__tab svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    opacity: .75;
+    transition: opacity .15s, transform .15s;
+  }
+
+  .sg__tab:hover {
+    color: rgb(var(--sg-accent) / .85);
+  }
+
+  .sg__tab[aria-selected='true'] {
+    color: rgb(var(--sg-accent));
+    border-bottom-color: rgb(var(--sg-accent));
+    font-weight: 600;
+  }
+
+  .sg__tab[aria-selected='true'] svg {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+
+  @media (max-width: 600px) {
+    .sg .sg__tablist > li {
+      flex: 0 0 6rem !important;
+    }
+  }
+
+  .sg__panel[hidden] {
+    display: none;
+  }
+
+  .sg__panel {
+    animation: sg-fade .25s ease;
+  }
+
+  @keyframes sg-fade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .sg__panel > h2:first-child {
+    margin-top: 0;
+  }
+
+  .sg__diagram {
+    margin: 0 0 1.75rem;
+    padding: 1.9rem 1.5rem 1.3rem;
+    border: 1px solid rgb(var(--sg-accent) / .14);
+    border-radius: .6rem;
+    background: rgb(var(--sg-accent) / .045);
+    color: rgb(var(--sg-accent) / .9);
+  }
+
+  .sg__diagram svg {
+    display: block;
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .sg__diagram--wide svg {
+    max-width: 620px;
+  }
+
+  .sg__diagram .sg__diag-arrow {
+    stroke: rgb(var(--sg-accent));
+    stroke-width: 2.4;
+  }
+
+  @media (max-width: 520px) {
+    .sg__diagram--wide {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sg__diagram--wide svg {
+      min-width: 460px;
+    }
+  }
+
+  .sg__diagram figcaption {
+    margin-top: .75rem;
+    text-align: center;
+    font-size: .8rem;
+    opacity: .7;
+  }
+
+  .sg :is(table) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 700px) {
+    .sg :is(table) {
+      display: table;
+      white-space: normal;
+    }
+  }
+</style>
+
+<div class="section-spacing section-spacing--tight color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
+  <div class="container container--{{ section.settings.page_width }}">
+    <div class="section-stack">
+      {%- if section.settings.show_title -%}
+        <div class="section-header justify-self-center text-center">
+          <h1 class="h2">{{ page.title }}</h1>
+        </div>
+      {%- endif -%}
+
+      {%- if page.content != empty -%}
+        <content-tabs-split class="sg prose">
+          {{ page.content }}
+        </content-tabs-split>
+      {%- else -%}
+        <div class="prose">
+          <p>Add this page's content in <strong>Admin &rsaquo; Content &rsaquo; Pages</strong>. Each <code>Heading 2</code> becomes a tab.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Measuring diagrams -- cloned into the matching tab by the script below {%- endcomment -%}
+<div hidden id="sg-diagrams-{{ section.id }}">
+  <template data-key="ring">
+    <figure class="sg__diagram sg__diagram--wide">
+      <svg viewBox="0 0 620 250" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" font-family="Archivo, system-ui, sans-serif">
+        <path d="M310 24 V226" stroke-dasharray="4 7" opacity=".35"/>
+
+        <text x="24" y="30" font-size="13" font-weight="600" stroke="none" fill="currentColor">Method 1 &middot; ring on a ruler</text>
+        <rect x="24" y="150" width="256" height="66" rx="4"/>
+        <path d="M56 150V174 M136 150V174 M216 150V174"/>
+        <path d="M40 150v14 M72 150v14 M88 150v14 M104 150v14 M120 150v14 M152 150v14 M168 150v14 M184 150v14 M200 150v14 M232 150v14 M248 150v14 M264 150v14"/>
+        <text x="56" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">1</text>
+        <text x="136" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">2</text>
+        <text x="216" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">3</text>
+        <text x="30" y="200" font-size="9" stroke="none" fill="currentColor">cm</text>
+        <path d="M96 150 A56 56 0 0 1 208 150"/>
+        <path d="M108 150 A44 44 0 0 1 200 150"/>
+        <path d="M96 150 H108 M200 150 H208"/>
+        <path d="M124 66 H180 M136 44 H168 M136 44 L124 66 M168 44 L180 66 M136 44 L146 66 M168 44 L158 66 M124 66 L152 90 M180 66 L152 90 M146 66 L152 90 M158 66 L152 90"/>
+        <path d="M144 90 L147 96 M160 90 L157 96"/>
+        <path class="sg__diag-arrow" d="M112 124 H192"/>
+        <path class="sg__diag-arrow" d="M112 124 L123 118 M112 124 L123 130 M192 124 L181 118 M192 124 L181 130"/>
+
+        <text x="336" y="30" font-size="13" font-weight="600" stroke="none" fill="currentColor">Method 2 &middot; wrap a paper strip</text>
+        <path d="M470 40 C462 92 464 128 476 146 C481 153 491 153 496 146 C508 126 510 92 504 44"/>
+        <path d="M476 146 q10 7 20 0"/>
+        <path d="M452 104 H520 M452 122 H520 M452 104 V122 M520 104 V122"/>
+        <path d="M520 104 h12 v18 h-12"/>
+        <path d="M532 122 V172" stroke-dasharray="3 5" opacity=".5"/>
+        <rect x="356" y="172" width="248" height="56" rx="4"/>
+        <path d="M388 172V194 M456 172V194 M524 172V194 M592 172V194"/>
+        <path d="M372 172v13 M404 172v13 M420 172v13 M440 172v13 M472 172v13 M488 172v13 M508 172v13 M540 172v13 M556 172v13 M576 172v13"/>
+        <text x="388" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">1</text>
+        <text x="456" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">2</text>
+        <text x="524" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">3</text>
+        <text x="592" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">4</text>
+        <text x="362" y="212" font-size="9" stroke="none" fill="currentColor">cm</text>
+        <path class="sg__diag-arrow" d="M372 204 H532"/>
+        <path class="sg__diag-arrow" d="M372 204 L383 198 M372 204 L383 210 M532 204 L521 198 M532 204 L521 210"/>
+      </svg>
+      <figcaption>Two ways to find your size: measure the inside diameter of a ring you already own, or wrap a paper strip around your finger, mark where it overlaps and measure that length.</figcaption>
+    </figure>
+  </template>
+
+  <template data-key="wrist">
+    <figure class="sg__diagram">
+      <svg viewBox="0 0 320 150" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+        <ellipse cx="160" cy="80" rx="66" ry="40"/>
+        <path d="M94 80a66 40 0 0 0 132 0" stroke-dasharray="3 5"/>
+        <text x="160" y="30" text-anchor="middle" font-size="11" fill="currentColor" stroke="none">around the wrist bone</text>
+      </svg>
+      <figcaption>Wrap the tape once around, snug but not tight. That is your wrist measurement.</figcaption>
+    </figure>
+  </template>
+
+  <template data-key="necklace">
+    <figure class="sg__diagram">
+      <svg viewBox="0 0 320 210" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+        <circle cx="160" cy="40" r="20"/>
+        <path d="M120 58q40 26 80 0"/>
+        <path d="M108 70q52 40 104 0" stroke-dasharray="2 4"/>
+        <path d="M96 84q64 58 128 0" stroke-dasharray="2 4"/>
+        <path d="M84 98q76 78 152 0" stroke-dasharray="2 4"/>
+        <text x="238" y="62" font-size="10" fill="currentColor" stroke="none">40 cm</text>
+        <text x="252" y="82" font-size="10" fill="currentColor" stroke="none">45 cm</text>
+        <text x="266" y="104" font-size="10" fill="currentColor" stroke="none">50 cm</text>
+        <text x="278" y="128" font-size="10" fill="currentColor" stroke="none">55 cm</text>
+      </svg>
+      <figcaption>Each line shows roughly where that chain length sits on the body.</figcaption>
+    </figure>
+  </template>
+
+  <template data-key="pendant">
+    <figure class="sg__diagram">
+      <svg viewBox="0 0 320 200" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+        <path d="M110 30q50 24 100 0"/>
+        <path d="M160 30v70"/>
+        <path d="M160 150c14 0 24-11 24-25s-24-32-24-32-24 18-24 32 10 25 24 25z"/>
+        <path d="M210 30v70" stroke-dasharray="3 4"/>
+        <path d="M210 100v50" stroke-dasharray="3 4"/>
+        <text x="220" y="70" font-size="10" fill="currentColor" stroke="none">chain length</text>
+        <text x="220" y="128" font-size="10" fill="currentColor" stroke="none">pendant drop</text>
+      </svg>
+      <figcaption>The chain sets the height; the pendant then hangs its own length below that.</figcaption>
+    </figure>
+  </template>
+
+  <template data-key="earring">
+    <figure class="sg__diagram">
+      <svg viewBox="0 0 320 190" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+        <path d="M150 30c-26 0-42 20-42 44 0 20 12 30 12 46 0 12 10 20 22 20"/>
+        <circle cx="150" cy="46" r="4" fill="currentColor" stroke="none"/>
+        <path d="M150 46 H250"/>
+        <path d="M150 86 H250" stroke-dasharray="2 4"/>
+        <path d="M150 126 H250" stroke-dasharray="2 4"/>
+        <path d="M150 160 H250" stroke-dasharray="2 4"/>
+        <text x="256" y="50" font-size="10" fill="currentColor" stroke="none">0 &middot; stud</text>
+        <text x="256" y="90" font-size="10" fill="currentColor" stroke="none">2&ndash;3 cm</text>
+        <text x="256" y="130" font-size="10" fill="currentColor" stroke="none">4&ndash;5 cm</text>
+        <text x="256" y="164" font-size="10" fill="currentColor" stroke="none">6 cm +</text>
+      </svg>
+      <figcaption>Drop is measured from where the earring meets the ear to its lowest point.</figcaption>
+    </figure>
+  </template>
+</div>
+
+<script>
+  (function () {
+    if (customElements.get('content-tabs-split')) return;
+
+    var ICONS = {
+      ring: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="14" r="7"/><path d="M9 5.5 12 8l3-2.5L13.5 3h-3z"/></svg>',
+      wrist: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="12" rx="8" ry="5.5"/><path d="M4 12a8 5.5 0 0 0 16 0" stroke-dasharray="1.5 2.5"/></svg>',
+      necklace: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4c0 8 3.5 13 8 13s8-5 8-13"/><circle cx="12" cy="18.5" r="2"/></svg>',
+      pendant: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5c3 3 6 4.5 8 4.5S17 8 20 5"/><path d="M12 9.5V13"/><path d="M12 21c2.2 0 4-1.8 4-4s-4-4-4-4-4 1.8-4 4 1.8 4 4 4z"/></svg>',
+      earring: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 4a3 3 0 0 1 6 0c0 2-3 2.5-3 5"/><circle cx="12" cy="15" r="5"/></svg>',
+      ruler: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="8" width="20" height="8" rx="1"/><path d="M7 8v3M12 8v4M17 8v3"/></svg>'
+    };
+
+    var diagRoot = document.getElementById('sg-diagrams-{{ section.id }}');
+
+    function keyFor(text) {
+      var t = (text || '').toLowerCase();
+      if (t.indexOf('ring') > -1 && t.indexOf('earring') === -1) return 'ring';
+      if (t.indexOf('bracelet') > -1 || t.indexOf('bangle') > -1) return 'wrist';
+      if (t.indexOf('pendant') > -1) return 'pendant';
+      if (t.indexOf('necklace') > -1 || t.indexOf('chain') > -1) return 'necklace';
+      if (t.indexOf('earring') > -1 || t.indexOf('hoop') > -1) return 'earring';
+      return null;
+    }
+
+    var uid = 0;
+
+    customElements.define('content-tabs-split', class extends HTMLElement {
+      connectedCallback() {
+        if (this._done) return;
+        var heads = Array.prototype.filter.call(this.children, function (el) { return el.tagName === 'H2'; });
+        if (heads.length < 2) return;
+        this._done = true;
+        uid += 1;
+
+        var nodes = Array.prototype.slice.call(this.childNodes);
+        var intro = document.createElement('div');
+        intro.className = 'sg__intro';
+        var panels = [];
+        var current = null;
+
+        nodes.forEach(function (node) {
+          if (node.nodeType === 1 && node.tagName === 'H2') {
+            // a trailing heading that isn't a jewellery category (e.g. "Still not sure?")
+            // folds into the previous tab instead of getting its own
+            if (panels.length && !keyFor(node.textContent)) {
+              current = panels[panels.length - 1].el;
+              current.appendChild(node);
+              return;
+            }
+            current = document.createElement('div');
+            current.className = 'sg__panel';
+            current.setAttribute('role', 'tabpanel');
+            current.appendChild(node);
+            panels.push({ el: current, title: node.textContent.trim() });
+          } else if (current) {
+            current.appendChild(node);
+          } else {
+            intro.appendChild(node);
+          }
+        });
+
+        // drop leftover "[ add image ... ]" placeholder lines from the pasted copy
+        [intro].concat(panels.map(function (p) { return p.el; })).forEach(function (container) {
+          Array.prototype.slice.call(container.querySelectorAll('p, div, figure')).forEach(function (el) {
+            if (/\[\s*(add|insert)\b[^\]]*image[^\]]*\]/i.test(el.textContent || '')) el.remove();
+          });
+        });
+
+        this.textContent = '';
+        if (intro.childNodes.length) this.appendChild(intro);
+
+        var tablist = document.createElement('ul');
+        tablist.className = 'sg__tablist';
+        tablist.setAttribute('role', 'tablist');
+
+        panels.forEach(function (p, i) {
+          var id = 'sg-' + uid + '-' + i;
+          var key = keyFor(p.title);
+
+          var li = document.createElement('li');
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sg__tab';
+          btn.id = id + '-tab';
+          btn.setAttribute('role', 'tab');
+          btn.setAttribute('aria-controls', id);
+          btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+          btn.innerHTML = (ICONS[key] || ICONS.ruler) + '<span>' + p.title + '</span>';
+          li.appendChild(btn);
+          tablist.appendChild(li);
+
+          p.el.id = id;
+          p.el.setAttribute('aria-labelledby', id + '-tab');
+          p.el.hidden = i !== 0;
+
+          var tpl = key && diagRoot ? diagRoot.querySelector('template[data-key="' + key + '"]') : null;
+          if (tpl) {
+            p.el.insertBefore(tpl.content.cloneNode(true), p.el.children[1] || null);
+          }
+
+          btn.addEventListener('click', function () { select(i); });
+          btn.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); select((i + 1) % panels.length, true); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); select((i - 1 + panels.length) % panels.length, true); }
+          });
+        });
+
+        this.appendChild(tablist);
+        panels.forEach(function (p) { this.appendChild(p.el); }, this);
+
+        var self = this;
+        function select(idx, focus) {
+          panels.forEach(function (p, i) {
+            p.el.hidden = i !== idx;
+            var tab = self.querySelector('#' + p.el.id + '-tab');
+            tab.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+            if (i === idx && focus) tab.focus();
+          });
+        }
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Size guide tabs",
+  "class": "shopify-section--size-guide-tabs",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "page_width",
+      "label": "Content width",
+      "options": [
+        { "value": "sm", "label": "Small" },
+        { "value": "md", "label": "Medium" },
+        { "value": "lg", "label": "Large" }
+      ],
+      "default": "md"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size guide tabs"
+    }
+  ]
+}
+{% endschema %}
