@@ -85,7 +85,7 @@
         "links": {
           "type": "links",
           "settings": {
-            "menu": "footer",
+            "menu": "customer-account-main-menu",
             "collapse_on_mobile": false,
             "show_menu_title": true,
             "menu_title": ""
