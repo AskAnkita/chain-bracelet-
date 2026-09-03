@@ -220,4 +220,38 @@
     <{{ option_value_tag }} class="block-underline {% if disabled %}is-disabled{% endif %} {% if selected and option_value_tag == 'a' %}is-selected{% endif %}" {{ attributes }}>
       <span>{{ label | default: value }}</span>
     </{{ option_value_tag }}>
+
+  {%- when 'coin' -%}
+    {%- liquid
+      # Circular metallic swatch for the single "Metal Type" option. The disc colour is
+      # taken from the metal colour in the value name; the karat abbreviation is printed
+      # inside the disc, e.g. "14K White Gold" -> silver disc reading "14K",
+      # "Sterling Silver" -> "SS", "Platinum" -> "PT".
+      assign coin_fill = '#d8d2c0'
+      assign coin_text = label | split: ' ' | first | upcase
+
+      if downcase_label contains 'sterling' or downcase_label == 'ss'
+        assign coin_text = 'SS'
+      elsif downcase_label contains 'platinum' or downcase_label == 'pt'
+        assign coin_text = 'PT'
+      endif
+
+      if downcase_label contains 'rose'
+        assign coin_fill = 'radial-gradient(circle at 34% 30%, #f7dccd, #e5b39a 46%, #b67c60 100%)'
+      elsif downcase_label contains 'white' or downcase_label contains 'silver' or downcase_label contains 'sterling' or downcase_label contains 'platinum' or downcase_label contains 'rhodium' or downcase_label == 'pt' or downcase_label == 'ss'
+        assign coin_fill = 'radial-gradient(circle at 34% 30%, #ffffff, #e3e3e7 46%, #a7abb2 100%)'
+      elsif downcase_label contains 'yellow' or downcase_label contains 'gold'
+        assign coin_fill = 'radial-gradient(circle at 34% 30%, #f8e7b2, #e6c568 46%, #b28f36 100%)'
+      elsif swatch.color != blank
+        assign coin_fill = swatch.color
+      endif
+    -%}
+    <{{ option_value_tag }}
+      class="coin-swatch {% if disabled %}is-disabled{% endif %} {% if selected and option_value_tag == 'a' %}is-selected{% endif %}"
+      {{ attributes }}
+      style="--coin-fill: {{ coin_fill }}"
+    >
+      <span class="coin-swatch__text" aria-hidden="true">{{ coin_text }}</span>
+      <span class="sr-only">{{ label | default: value }}</span>
+    </{{ option_value_tag }}>
 {%- endcase -%}

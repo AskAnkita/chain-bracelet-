@@ -63,6 +63,14 @@
         if variant_image_options contains option_downcase
           assign resolved_option_selector_style = 'variant_image'
         endif
+
+        # The metal option renders as circular metallic coins (see option-value.liquid `coin` type).
+        # "Jewelry material" / "Material" are the current names; "Metal Type" is the target name.
+        assign coin_option_list = 'jewelry material,jewellery material,material,metal type,metal colour,metal color,color,colour,gold colour,gold color'
+        assign coin_option_list = coin_option_list | split: ','
+        if coin_option_list contains option_downcase
+          assign resolved_option_selector_style = 'coin'
+        endif
       %}
 
       <fieldset class="variant-picker__option v-stack gap-2">
@@ -70,7 +78,7 @@
           <div class="h-stack gap-1">
             <legend>{{ option.name }}:</legend>
 
-            {%- if resolved_option_selector_style == 'swatch' or resolved_option_selector_style == 'swatch_underline' or resolved_option_selector_style == 'variant_image' -%}
+            {%- if resolved_option_selector_style == 'swatch' or resolved_option_selector_style == 'swatch_underline' or resolved_option_selector_style == 'variant_image' or resolved_option_selector_style == 'coin' -%}
               <span>{{ option.selected_value }}</span>
             {%- endif -%}
           </div>
@@ -172,7 +180,7 @@
         {%- else -%}
           {%- liquid
             case resolved_option_selector_style
-              when 'swatch', 'swatch_underline', 'variant_image', 'block', 'block_swatch'
+              when 'swatch', 'swatch_underline', 'variant_image', 'block', 'block_swatch', 'coin'
                 assign list_classes = 'h-stack gap-2.5 wrap'
 
               when 'underline'
@@ -203,6 +211,8 @@
                     render 'option-value', type: 'block', form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                   when 'block_swatch'
                     render 'option-value', type: 'block', form: form_id, option_value: option_value, param_name: name, option_position: option.position, show_swatch: true, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
+                  when 'coin'
+                    render 'option-value', type: 'coin', form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                   when 'underline'
                     render 'option-value', type: 'underline', form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                 endcase

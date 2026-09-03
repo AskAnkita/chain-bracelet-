@@ -1,0 +1,225 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_title": false,
+        "page_width": "sm"
+      }
+    },
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading": {
+          "type": "subheading",
+          "settings": {
+            "text": "Our story"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Crafted to be worn every day",
+            "heading_tag": "h1"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>We started with a simple idea: fine jewellery should feel personal, last a lifetime, and still make sense to wear on an ordinary Tuesday. Every chain and bracelet we make is built around that balance of substance and ease.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "subheading",
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "content_width": "sm",
+        "text_position": "center",
+        "separate_section_with_border": false
+      }
+    },
+    "story": {
+      "type": "image-with-text",
+      "blocks": {
+        "subheading": {
+          "type": "subheading",
+          "settings": {
+            "text": "Where it began"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Made by hand, refined over time",
+            "heading_tag": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>What began as a small studio bench has grown into a workshop of jewellers who still finish each piece by hand. We test every clasp, weigh every stone, and polish every link before it earns our name. Nothing ships until it is something we would wear ourselves.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "subheading",
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "image": "",
+        "mobile_image": "",
+        "image_position": "start",
+        "content_width": "sm",
+        "reveal_on_scroll": true
+      }
+    },
+    "values": {
+      "type": "text-with-icons",
+      "blocks": {
+        "craft": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-jewelry",
+            "title": "Handmade craftsmanship",
+            "content": "<p>Each piece is assembled, set, and finished by hand in our own workshop.</p>",
+            "icon_width": 28
+          }
+        },
+        "materials": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-leaf",
+            "title": "Responsibly sourced",
+            "content": "<p>Solid recycled gold and silver, paired with lab-grown diamonds you can trace.</p>",
+            "icon_width": 28
+          }
+        },
+        "guarantee": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-shield",
+            "title": "Lifetime guarantee",
+            "content": "<p>Free re-plating, re-tightening, and repairs for as long as you own it.</p>",
+            "icon_width": 28
+          }
+        }
+      },
+      "block_order": [
+        "craft",
+        "materials",
+        "guarantee"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "text_alignment": "center",
+        "stack_on_mobile": false
+      }
+    },
+    "materials": {
+      "type": "multi-column",
+      "blocks": {
+        "metal": {
+          "type": "image_with_text",
+          "settings": {
+            "image": "",
+            "title": "Solid gold &amp; silver",
+            "heading_tag": "h3",
+            "content": "<p>10k to 18k solid gold and 925 sterling silver &mdash; never plated brass. The weight in your hand is real metal.</p>"
+          }
+        },
+        "diamonds": {
+          "type": "image_with_text",
+          "settings": {
+            "image": "",
+            "title": "Lab-grown diamonds",
+            "heading_tag": "h3",
+            "content": "<p>Identical to mined stones in every physical property, hand-set for consistent sparkle across every link.</p>"
+          }
+        },
+        "build": {
+          "type": "image_with_text",
+          "settings": {
+            "image": "",
+            "title": "Built to last",
+            "heading_tag": "h3",
+            "content": "<p>Reinforced clasps and soldered links, stress-tested so your everyday piece stays an everyday piece.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "metal",
+        "diamonds",
+        "build"
+      ],
+      "settings": {
+        "columns_per_row": 3,
+        "stack_on_mobile": true,
+        "subheading": "The details",
+        "title": "What goes into every piece",
+        "heading_style": "h2",
+        "text_alignment": "start",
+        "content_alignment": "start",
+        "spacing": "md"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "quote_1": {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>The bracelet has not left my wrist in months. It still looks the day I unboxed it.</p>",
+            "author": "Priya S."
+          }
+        },
+        "quote_2": {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>You can feel the difference the moment you pick it up. Proper weight, proper clasp.</p>",
+            "author": "Daniel R."
+          }
+        },
+        "quote_3": {
+          "type": "testimonial",
+          "settings": {
+            "content": "<p>Ordered a chain, needed it shortened, and they resized it for free within the week.</p>",
+            "author": "Mara L."
+          }
+        }
+      },
+      "block_order": [
+        "quote_1",
+        "quote_2",
+        "quote_3"
+      ],
+      "settings": {
+        "subheading": "In their words",
+        "title": "Worn and reviewed",
+        "heading_style": "h2"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "subheading": "Keep me updated",
+        "title": "Stay in the loop",
+        "heading_style": "h2",
+        "content": "<p>New releases, restocks, and the occasional workshop story. No noise.</p>",
+        "button_text": "Subscribe"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "intro",
+    "story",
+    "values",
+    "materials",
+    "testimonials",
+    "newsletter"
+  ]
+}
