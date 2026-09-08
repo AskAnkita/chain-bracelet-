@@ -19,24 +19,33 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Crafted to be worn every day",
+            "text": "Jewellery made by hand, made to keep",
             "heading_tag": "h1"
           }
         },
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>We started with a simple idea: fine jewellery should feel personal, last a lifetime, and still make sense to wear on an ordinary Tuesday. Every chain and bracelet we make is built around that balance of substance and ease.</p>"
+            "content": "<p>We started with one idea: a chain or a bracelet should feel personal, last for years, and still make sense on an ordinary Tuesday. Everything we make is built around that balance of substance and ease &mdash; solid metal, honest stones, and a finish you can live in.</p>"
+          }
+        },
+        "cta": {
+          "type": "button",
+          "settings": {
+            "style": "solid",
+            "text": "Shop the collection",
+            "url": "shopify://collections/all"
           }
         }
       },
       "block_order": [
         "subheading",
         "heading",
-        "paragraph"
+        "paragraph",
+        "cta"
       ],
       "settings": {
-        "content_width": "sm",
+        "content_width": "md",
         "text_position": "center",
         "separate_section_with_border": false
       }
@@ -47,20 +56,20 @@
         "subheading": {
           "type": "subheading",
           "settings": {
-            "text": "Where it began"
+            "text": "The workshop"
           }
         },
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Made by hand, refined over time",
+            "text": "Every piece finished by hand",
             "heading_tag": "h2"
           }
         },
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>What began as a small studio bench has grown into a workshop of jewellers who still finish each piece by hand. We test every clasp, weigh every stone, and polish every link before it earns our name. Nothing ships until it is something we would wear ourselves.</p>"
+            "content": "<p>What began as a single studio bench is now a small workshop of jewellers who still assemble, set, and polish each piece themselves. We weigh every stone, test every clasp, and check every link before it earns our name. Nothing ships until it is something we would wear ourselves.</p>"
           }
         }
       },
@@ -85,7 +94,7 @@
           "settings": {
             "icon": "picto-jewelry",
             "title": "Handmade craftsmanship",
-            "content": "<p>Each piece is assembled, set, and finished by hand in our own workshop.</p>",
+            "content": "<p>Assembled, stone-set, and finished by hand in our own workshop &mdash; not on a production line.</p>",
             "icon_width": 28
           }
         },
@@ -93,8 +102,8 @@
           "type": "item",
           "settings": {
             "icon": "picto-leaf",
-            "title": "Responsibly sourced",
-            "content": "<p>Solid recycled gold and silver, paired with lab-grown diamonds you can trace.</p>",
+            "title": "Solid gold &amp; silver",
+            "content": "<p>10k&ndash;18k solid gold and 925 sterling silver, set with traceable lab-grown diamonds. Never plated brass.</p>",
             "icon_width": 28
           }
         },
@@ -102,8 +111,8 @@
           "type": "item",
           "settings": {
             "icon": "picto-shield",
-            "title": "Lifetime guarantee",
-            "content": "<p>Free re-plating, re-tightening, and repairs for as long as you own it.</p>",
+            "title": "Lifetime care",
+            "content": "<p>Free re-tightening, re-polishing, and repairs for as long as you own the piece.</p>",
             "icon_width": 28
           }
         }
@@ -119,6 +128,27 @@
         "stack_on_mobile": false
       }
     },
+    "promise": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "&ldquo;We make pieces we would wear every day &mdash; and we build them to survive it.&rdquo;",
+            "heading_tag": "h3"
+          }
+        }
+      },
+      "block_order": [
+        "heading"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "content_width": "md",
+        "text_position": "center",
+        "separate_section_with_border": true
+      }
+    },
     "materials": {
       "type": "multi-column",
       "blocks": {
@@ -126,9 +156,9 @@
           "type": "image_with_text",
           "settings": {
             "image": "",
-            "title": "Solid gold &amp; silver",
+            "title": "Real metal",
             "heading_tag": "h3",
-            "content": "<p>10k to 18k solid gold and 925 sterling silver &mdash; never plated brass. The weight in your hand is real metal.</p>"
+            "content": "<p>Solid 10k&ndash;18k gold and 925 sterling silver. The weight in your hand is the metal, not a coating.</p>"
           }
         },
         "diamonds": {
@@ -137,7 +167,7 @@
             "image": "",
             "title": "Lab-grown diamonds",
             "heading_tag": "h3",
-            "content": "<p>Identical to mined stones in every physical property, hand-set for consistent sparkle across every link.</p>"
+            "content": "<p>Physically identical to mined stones, hand-set for consistent sparkle across every link.</p>"
           }
         },
         "build": {
@@ -146,7 +176,7 @@
             "image": "",
             "title": "Built to last",
             "heading_tag": "h3",
-            "content": "<p>Reinforced clasps and soldered links, stress-tested so your everyday piece stays an everyday piece.</p>"
+            "content": "<p>Reinforced clasps and soldered links, stress-tested so an everyday piece stays an everyday piece.</p>"
           }
         }
       },
@@ -166,42 +196,6 @@
         "spacing": "md"
       }
     },
-    "testimonials": {
-      "type": "testimonials",
-      "blocks": {
-        "quote_1": {
-          "type": "testimonial",
-          "settings": {
-            "content": "<p>The bracelet has not left my wrist in months. It still looks the day I unboxed it.</p>",
-            "author": "Priya S."
-          }
-        },
-        "quote_2": {
-          "type": "testimonial",
-          "settings": {
-            "content": "<p>You can feel the difference the moment you pick it up. Proper weight, proper clasp.</p>",
-            "author": "Daniel R."
-          }
-        },
-        "quote_3": {
-          "type": "testimonial",
-          "settings": {
-            "content": "<p>Ordered a chain, needed it shortened, and they resized it for free within the week.</p>",
-            "author": "Mara L."
-          }
-        }
-      },
-      "block_order": [
-        "quote_1",
-        "quote_2",
-        "quote_3"
-      ],
-      "settings": {
-        "subheading": "In their words",
-        "title": "Worn and reviewed",
-        "heading_style": "h2"
-      }
-    },
     "newsletter": {
       "type": "newsletter",
       "settings": {
@@ -218,8 +212,8 @@
     "intro",
     "story",
     "values",
+    "promise",
     "materials",
-    "testimonials",
     "newsletter"
   ]
 }
