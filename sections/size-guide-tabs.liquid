@@ -2,8 +2,12 @@
   Size guide page.
 
   Renders the page's own content (edited in Admin -> Content -> Pages) and, where
-  JavaScript is available, turns each <h2> into a switchable tab with a small icon
-  and a measuring diagram. With no JS it degrades to the normal stacked article.
+  JavaScript is available, turns each <h2> into a switchable tab. Into each tab it
+  injects a "how to measure" card -- three short steps plus an illustration -- so
+  every category reads the same way. With no JS it degrades to a stacked article.
+
+  The illustrations are inline SVG by default; each category also has an image
+  picker in the theme editor that replaces its SVG with your own artwork.
 
   It also forces the header to a solid white background -- but only on whatever
   template uses this section, because the section's <style> only loads there.
@@ -22,22 +26,96 @@
     --header-separation-border-color: 0 0 0 / 0.10 !important;
   }
 
-
   #shopify-section-{{ section.id }} {
     --sg-accent: {{ section.settings.color_scheme.settings.text_color.rgb }};
     --sg-surface: {{ section.settings.color_scheme.settings.background.rgb }};
+    --sg-gold: {{ section.settings.accent_color }};
+    --sg-line: rgb(var(--sg-accent) / .12);
+    --sg-tint: rgb(var(--sg-accent) / .035);
   }
 
-  /* tab bar -- boxed (border all sides), dividers between, active tab accented */
+  /* =========================================================
+     Intro -- lead paragraph + "before you measure" checklist
+     ========================================================= */
+  .sg .sg__intro {
+    max-inline-size: 52rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .sg .sg__intro > p {
+    margin-block: 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    opacity: .75;
+  }
+
+  .sg .sg__intro > :is(h2, h3, h4) {
+    margin-block: 2.25rem .9rem;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: .5;
+  }
+
+  .sg .sg__intro > :is(ul, ol) {
+    margin: 0;
+    padding: 1.35rem 1.5rem;
+    border: 1px solid var(--sg-line);
+    border-radius: .8rem;
+    background: var(--sg-tint);
+    display: grid;
+    gap: .8rem;
+    list-style: none;
+    text-align: start;
+  }
+
+  .sg .sg__intro > :is(ul, ol) > li {
+    position: relative;
+    margin: 0;
+    padding-inline-start: 1.4rem;
+    font-size: .9rem;
+    line-height: 1.55;
+    opacity: .8;
+    list-style: none;
+  }
+
+  .sg .sg__intro > :is(ul, ol) > li::marker {
+    content: "";
+  }
+
+  .sg .sg__intro > :is(ul, ol) > li::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: .58em;
+    inline-size: .42rem;
+    block-size: .42rem;
+    border-radius: 50%;
+    background: var(--sg-gold);
+  }
+
+  @media (min-width: 800px) {
+    .sg .sg__intro > :is(ul, ol) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.6rem;
+      padding: 1.6rem 1.9rem;
+    }
+  }
+
+  /* =========================================================
+     Tab bar
+     ========================================================= */
   .sg .sg__tablist {
     display: flex !important;
     flex-wrap: nowrap !important;
     gap: 0 !important;
-    margin: 2.5rem 0 2.25rem !important;
+    margin: 2.75rem 0 2.5rem !important;
     padding: 0 !important;
     list-style: none !important;
-    border: 1px solid rgb(var(--sg-accent) / .25);
-    border-radius: .5rem;
+    border: 1px solid var(--sg-line);
+    border-radius: .7rem;
     overflow: hidden;
   }
 
@@ -50,7 +128,7 @@
       display: none;
     }
     .sg .sg__tablist > li {
-      flex: 0 0 6rem !important;
+      flex: 0 0 6.5rem !important;
     }
   }
 
@@ -64,7 +142,7 @@
   }
 
   .sg .sg__tablist > li + li {
-    border-left: 1px solid rgb(var(--sg-accent) / .18);
+    border-inline-start: 1px solid var(--sg-line);
   }
 
   .sg .sg__tablist > li::marker {
@@ -76,49 +154,53 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: .5rem;
+    gap: .55rem;
     width: 100%;
     height: 100%;
-    min-height: 4.5rem;
-    padding: .8rem .6rem;
+    min-height: 4.75rem;
+    padding: .9rem .6rem;
     border: 0;
     background: transparent;
     font: inherit;
-    font-size: .66rem;
-    line-height: 1.25;
-    letter-spacing: .09em;
+    font-size: .65rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: .1em;
     text-align: center;
     text-transform: uppercase;
-    color: rgb(var(--sg-accent) / .5);
+    color: rgb(var(--sg-accent) / .45);
     cursor: pointer;
-    transition: color .15s, background .15s, box-shadow .15s;
+    transition: color .18s, background .18s, box-shadow .18s;
   }
 
   .sg__tab svg {
-    width: 22px;
-    height: 22px;
+    width: 23px;
+    height: 23px;
     flex: none;
-    opacity: .75;
-    transition: opacity .15s, transform .15s;
+    opacity: .6;
+    transition: opacity .18s, transform .18s, color .18s;
   }
 
   .sg__tab:hover {
-    color: rgb(var(--sg-accent) / .85);
-    background: rgb(var(--sg-accent) / .04);
+    color: rgb(var(--sg-accent) / .8);
+    background: rgb(var(--sg-accent) / .03);
   }
 
   .sg__tab[aria-selected='true'] {
     color: rgb(var(--sg-accent));
-    background: rgb(var(--sg-accent) / .07);
-    font-weight: 600;
-    box-shadow: inset 0 -3px 0 rgb(var(--sg-accent));
+    background: var(--sg-tint);
+    box-shadow: inset 0 -2px 0 var(--sg-gold);
   }
 
   .sg__tab[aria-selected='true'] svg {
     opacity: 1;
-    transform: scale(1.12);
+    color: var(--sg-gold);
+    transform: scale(1.08);
   }
 
+  /* =========================================================
+     Panels
+     ========================================================= */
   .sg__panel[hidden] {
     display: none;
   }
@@ -132,64 +214,169 @@
     to { opacity: 1; transform: none; }
   }
 
-  .sg__panel > h2:first-child {
-    margin-top: 0;
+  .sg .sg__panel > h2 {
+    margin: 0 0 1.6rem !important;
+    padding-block-end: .9rem;
+    border-block-end: 1px solid var(--sg-line);
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    text-align: center;
   }
 
-  .sg__diagram {
-    margin: 0 0 1.75rem;
-    padding: 1.9rem 1.5rem 1.3rem;
-    border: 1px solid rgb(var(--sg-accent) / .14);
-    border-radius: .6rem;
-    background: rgb(var(--sg-accent) / .045);
-    color: rgb(var(--sg-accent) / .9);
+  .sg .sg__panel :is(h3, h4) {
+    margin-block: 2.4rem .8rem;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    opacity: .5;
   }
 
-  .sg__diagram svg {
+  .sg .sg__panel p {
+    font-size: .95rem;
+    line-height: 1.65;
+  }
+
+  /* =========================================================
+     "How to measure" card -- identical shape for every category
+     ========================================================= */
+  .sg .sg__measure {
+    display: grid;
+    gap: 1.75rem;
+    align-items: center;
+    margin: 0 0 .5rem;
+    padding: 1.75rem 1.5rem;
+    border: 1px solid var(--sg-line);
+    border-radius: .9rem;
+    background: var(--sg-tint);
+  }
+
+  @media (min-width: 760px) {
+    .sg .sg__measure {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      padding: 2.4rem 2.6rem;
+    }
+  }
+
+  .sg .sg__measure-steps {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.15rem;
+    list-style: none;
+  }
+
+  .sg .sg__measure-steps > li {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .9rem;
+    align-items: start;
+    list-style: none;
+  }
+
+  .sg .sg__measure-steps > li::marker {
+    content: "";
+  }
+
+  .sg .sg__measure-num {
+    inline-size: 1.65rem;
+    block-size: 1.65rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgb(var(--sg-accent) / .25);
+    border-radius: 50%;
+    color: var(--sg-gold);
+    font-size: .72rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .sg .sg__measure-steps p {
+    margin: 0 !important;
+    font-size: .92rem;
+    line-height: 1.55;
+    opacity: .85;
+  }
+
+  .sg .sg__measure-art {
+    justify-self: center;
+    inline-size: 100%;
+  }
+
+  .sg .sg__measure-art :is(svg, img) {
     display: block;
-    width: 100%;
-    max-width: 540px;
-    height: auto;
+    inline-size: 100%;
+    max-inline-size: {{ section.settings.illustration_width }}px;
+    block-size: auto;
     margin-inline: auto;
+    color: rgb(var(--sg-accent) / .8);
   }
 
-  .sg__diagram--wide svg {
-    max-width: 620px;
-  }
-
-  .sg__diagram .sg__diag-arrow {
-    stroke: rgb(var(--sg-accent));
+  .sg .sg__measure-art .sg__diag-arrow {
+    stroke: var(--sg-gold);
     stroke-width: 2.4;
   }
 
-  @media (max-width: 520px) {
-    .sg__diagram--wide {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .sg__diagram--wide svg {
-      min-width: 460px;
-    }
+  /* =========================================================
+     Size charts
+     ========================================================= */
+  .sg .sg__panel table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    margin-block: 1rem 1.4rem;
+    font-size: .92rem;
   }
 
-  .sg__diagram figcaption {
-    margin-top: .75rem;
-    text-align: center;
-    font-size: .8rem;
-    opacity: .7;
-  }
-
-  .sg :is(table) {
-    display: block;
-    overflow-x: auto;
+  .sg .sg__panel :is(th, td) {
+    padding: .8rem 1rem;
+    text-align: start;
+    border-block-end: 1px solid var(--sg-line);
     white-space: nowrap;
   }
 
-  @media (min-width: 700px) {
-    .sg :is(table) {
-      display: table;
-      white-space: normal;
+  .sg .sg__panel :is(thead th, tr:first-child th) {
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    opacity: .5;
+    border-block-end-color: rgb(var(--sg-accent) / .22);
+  }
+
+  .sg .sg__panel tbody tr:hover {
+    background: rgb(var(--sg-accent) / .03);
+  }
+
+  .sg .sg__panel :is(td, tbody th):first-child {
+    font-weight: 600;
+  }
+
+  .sg .sg__panel tbody tr:last-child :is(th, td) {
+    border-block-end: 0;
+  }
+
+  @media (max-width: 700px) {
+    .sg .sg__panel table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
+  }
+
+  /* trailing note / tip line at the end of a panel */
+  .sg .sg__panel > p:last-child {
+    margin-block-start: 1.4rem;
+    padding: .95rem 1.15rem;
+    border-inline-start: 2px solid var(--sg-gold);
+    border-radius: 0 .45rem .45rem 0;
+    background: var(--sg-tint);
+    font-size: .88rem;
+    opacity: .8;
   }
 </style>
 
@@ -215,109 +402,147 @@
   </div>
 </div>
 
-{%- comment -%} Measuring diagrams -- cloned into the matching tab by the script below {%- endcomment -%}
+{%- comment -%}
+  "How to measure" cards -- cloned into the matching tab by the script below.
+  Same shape for every category: three steps on one side, an illustration on the
+  other. A category's image_picker setting, when filled, replaces its SVG.
+{%- endcomment -%}
 <div hidden id="sg-diagrams-{{ section.id }}">
   <template data-key="ring">
-    <figure class="sg__diagram sg__diagram--wide">
-      <svg viewBox="0 0 620 250" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" font-family="Archivo, system-ui, sans-serif">
-        <path d="M310 24 V226" stroke-dasharray="4 7" opacity=".35"/>
-
-        <text x="24" y="30" font-size="13" font-weight="600" stroke="none" fill="currentColor">Method 1 &middot; ring on a ruler</text>
-        <rect x="24" y="150" width="256" height="66" rx="4"/>
-        <path d="M56 150V174 M136 150V174 M216 150V174"/>
-        <path d="M40 150v14 M72 150v14 M88 150v14 M104 150v14 M120 150v14 M152 150v14 M168 150v14 M184 150v14 M200 150v14 M232 150v14 M248 150v14 M264 150v14"/>
-        <text x="56" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">1</text>
-        <text x="136" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">2</text>
-        <text x="216" y="204" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">3</text>
-        <text x="30" y="200" font-size="9" stroke="none" fill="currentColor">cm</text>
-        <path d="M96 150 A56 56 0 0 1 208 150"/>
-        <path d="M108 150 A44 44 0 0 1 200 150"/>
-        <path d="M96 150 H108 M200 150 H208"/>
-        <path d="M124 66 H180 M136 44 H168 M136 44 L124 66 M168 44 L180 66 M136 44 L146 66 M168 44 L158 66 M124 66 L152 90 M180 66 L152 90 M146 66 L152 90 M158 66 L152 90"/>
-        <path d="M144 90 L147 96 M160 90 L157 96"/>
-        <path class="sg__diag-arrow" d="M112 124 H192"/>
-        <path class="sg__diag-arrow" d="M112 124 L123 118 M112 124 L123 130 M192 124 L181 118 M192 124 L181 130"/>
-
-        <text x="336" y="30" font-size="13" font-weight="600" stroke="none" fill="currentColor">Method 2 &middot; wrap a paper strip</text>
-        <path d="M470 40 C462 92 464 128 476 146 C481 153 491 153 496 146 C508 126 510 92 504 44"/>
-        <path d="M476 146 q10 7 20 0"/>
-        <path d="M452 104 H520 M452 122 H520 M452 104 V122 M520 104 V122"/>
-        <path d="M520 104 h12 v18 h-12"/>
-        <path d="M532 122 V172" stroke-dasharray="3 5" opacity=".5"/>
-        <rect x="356" y="172" width="248" height="56" rx="4"/>
-        <path d="M388 172V194 M456 172V194 M524 172V194 M592 172V194"/>
-        <path d="M372 172v13 M404 172v13 M420 172v13 M440 172v13 M472 172v13 M488 172v13 M508 172v13 M540 172v13 M556 172v13 M576 172v13"/>
-        <text x="388" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">1</text>
-        <text x="456" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">2</text>
-        <text x="524" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">3</text>
-        <text x="592" y="216" font-size="12" stroke="none" fill="currentColor" text-anchor="middle">4</text>
-        <text x="362" y="212" font-size="9" stroke="none" fill="currentColor">cm</text>
-        <path class="sg__diag-arrow" d="M372 204 H532"/>
-        <path class="sg__diag-arrow" d="M372 204 L383 198 M372 204 L383 210 M532 204 L521 198 M532 204 L521 210"/>
-      </svg>
-      <figcaption>Two ways to find your size: measure the inside diameter of a ring you already own, or wrap a paper strip around your finger, mark where it overlaps and measure that length.</figcaption>
-    </figure>
+    <div class="sg__measure">
+      <ol class="sg__measure-steps">
+        <li><span class="sg__measure-num" aria-hidden="true">1</span><p>Wrap a thin strip of paper around the base of your finger.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">2</span><p>Mark where it overlaps, then lay it flat against a ruler.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">3</span><p>Match that length in millimetres to the circumference column below.</p></li>
+      </ol>
+      <div class="sg__measure-art" aria-hidden="true">
+        {%- if section.settings.img_ring != blank -%}
+          {{- section.settings.img_ring | image_url: width: 900 | image_tag: widths: '300,450,600,900', loading: 'lazy', sizes: '(max-width: 759px) 80vw, 340px', alt: '' -}}
+        {%- else -%}
+          <svg viewBox="0 0 280 180" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" font-family="Archivo, system-ui, sans-serif">
+            <rect x="20" y="112" width="240" height="46" rx="4"/>
+            <path d="M60 112 V134 M110 112 V134 M160 112 V134 M210 112 V134"/>
+            <path d="M40 112 v12 M80 112 v12 M95 112 v12 M130 112 v12 M145 112 v12 M180 112 v12 M195 112 v12 M230 112 v12 M245 112 v12"/>
+            <g fill="currentColor" stroke="none" font-size="11" text-anchor="middle">
+              <text x="60" y="152">1</text><text x="110" y="152">2</text><text x="160" y="152">3</text><text x="210" y="152">4</text>
+            </g>
+            <path d="M78 112 A56 56 0 0 1 190 112"/>
+            <path d="M92 112 A42 42 0 0 1 176 112"/>
+            <path d="M78 112 H92 M176 112 H190"/>
+            <path class="sg__diag-arrow" d="M94 86 H174"/>
+            <path class="sg__diag-arrow" d="M94 86 l10 -5 M94 86 l10 5 M174 86 l-10 -5 M174 86 l-10 5"/>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
   </template>
 
   <template data-key="wrist">
-    <figure class="sg__diagram">
-      <svg viewBox="0 0 320 150" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
-        <ellipse cx="160" cy="80" rx="66" ry="40"/>
-        <path d="M94 80a66 40 0 0 0 132 0" stroke-dasharray="3 5"/>
-        <text x="160" y="30" text-anchor="middle" font-size="11" fill="currentColor" stroke="none">around the wrist bone</text>
-      </svg>
-      <figcaption>Wrap the tape once around, snug but not tight. That is your wrist measurement.</figcaption>
-    </figure>
+    <div class="sg__measure">
+      <ol class="sg__measure-steps">
+        <li><span class="sg__measure-num" aria-hidden="true">1</span><p>Wrap a tape measure around your wrist, just below the wrist bone.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">2</span><p>Keep it snug &mdash; you should still fit a fingertip underneath.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">3</span><p>Add 1&ndash;2&nbsp;cm for an easy fit, or more if you like it loose.</p></li>
+      </ol>
+      <div class="sg__measure-art" aria-hidden="true">
+        {%- if section.settings.img_wrist != blank -%}
+          {{- section.settings.img_wrist | image_url: width: 900 | image_tag: widths: '300,450,600,900', loading: 'lazy', sizes: '(max-width: 759px) 80vw, 340px', alt: '' -}}
+        {%- else -%}
+          <svg viewBox="0 0 280 160" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="140" cy="92" rx="72" ry="44"/>
+            <path d="M68 92 a72 44 0 0 0 144 0" stroke-dasharray="4 6" opacity=".5"/>
+            <path class="sg__diag-arrow" d="M68 40 H212"/>
+            <path class="sg__diag-arrow" d="M68 40 l10 -5 M68 40 l10 5 M212 40 l-10 -5 M212 40 l-10 5"/>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
   </template>
 
   <template data-key="necklace">
-    <figure class="sg__diagram">
-      <svg viewBox="0 0 320 210" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
-        <circle cx="160" cy="40" r="20"/>
-        <path d="M120 58q40 26 80 0"/>
-        <path d="M108 70q52 40 104 0" stroke-dasharray="2 4"/>
-        <path d="M96 84q64 58 128 0" stroke-dasharray="2 4"/>
-        <path d="M84 98q76 78 152 0" stroke-dasharray="2 4"/>
-        <text x="238" y="62" font-size="10" fill="currentColor" stroke="none">40 cm</text>
-        <text x="252" y="82" font-size="10" fill="currentColor" stroke="none">45 cm</text>
-        <text x="266" y="104" font-size="10" fill="currentColor" stroke="none">50 cm</text>
-        <text x="278" y="128" font-size="10" fill="currentColor" stroke="none">55 cm</text>
-      </svg>
-      <figcaption>Each line shows roughly where that chain length sits on the body.</figcaption>
-    </figure>
+    <div class="sg__measure">
+      <ol class="sg__measure-steps">
+        <li><span class="sg__measure-num" aria-hidden="true">1</span><p>Wrap a tape measure around your neck where you want the chain to sit.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">2</span><p>Check that length against the guide below to pick your size.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">3</span><p>Layering? Step each chain up by about 5&nbsp;cm so they sit clear of one another.</p></li>
+      </ol>
+      <div class="sg__measure-art" aria-hidden="true">
+        {%- if section.settings.img_necklace != blank -%}
+          {{- section.settings.img_necklace | image_url: width: 900 | image_tag: widths: '300,450,600,900', loading: 'lazy', sizes: '(max-width: 759px) 80vw, 340px', alt: '' -}}
+        {%- else -%}
+          <svg viewBox="0 0 320 210" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+            <circle cx="160" cy="40" r="20"/>
+            <path d="M120 58q40 26 80 0"/>
+            <path d="M108 70q52 40 104 0" stroke-dasharray="2 4"/>
+            <path d="M96 84q64 58 128 0" stroke-dasharray="2 4"/>
+            <path d="M84 98q76 78 152 0" stroke-dasharray="2 4"/>
+            <g fill="currentColor" stroke="none" font-size="10">
+              <text x="238" y="62">40 cm</text>
+              <text x="252" y="82">45 cm</text>
+              <text x="266" y="104">50 cm</text>
+              <text x="278" y="128">55 cm</text>
+            </g>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
   </template>
 
   <template data-key="pendant">
-    <figure class="sg__diagram">
-      <svg viewBox="0 0 320 200" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
-        <path d="M110 30q50 24 100 0"/>
-        <path d="M160 30v70"/>
-        <path d="M160 150c14 0 24-11 24-25s-24-32-24-32-24 18-24 32 10 25 24 25z"/>
-        <path d="M210 30v70" stroke-dasharray="3 4"/>
-        <path d="M210 100v50" stroke-dasharray="3 4"/>
-        <text x="220" y="70" font-size="10" fill="currentColor" stroke="none">chain length</text>
-        <text x="220" y="128" font-size="10" fill="currentColor" stroke="none">pendant drop</text>
-      </svg>
-      <figcaption>The chain sets the height; the pendant then hangs its own length below that.</figcaption>
-    </figure>
+    <div class="sg__measure">
+      <ol class="sg__measure-steps">
+        <li><span class="sg__measure-num" aria-hidden="true">1</span><p>The chain length decides where the bail rests on your chest.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">2</span><p>The pendant then hangs its own drop below that point.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">3</span><p>Add the two together to find where the piece finishes.</p></li>
+      </ol>
+      <div class="sg__measure-art" aria-hidden="true">
+        {%- if section.settings.img_pendant != blank -%}
+          {{- section.settings.img_pendant | image_url: width: 900 | image_tag: widths: '300,450,600,900', loading: 'lazy', sizes: '(max-width: 759px) 80vw, 340px', alt: '' -}}
+        {%- else -%}
+          <svg viewBox="0 0 320 200" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+            <path d="M110 30q50 24 100 0"/>
+            <path d="M160 30v70"/>
+            <path d="M160 150c14 0 24-11 24-25s-24-32-24-32-24 18-24 32 10 25 24 25z"/>
+            <path d="M210 30v70" stroke-dasharray="3 4"/>
+            <path d="M210 100v50" stroke-dasharray="3 4"/>
+            <g fill="currentColor" stroke="none" font-size="10">
+              <text x="220" y="70">chain length</text>
+              <text x="220" y="128">pendant drop</text>
+            </g>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
   </template>
 
   <template data-key="earring">
-    <figure class="sg__diagram">
-      <svg viewBox="0 0 320 190" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
-        <path d="M150 30c-26 0-42 20-42 44 0 20 12 30 12 46 0 12 10 20 22 20"/>
-        <circle cx="150" cy="46" r="4" fill="currentColor" stroke="none"/>
-        <path d="M150 46 H250"/>
-        <path d="M150 86 H250" stroke-dasharray="2 4"/>
-        <path d="M150 126 H250" stroke-dasharray="2 4"/>
-        <path d="M150 160 H250" stroke-dasharray="2 4"/>
-        <text x="256" y="50" font-size="10" fill="currentColor" stroke="none">0 &middot; stud</text>
-        <text x="256" y="90" font-size="10" fill="currentColor" stroke="none">2&ndash;3 cm</text>
-        <text x="256" y="130" font-size="10" fill="currentColor" stroke="none">4&ndash;5 cm</text>
-        <text x="256" y="164" font-size="10" fill="currentColor" stroke="none">6 cm +</text>
-      </svg>
-      <figcaption>Drop is measured from where the earring meets the ear to its lowest point.</figcaption>
-    </figure>
+    <div class="sg__measure">
+      <ol class="sg__measure-steps">
+        <li><span class="sg__measure-num" aria-hidden="true">1</span><p>Drop is measured from where the earring meets your ear to its lowest point.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">2</span><p>Studs sit flush; 2&ndash;3&nbsp;cm grazes the jawline.</p></li>
+        <li><span class="sg__measure-num" aria-hidden="true">3</span><p>4&nbsp;cm and over reads as a statement drop.</p></li>
+      </ol>
+      <div class="sg__measure-art" aria-hidden="true">
+        {%- if section.settings.img_earring != blank -%}
+          {{- section.settings.img_earring | image_url: width: 900 | image_tag: widths: '300,450,600,900', loading: 'lazy', sizes: '(max-width: 759px) 80vw, 340px', alt: '' -}}
+        {%- else -%}
+          <svg viewBox="0 0 320 190" fill="none" stroke="currentColor" stroke-width="2" font-family="Archivo, system-ui, sans-serif">
+            <path d="M150 30c-26 0-42 20-42 44 0 20 12 30 12 46 0 12 10 20 22 20"/>
+            <circle cx="150" cy="46" r="4" fill="currentColor" stroke="none"/>
+            <path d="M150 46 H250"/>
+            <path d="M150 86 H250" stroke-dasharray="2 4"/>
+            <path d="M150 126 H250" stroke-dasharray="2 4"/>
+            <path d="M150 160 H250" stroke-dasharray="2 4"/>
+            <g fill="currentColor" stroke="none" font-size="10">
+              <text x="256" y="50">0 &middot; stud</text>
+              <text x="256" y="90">2&ndash;3 cm</text>
+              <text x="256" y="130">4&ndash;5 cm</text>
+              <text x="256" y="164">6 cm +</text>
+            </g>
+          </svg>
+        {%- endif -%}
+      </div>
+    </div>
   </template>
 </div>
 
@@ -445,7 +670,6 @@
     });
   })();
 </script>
-
 {% schema %}
 {
   "name": "Size guide tabs",
@@ -474,6 +698,53 @@
         { "value": "lg", "label": "Large" }
       ],
       "default": "md"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "info": "Active tab underline, step numbers and measurement arrows.",
+      "default": "#b08d57"
+    },
+    {
+      "type": "header",
+      "content": "Illustrations",
+      "info": "Each category ships with a line drawing. Upload an image to replace it."
+    },
+    {
+      "type": "range",
+      "id": "illustration_width",
+      "min": 180,
+      "max": 480,
+      "step": 10,
+      "unit": "px",
+      "label": "Illustration width",
+      "default": 320
+    },
+    {
+      "type": "image_picker",
+      "id": "img_ring",
+      "label": "Rings"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_wrist",
+      "label": "Bracelets"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_necklace",
+      "label": "Necklaces & chains"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_pendant",
+      "label": "Pendants"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_earring",
+      "label": "Earrings"
     }
   ],
   "presets": [
