@@ -13,7 +13,7 @@
       "type": "collection-banner",
       "settings": {
         "color_scheme": "",
-        "image_size": "sm",
+        "image_size": "auto",
         "allow_transparent_header": true,
         "show_image": true,
         "reveal": true,
@@ -29,6 +29,31 @@
     },
     "main": {
       "type": "main-collection",
+      "blocks": {
+        "push_promo_offer": {
+          "type": "push_promo",
+          "settings": {
+            "color_scheme": "scheme-3",
+            "bordered": false,
+            "position": 5,
+            "size": "2",
+            "media_type": "image",
+            "image": "shopify://shop_images/d5c0c56c-1414-4f46-8179-b8a682865e73.png",
+            "overlay_color": "#0000004d",
+            "content_position": "align-self-center",
+            "alignment": "center",
+            "subheading": "We're now live",
+            "heading": "10% off your first order",
+            "heading_tag": "h4",
+            "style": "solid",
+            "link_text": "Shop now",
+            "url": "shopify://collections/necklaces"
+          }
+        }
+      },
+      "block_order": [
+        "push_promo_offer"
+      ],
       "settings": {
         "color_scheme": "",
         "hide_product_information": false,
@@ -46,31 +71,7 @@
         "show_filter_group_name": false,
         "show_filter_values_count": true,
         "open_filters_by_default": false
-      },
-      "blocks": {
-        "push_promo_offer": {
-          "type": "push_promo",
-          "settings": {
-            "color_scheme": "scheme-3",
-            "bordered": false,
-            "position": 5,
-            "size": "2",
-            "media_type": "image",
-            "overlay_color": "rgb(0 0 0 / 0.3)",
-            "content_position": "align-self-center",
-            "alignment": "center",
-            "subheading": "We're now live",
-            "heading": "10% off your first order",
-            "heading_tag": "h4",
-            "style": "solid",
-            "link_text": "Shop now",
-            "url": "shopify://collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "push_promo_offer"
-      ]
+      }
     }
   },
   "order": [
