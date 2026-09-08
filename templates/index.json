@@ -97,7 +97,7 @@
         "image_2": {
           "type": "image",
           "settings": {
-            "color_scheme": "scheme-4",
+            "color_scheme": "scheme-2",
             "image": "shopify://shop_images/1683baf2-9f89-47cf-9d71-35ec8238b993.png",
             "column_count": "3",
             "row_count": 1,
@@ -110,13 +110,13 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 2
+            "overlay_opacity": 0
           }
         },
         "image_3": {
           "type": "image",
           "settings": {
-            "color_scheme": "scheme-4",
+            "color_scheme": "scheme-2",
             "image": "shopify://shop_images/74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png",
             "column_count": "3",
             "row_count": 1,
@@ -129,13 +129,13 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 2
+            "overlay_opacity": 0
           }
         },
         "image_4": {
           "type": "image",
           "settings": {
-            "color_scheme": "scheme-4",
+            "color_scheme": "scheme-2",
             "image": "shopify://shop_images/841d5f8b-ee25-419c-8033-c968d70a9c3a.png",
             "column_count": "3",
             "row_count": 1,
@@ -148,13 +148,13 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 2
+            "overlay_opacity": 0
           }
         },
         "image_5": {
           "type": "image",
           "settings": {
-            "color_scheme": "scheme-4",
+            "color_scheme": "scheme-2",
             "image": "shopify://shop_images/3112205e-855b-473e-a451-2929ed5f104f.png",
             "column_count": "3",
             "row_count": 1,
@@ -167,7 +167,7 @@
             "link_style": "link",
             "text_position": "place-self-end-start text-start",
             "overlay_color": "#000000",
-            "overlay_opacity": 2
+            "overlay_opacity": 0
           }
         }
       },
@@ -196,6 +196,7 @@
       "settings": {
         "color_scheme": "scheme-1",
         "separate_section_with_border": false,
+        "section_width": "contained",
         "desktop_height": 50,
         "mobile_media_height": 45,
         "accent_color": "#b08d57",

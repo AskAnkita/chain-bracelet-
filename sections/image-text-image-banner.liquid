@@ -222,7 +222,8 @@
     }
   </style>
 
-  <div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+  <div class="{% if section.settings.section_width == 'contained' %}section-spacing {% endif %}color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    {%- if section.settings.section_width == 'contained' -%}<div class="container">{%- endif -%}
     <div class="triptych-banner">
       {%- comment -%}Left image{%- endcomment -%}
       {%- capture left_media -%}
@@ -311,6 +312,7 @@
         <div class="triptych-banner__media triptych-banner__media--right">{{- right_media -}}</div>
       {%- endif -%}
     </div>
+    {%- if section.settings.section_width == 'contained' -%}</div>{%- endif -%}
   </div>
 {%- endif -%}
 
@@ -334,6 +336,17 @@
       "id": "separate_section_with_border",
       "label": "t:global.section.separate_section_with_border",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "full", "label": "Full width" },
+        { "value": "contained", "label": "Page width" }
+      ],
+      "info": "Page width adds side margins and vertical spacing so the banner matches the other sections instead of running edge to edge.",
+      "default": "contained"
     },
     {
       "type": "range",
