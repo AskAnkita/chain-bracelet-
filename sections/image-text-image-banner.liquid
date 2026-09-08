@@ -11,6 +11,14 @@
       --triptych-banner-center-background: {{ section.settings.center_background_color.rgb }};
       --triptych-banner-center-text-color: {{ section.settings.color_scheme.settings.text_color.rgb }};
       --triptych-banner-accent-color: {{ section.settings.accent_color.rgb }};
+      {%- comment -%}
+        Match the side inset of a full-width media-grid above (its container gutter is
+        pinned to the grid gap), so this banner's edges line up with the category cards
+        rather than sitting at the theme's much wider default gutter.
+      {%- endcomment -%}
+      {%- if section.settings.section_width == 'contained' -%}
+        --container-gutter: {{ section.settings.side_margin }}px;
+      {%- endif -%}
     }
 
     #shopify-section-{{ section.id }} .triptych-banner {
@@ -50,18 +58,21 @@
     }
 
     {%- comment -%}
-      These photos are isolated cutouts (transparent background around the subject),
-      not full-bleed rectangular shots -- object-fit: cover alone can't crop that empty
-      margin away since the subject doesn't fill the source image's own frame. Scaling
-      the image up within its (overflow: hidden) box crops the transparent edges out of
-      view instead, so only the product/model shows.
+      Zoom crops the side photos in via transform: scale() inside the (overflow: hidden)
+      media box -- object-fit: cover already fills the frame, this pushes past it so the
+      merchant can tighten in on the jewellery instead of showing the full model/scene.
+      transform-origin (the "focus point") decides which part stays in frame as it zooms:
+      50% is the middle, higher values pull the crop down toward a necklace/wrist so the
+      model's face isn't what the zoom centres on.
     {%- endcomment -%}
     #shopify-section-{{ section.id }} .triptych-banner__media--left img {
       transform: scale({{ section.settings.left_image_zoom | divided_by: 100.0 }});
+      transform-origin: 50% {{ section.settings.left_image_focus }}%;
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__media--right img {
       transform: scale({{ section.settings.right_image_zoom | divided_by: 100.0 }});
+      transform-origin: 50% {{ section.settings.right_image_focus }}%;
     }
 
     #shopify-section-{{ section.id }} .triptych-banner__content {
@@ -148,8 +159,9 @@
       max-height: 230px;
       height: auto;
       object-fit: contain;
-      margin-block-start: .5rem;
+      margin-block-start: {{ section.settings.product_image_gap }}px;
       transform: scale(1.4);
+      transform-origin: top center;
     }
 
     @media screen and (min-width: 1000px) {
@@ -216,13 +228,14 @@
         height: auto;
         max-width: min(100%, {{ section.settings.product_image_width }}px);
         object-fit: contain;
-        margin-block-start: 0;
+        margin-block-start: {{ section.settings.product_image_gap }}px;
         transform: scale(1.4);
+        transform-origin: top center;
       }
     }
   </style>
 
-  <div class="{% if section.settings.section_width == 'contained' %}section-spacing {% endif %}color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+  <div class="{% if section.settings.vertical_spacing != 'none' %}section-spacing {% if section.settings.vertical_spacing == 'tight' %}section-spacing--tight {% endif %}{% endif %}color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
     {%- if section.settings.section_width == 'contained' -%}<div class="container">{%- endif -%}
     <div class="triptych-banner">
       {%- comment -%}Left image{%- endcomment -%}
@@ -345,8 +358,31 @@
         { "value": "full", "label": "Full width" },
         { "value": "contained", "label": "Page width" }
       ],
-      "info": "Page width adds side margins and vertical spacing so the banner matches the other sections instead of running edge to edge.",
+      "info": "Page width pulls the banner in from the viewport edges by the side margin below.",
       "default": "contained"
+    },
+    {
+      "type": "range",
+      "id": "side_margin",
+      "min": 0,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "label": "Side margin",
+      "info": "Only applies at Page width. Set this to match the section above (a full-width category grid sits about 12px from the edge).",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "vertical_spacing",
+      "label": "Vertical spacing",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "tight", "label": "Tight" },
+        { "value": "default", "label": "Default" }
+      ],
+      "info": "Space above and below the banner.",
+      "default": "tight"
     },
     {
       "type": "range",
@@ -408,8 +444,19 @@
       "step": 5,
       "unit": "%",
       "label": "Zoom",
-      "info": "Crops in on the photo. Useful for cutout/isolated images with empty space around the subject.",
+      "info": "Crops in on the photo so it reads as a jewellery shot, not a full model shot.",
       "default": 100
+    },
+    {
+      "type": "range",
+      "id": "left_image_focus",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Focus point (vertical)",
+      "info": "Which part of the photo the zoom centres on. 50% = middle, higher = lower down (toward a necklace or wrist instead of the face).",
+      "default": 60
     },
     {
       "type": "header",
@@ -444,8 +491,19 @@
       "step": 5,
       "unit": "%",
       "label": "Zoom",
-      "info": "Crops in on the photo. Useful for cutout/isolated images with empty space around the subject.",
+      "info": "Crops in on the photo so it reads as a jewellery shot, not a full model shot.",
       "default": 100
+    },
+    {
+      "type": "range",
+      "id": "right_image_focus",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Focus point (vertical)",
+      "info": "Which part of the photo the zoom centres on. 50% = middle, higher = lower down (toward a necklace or wrist instead of the face).",
+      "default": 60
     },
     {
       "type": "header",
@@ -528,6 +586,17 @@
       "unit": "px",
       "label": "Product shot width",
       "default": 260
+    },
+    {
+      "type": "range",
+      "id": "product_image_gap",
+      "min": -200,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Space above product shot",
+      "info": "Gap between the button and the product shot. Go negative to pull the shot up over any empty (transparent) space baked into the top of the image file.",
+      "default": 0
     }
   ],
   "presets": [
