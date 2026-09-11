@@ -9,6 +9,100 @@
 {%- if section.blocks.size > 0 -%}
   {%- assign carousel_id = 'carousel-' | append: section.id -%}
 
+  {%- liquid
+    assign uses_elegant_heading = false
+    for block in section.blocks
+      if block.settings.elegant_heading
+        assign uses_elegant_heading = true
+      endif
+    endfor
+  -%}
+
+  {%- if uses_elegant_heading -%}
+    <style>
+      #shopify-section-{{ section.id }} .content-over-media > .slideshow__slide-content--elegant {
+        text-shadow: none;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant {
+        --elegant-justify: var(--elegant-justify-mobile);
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__accent {
+        color: var(--elegant-accent);
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__divider,
+      #shopify-section-{{ section.id }} .slideshow-elegant__ornament {
+        display: flex;
+        align-items: center;
+        justify-content: var(--elegant-justify);
+        gap: .9rem;
+        color: var(--elegant-accent);
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__divider {
+        margin-block: .3em;
+        font-family: var(--heading-font-family);
+        font-weight: var(--heading-font-weight);
+        font-style: var(--heading-font-style);
+        font-size: calc(var(--text-h1) * .7);
+        line-height: 1;
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__ornament {
+        margin-block-start: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      #shopify-section-{{ section.id }} .prose :is(.slideshow-elegant__divider, .slideshow-elegant__ornament) > * {
+        margin-block: 0;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__ornament svg {
+        width: 3.25rem;
+        flex-shrink: 0;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__rule {
+        position: relative;
+        width: clamp(2.5rem, 7vw, 6rem);
+        height: 1px;
+        background: currentColor;
+        opacity: .7;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__rule::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: -2px;
+        width: 5px;
+        height: 5px;
+        background: currentColor;
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__rule--end::before {
+        inset-inline-start: auto;
+        inset-inline-end: -2px;
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__tagline {
+        margin-block-start: clamp(1rem, 2vw, 1.5rem);
+        font-size: clamp(.75rem, .65rem + .35vw, .95rem);
+        font-weight: 500;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+      }
+
+      @media screen and (min-width: 700px) {
+        #shopify-section-{{ section.id }} .slideshow-elegant {
+          --elegant-justify: var(--elegant-justify-desktop);
+        }
+      }
+    </style>
+  {%- endif -%}
+
   <slideshow-carousel
     id="{{ carousel_id }}"
     class="slideshow"
@@ -132,13 +226,15 @@
             endif
           %}
 
-          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %}">
+          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {% if block.settings.elegant_heading %}slideshow__slide-content--elegant{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %}">
             <div class="prose" {% if block.settings.enable_text_shadow %}style="text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});"{% endif %}>
               {%- if block.settings.subheading != blank -%}
                 <p class="h6">{{ block.settings.subheading }}</p>
               {%- endif -%}
 
-              {%- if block.settings.title != blank -%}
+              {%- if block.settings.elegant_heading -%}
+                {%- render 'slideshow-elegant-heading', block: block -%}
+              {%- elsif block.settings.title != blank -%}
                 <p class="{{ block.settings.heading_style }}">{{ block.settings.title }}</p>
               {%- endif -%}
 
@@ -415,6 +511,45 @@
             }
           ],
           "default": "h1"
+        },
+        {
+          "type": "header",
+          "content": "Elegant heading"
+        },
+        {
+          "type": "checkbox",
+          "id": "elegant_heading",
+          "label": "Add ornamental divider and second line",
+          "info": "Uses the heading font and heading style above.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "divider_text",
+          "label": "Divider text",
+          "info": "Shown between the heading and the second line with a thin ornamental line on each side, e.g. &. Leave empty to hide."
+        },
+        {
+          "type": "text",
+          "id": "accent_text",
+          "label": "Second line"
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Divider and second line color",
+          "default": "#9a763c"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_ornament",
+          "label": "Show ornament under heading",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "tagline",
+          "label": "Tagline"
         },
         {
           "type": "select",

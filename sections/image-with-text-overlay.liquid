@@ -12,16 +12,22 @@
       {%- endif -%}
 
       --content-over-media-content-max-width: var(--container-{{ section.settings.content_width }}-max-width);
-
-      {%- if section.id contains 'image_with_text_offer' -%}
-        --content-over-media-content-max-width: min(var(--container-xl-max-width), calc(100vw - var(--container-gutter) * 2));
-        --content-over-media-height: clamp(6.5rem, 11vw, 8.25rem);
-        --content-over-media-gap: 1rem;
-      {%- endif -%}
     }
 
     {%- if section.id contains 'image_with_text_offer' -%}
+      {%- comment -%}
+        Set on the element itself: .content-over-media and its --xs/--sm size classes declare
+        these variables directly, so values set on the section wrapper never reached it.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .content-over-media {
+        --content-over-media-height: clamp(6.5rem, 11vw, 8.25rem);
+        --content-over-media-gap: 1rem;
+        --content-over-media-column-gap: var(--container-gutter);
+        --content-over-media-content-max-width: 100%;
+      }
+
       #shopify-section-{{ section.id }} .content {
+        width: 100%;
         padding-block: 0;
       }
 
@@ -57,7 +63,7 @@
       }
 
       @media screen and (max-width: 699px) {
-        #shopify-section-{{ section.id }} {
+        #shopify-section-{{ section.id }} .content-over-media {
           --content-over-media-height: clamp(8rem, 34vw, 10rem);
         }
 

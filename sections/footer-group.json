@@ -84,6 +84,7 @@
         },
         "links": {
           "type": "links",
+          "disabled": true,
           "settings": {
             "menu": "customer-account-main-menu",
             "collapse_on_mobile": false,

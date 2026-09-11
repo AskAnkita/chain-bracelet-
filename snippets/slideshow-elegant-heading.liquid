@@ -1,0 +1,46 @@
+{%- comment -%}
+  Editorial hero heading for slideshow image slides: the heading, an optional ornamental
+  divider, a second line in the accent color, an optional ornament and a letter-spaced
+  tagline. Everything uses the theme's heading font; styles live in sections/slideshow.liquid
+  so they print once per section.
+
+  @param {object} block - the slideshow image block
+{%- endcomment -%}
+
+{%- liquid
+  assign mobile_align = block.settings.mobile_text_position | split: 'text-' | last
+  assign desktop_align = block.settings.desktop_text_position | split: 'text-' | last
+-%}
+
+<div class="slideshow-elegant" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }};">
+  {%- if block.settings.title != blank -%}
+    <p class="{{ block.settings.heading_style }}">{{ block.settings.title }}</p>
+  {%- endif -%}
+
+  {%- if block.settings.divider_text != blank -%}
+    <p class="slideshow-elegant__divider">
+      <span class="slideshow-elegant__rule" aria-hidden="true"></span>
+      <span>{{ block.settings.divider_text }}</span>
+      <span class="slideshow-elegant__rule slideshow-elegant__rule--end" aria-hidden="true"></span>
+    </p>
+  {%- endif -%}
+
+  {%- if block.settings.accent_text != blank -%}
+    <p class="{{ block.settings.heading_style }} slideshow-elegant__accent">{{ block.settings.accent_text }}</p>
+  {%- endif -%}
+
+  {%- if block.settings.show_ornament -%}
+    <div class="slideshow-elegant__ornament" aria-hidden="true">
+      <span class="slideshow-elegant__rule"></span>
+      <svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+        <path d="M20 2.5c-2.2 3.4-2.2 7.6 0 11 2.2-3.4 2.2-7.6 0-11Z"/>
+        <path d="M17 8c-2.6-3.6-8-3.8-9.5-.4 1 2.8 4.6 2.9 5.8.9M23 8c2.6-3.6 8-3.8 9.5-.4-1 2.8-4.6 2.9-5.8.9"/>
+      </svg>
+      <span class="slideshow-elegant__rule slideshow-elegant__rule--end"></span>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.tagline != blank -%}
+    <p class="slideshow-elegant__tagline">{{ block.settings.tagline }}</p>
+  {%- endif -%}
+</div>
