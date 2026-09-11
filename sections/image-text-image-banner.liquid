@@ -6,6 +6,17 @@
 {%- endcomment -%}
 
 {%- if section.settings.left_image != blank or section.settings.right_image != blank or section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank -%}
+  {%- liquid
+    assign editorial = false
+    if section.settings.content_style == 'editorial'
+      assign editorial = true
+    endif
+
+    # Half the "space above product shot" value trims each side of the shot's box in the
+    # editorial row, so a negative value eats into transparent padding baked into the file.
+    assign product_trim = section.settings.product_image_gap | divided_by: 2
+  -%}
+
   <style>
     #shopify-section-{{ section.id }} {
       --triptych-banner-center-background: {{ section.settings.center_background_color.rgb }};
@@ -233,6 +244,92 @@
         transform-origin: top center;
       }
     }
+
+    {%- if editorial -%}
+      {%- comment -%}
+        Editorial style. Every rule is scoped under --editorial so it outranks the classic
+        sizes above (which the shared kicker/heading/body/product-image classes still match).
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial {
+        padding: 3rem 1.5rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .prose {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__eyebrow {
+        font-size: .75rem;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__title {
+        font-size: clamp(1.625rem, 7vw, 2.25rem);
+        line-height: 1.1;
+        text-wrap: balance;
+        margin-block-start: .875rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__title > span {
+        font-size: inherit;
+        line-height: inherit;
+        margin: 0;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__body {
+        font-size: .9375rem;
+        line-height: 1.6;
+        max-width: 34ch;
+        margin-block-start: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__quote {
+        font-size: 1.25rem;
+        line-height: 1.4;
+        max-width: 26ch;
+        margin-block-start: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-block-start: 1.5rem;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta > p {
+        flex: none;
+        margin: 0;
+        font-size: .75rem;
+        white-space: nowrap;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__product-image {
+        width: {{ section.settings.product_image_width }}px;
+        max-width: 45vw;
+        min-width: 0;
+        max-height: none;
+        height: auto;
+        object-fit: contain;
+        transform: none;
+        margin: {{ product_trim }}px 0 {{ product_trim }}px {{ product_trim }}px;
+      }
+
+      @media screen and (min-width: 1000px) {
+        #shopify-section-{{ section.id }} .triptych-banner__content--editorial {
+          gap: 0;
+          padding: 3rem clamp(1.5rem, 3vw, 3rem);
+        }
+
+        #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__title {
+          font-size: clamp(1.75rem, 2.3vw, 2.75rem);
+        }
+      }
+    {%- endif -%}
   </style>
 
   <div class="{% if section.settings.vertical_spacing != 'none' %}section-spacing {% if section.settings.vertical_spacing == 'tight' %}section-spacing--tight {% endif %}{% endif %}color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
@@ -264,41 +361,88 @@
       {%- endif -%}
 
       {%- comment -%}Center content{%- endcomment -%}
-      <div class="triptych-banner__content">
-        {%- if section.settings.logo_image != blank -%}
-          {{- section.settings.logo_image | image_url: width: 160 | image_tag: widths: '80,160', alt: '', loading: 'lazy', class: 'triptych-banner__logo' -}}
-        {%- endif -%}
-
-        <span class="triptych-banner__rule" aria-hidden="true"></span>
-
-        <div class="prose">
-          {%- if section.settings.kicker_text != blank -%}
-            <p class="triptych-banner__kicker h1">{{- section.settings.kicker_text -}}</p>
-          {%- endif -%}
-
-          {%- if section.settings.heading_line_1 != blank -%}
-            <p class="triptych-banner__heading h1">{{- section.settings.heading_line_1 -}}</p>
-          {%- endif -%}
-
-          {%- if section.settings.heading_line_2 != blank -%}
-            <p class="triptych-banner__heading h1">{{- section.settings.heading_line_2 -}}</p>
-          {%- endif -%}
-
-          {%- if section.settings.body_text != blank -%}
-            <div class="triptych-banner__body">{{- section.settings.body_text -}}</div>
-          {%- endif -%}
-
-          {%- if section.settings.button_text != blank -%}
-            <p class="h6">
-              {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
-            </p>
-          {%- endif -%}
-        </div>
-
+      {%- capture product_image -%}
         {%- if section.settings.product_image != blank -%}
           {{- section.settings.product_image | image_url: width: section.settings.product_image.width | image_tag: widths: '300,400,600,800', loading: 'lazy', class: 'triptych-banner__product-image', alt: section.settings.product_image_alt | default: '' -}}
         {%- endif -%}
-      </div>
+      {%- endcapture -%}
+
+      {%- if editorial -%}
+        {%- comment -%}
+          Editorial layout: small eyebrow, one flowing heading with the middle line picked
+          out in the accent color, body copy, an optional pull quote, and the link sitting
+          beside the product shot instead of stacked above it.
+        {%- endcomment -%}
+        <div class="triptych-banner__content triptych-banner__content--editorial">
+          <div class="prose">
+            {%- if section.settings.eyebrow_text != blank -%}
+              <p class="triptych-banner__eyebrow">{{- section.settings.eyebrow_text -}}</p>
+            {%- endif -%}
+
+            {%- if section.settings.kicker_text != blank or section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank -%}
+              <h2 class="triptych-banner__title h1">
+                {%- if section.settings.kicker_text != blank -%}<span class="triptych-banner__kicker">{{ section.settings.kicker_text }}</span>{% endif %}
+                {% if section.settings.heading_line_1 != blank -%}<span class="triptych-banner__heading">{{ section.settings.heading_line_1 }}</span>{% endif %}
+                {% if section.settings.heading_line_2 != blank -%}<span class="triptych-banner__kicker">{{ section.settings.heading_line_2 }}</span>{%- endif -%}
+              </h2>
+            {%- endif -%}
+
+            {%- if section.settings.body_text != blank -%}
+              <div class="triptych-banner__body">{{- section.settings.body_text -}}</div>
+            {%- endif -%}
+
+            {%- if section.settings.quote_text != blank -%}
+              <div class="triptych-banner__quote">{{- section.settings.quote_text -}}</div>
+            {%- endif -%}
+
+            {%- if section.settings.button_text != blank or product_image != blank -%}
+              <div class="triptych-banner__cta">
+                {%- if section.settings.button_text != blank -%}
+                  <p class="h6">
+                    {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
+                  </p>
+                {%- endif -%}
+
+                {{- product_image -}}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <div class="triptych-banner__content">
+          {%- if section.settings.logo_image != blank -%}
+            {{- section.settings.logo_image | image_url: width: 160 | image_tag: widths: '80,160', alt: '', loading: 'lazy', class: 'triptych-banner__logo' -}}
+          {%- endif -%}
+
+          <span class="triptych-banner__rule" aria-hidden="true"></span>
+
+          <div class="prose">
+            {%- if section.settings.kicker_text != blank -%}
+              <p class="triptych-banner__kicker h1">{{- section.settings.kicker_text -}}</p>
+            {%- endif -%}
+
+            {%- if section.settings.heading_line_1 != blank -%}
+              <p class="triptych-banner__heading h1">{{- section.settings.heading_line_1 -}}</p>
+            {%- endif -%}
+
+            {%- if section.settings.heading_line_2 != blank -%}
+              <p class="triptych-banner__heading h1">{{- section.settings.heading_line_2 -}}</p>
+            {%- endif -%}
+
+            {%- if section.settings.body_text != blank -%}
+              <div class="triptych-banner__body">{{- section.settings.body_text -}}</div>
+            {%- endif -%}
+
+            {%- if section.settings.button_text != blank -%}
+              <p class="h6">
+                {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
+              </p>
+            {%- endif -%}
+          </div>
+
+          {{- product_image -}}
+        </div>
+      {%- endif -%}
 
       {%- comment -%}Right image{%- endcomment -%}
       {%- capture right_media -%}
@@ -510,16 +654,35 @@
       "content": "Center content"
     },
     {
+      "type": "select",
+      "id": "content_style",
+      "label": "Style",
+      "options": [
+        { "value": "classic", "label": "Classic (logo mark, stacked heading)" },
+        { "value": "editorial", "label": "Editorial (eyebrow, one-line heading)" }
+      ],
+      "info": "Editorial puts the link beside the product shot and hides the logo mark.",
+      "default": "classic"
+    },
+    {
       "type": "color",
       "id": "center_background_color",
       "label": "Background color",
       "default": "#f5f0e6"
     },
     {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow",
+      "info": "Small uppercase line above the heading. Editorial style only.",
+      "visible_if": "{{ section.settings.content_style == 'editorial' }}"
+    },
+    {
       "type": "image_picker",
       "id": "logo_image",
       "label": "Logo mark",
-      "info": "Small mark shown above the heading. Falls back to nothing when empty."
+      "info": "Small mark shown above the heading. Falls back to nothing when empty.",
+      "visible_if": "{{ section.settings.content_style == 'classic' }}"
     },
     {
       "type": "range",
@@ -554,6 +717,13 @@
       "id": "body_text",
       "label": "t:global.text.content",
       "default": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "quote_text",
+      "label": "Pull quote",
+      "info": "Optional larger line under the text, e.g. a customer quote. Editorial style only.",
+      "visible_if": "{{ section.settings.content_style == 'editorial' }}"
     },
     {
       "type": "text",
