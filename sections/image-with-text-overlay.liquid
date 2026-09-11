@@ -12,7 +12,70 @@
       {%- endif -%}
 
       --content-over-media-content-max-width: var(--container-{{ section.settings.content_width }}-max-width);
+
+      {%- if section.id contains 'image_with_text_offer' -%}
+        --content-over-media-content-max-width: min(var(--container-xl-max-width), calc(100vw - var(--container-gutter) * 2));
+        --content-over-media-height: clamp(6.5rem, 11vw, 8.25rem);
+        --content-over-media-gap: 1rem;
+      {%- endif -%}
     }
+
+    {%- if section.id contains 'image_with_text_offer' -%}
+      #shopify-section-{{ section.id }} .content {
+        padding-block: 0;
+      }
+
+      #shopify-section-{{ section.id }} .prose {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 2rem;
+        row-gap: .25rem;
+        width: 100%;
+        text-align: start;
+      }
+
+      #shopify-section-{{ section.id }} .prose :where(:not(meta, span) + *) {
+        margin-block-start: 0;
+      }
+
+      #shopify-section-{{ section.id }} .h1 {
+        grid-column: 1;
+        font-size: clamp(1.2rem, .95rem + .7vw, 1.55rem);
+      }
+
+      #shopify-section-{{ section.id }} .h1 + div {
+        grid-column: 1;
+      }
+
+      #shopify-section-{{ section.id }} .button {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        justify-self: end;
+        margin-block-start: 0;
+        white-space: nowrap;
+      }
+
+      @media screen and (max-width: 699px) {
+        #shopify-section-{{ section.id }} {
+          --content-over-media-height: clamp(8rem, 34vw, 10rem);
+        }
+
+        #shopify-section-{{ section.id }} .prose {
+          grid-template-columns: 1fr;
+          justify-items: center;
+          text-align: center;
+          row-gap: .45rem;
+        }
+
+        #shopify-section-{{ section.id }} .h1,
+        #shopify-section-{{ section.id }} .h1 + div,
+        #shopify-section-{{ section.id }} .button {
+          grid-column: 1;
+          grid-row: auto;
+        }
+      }
+    {%- endif -%}
   </style>
 
   {%- comment -%}

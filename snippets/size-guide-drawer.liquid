@@ -17,6 +17,12 @@
 {%- liquid
   assign sg_category = category | default: 'auto'
 
+  # Liquid's `render` tag only accepts a plain variable or literal as an argument value,
+  # so these defaults have to be resolved here rather than piped inline at the call site.
+  assign sg_trigger_text = trigger_text | default: 'Size guide'
+  assign sg_button_style = button_style | default: 'link'
+  assign sg_heading = heading | default: 'Size guide'
+
   if product != blank
     assign sg_drawer_id = 'size-guide-drawer-' | append: product.id
   else
@@ -77,8 +83,8 @@
 
   <div class="size-guide-drawer">
     {%- render 'button',
-      content: trigger_text | default: 'Size guide',
-      style: button_style | default: 'link',
+      content: sg_trigger_text,
+      style: sg_button_style,
       stretch: stretch,
       icon: 'picto-info',
       aria_controls: sg_drawer_id
@@ -86,7 +92,7 @@
 
     <x-drawer id="{{ sg_drawer_id | escape }}" class="drawer color-scheme color-scheme--dialog">
       <span class="h5" slot="header">
-        {{- heading | default: 'Size guide' -}}
+        {{- sg_heading -}}
         {%- if sg_resolved_title != blank %} &ndash; {{ sg_resolved_title }}{% endif -%}
       </span>
 

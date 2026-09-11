@@ -1,6 +1,27 @@
 {%- if section.blocks.size > 0 -%}
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
+  <style>
+    {%- if section.id contains 'text-with-icons' -%}
+      #shopify-section-{{ section.id }} .section-spacing--tight {
+        --section-vertical-spacing: 2rem;
+        --section-stack-gap: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .v-stack.gap-8 {
+        gap: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .text-with-icons {
+        --text-with-icons-row-gap: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .text-with-icons__item > .v-stack {
+        gap: 1rem;
+      }
+    {%- endif -%}
+  </style>
+
   <div class="section-spacing section-spacing--tight color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
     <div class="container">
       <div class="v-stack gap-8">
