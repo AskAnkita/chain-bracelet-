@@ -90,6 +90,21 @@
     </div>
   </collection-banner>
 {%- elsif collection_content != blank -%}
+  {%- comment -%}
+    With no image there is nothing for the transparent header to sit over, so it would
+    keep its white text and logo on a light page. Give it this section's text color and
+    the primary logo instead, with no scrim -- the same approach main-product uses.
+    .header__utility is a sibling of .header, so it needs the variables too.
+  {%- endcomment -%}
+  <style>
+    .header,
+    .header__utility {
+      --header-show-transparent-logo: 0 !important;
+      --header-transparent-header-text-color: {{ section.settings.color_scheme.settings.text_color.rgb }};
+      --header-overlay: 0 0 0 / 0;
+    }
+  </style>
+
   <div class="color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
     <div class="relative section-spacing section-spacing--tight">
       <div class="container container--{{ section.settings.content_width }} container--align-{{ text_alignment }}">

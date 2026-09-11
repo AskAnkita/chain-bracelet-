@@ -102,6 +102,10 @@
     transition: background .2s, color .2s;
   }
 
+  #shopify-section-{{ section.id }} .header__primary-nav-item > a {
+    font-size: {{ section.settings.menu_text_size }}rem;
+  }
+
   #shopify-section-{{ section.id }} .header__utility-row {
     display: flex;
     align-items: center;
@@ -864,7 +868,7 @@
       "type": "range",
       "id": "center_icon_width",
       "min": 12,
-      "max": 48,
+      "max": 80,
       "step": 1,
       "unit": "px",
       "label": "Center mark width",
@@ -889,6 +893,16 @@
       "unit": "rem",
       "label": "Utility text size",
       "default": 0.8
+    },
+    {
+      "type": "range",
+      "id": "menu_text_size",
+      "min": 0.6,
+      "max": 1.2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Menu text size",
+      "default": 0.9
     },
     {
       "type": "range",

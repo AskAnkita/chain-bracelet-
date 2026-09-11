@@ -12,10 +12,10 @@
     "collection-banner": {
       "type": "collection-banner",
       "settings": {
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "image_size": "auto",
         "allow_transparent_header": true,
-        "show_image": true,
+        "show_image": false,
         "reveal": true,
         "enable_parallax": true,
         "show_collection_title": true,
@@ -32,6 +32,7 @@
       "blocks": {
         "push_promo_offer": {
           "type": "push_promo",
+          "disabled": true,
           "settings": {
             "color_scheme": "scheme-3",
             "bordered": false,
@@ -59,7 +60,7 @@
         "hide_product_information": false,
         "products_per_page": 48,
         "products_per_row_mobile": "2",
-        "products_size_desktop": "medium",
+        "products_size_desktop": "compact",
         "show_grid_mode_selector": true,
         "horizontal_spacing_factor": 0.2,
         "vertical_spacing_factor": 0.5,
