@@ -14,6 +14,7 @@
       "blocks": {
         "banner_text_left": {
           "type": "image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/4256e7dc-befa-4e83-af71-fc2b9bc6e443.png",
             "subheading": "",
@@ -50,6 +51,7 @@
         },
         "banner_text_center": {
           "type": "image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/2164760c-3bf1-40d2-a100-9eb84842afee.png",
             "subheading": "",
@@ -86,7 +88,6 @@
         },
         "slide_1": {
           "type": "image",
-          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/fd91f459-6b7a-4f9d-ac1e-d440a3e86af8-2.png",
             "mobile_image": "shopify://shop_images/33ac6553-ab44-4a92-9cbf-363e7f34a9b5.png",
@@ -308,6 +309,7 @@
         "heading_line_1": "Diamond",
         "heading_line_2": "Essentials",
         "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
+        "quote_text": "",
         "button_text": "Shop the Collection",
         "button_link": "shopify://collections/bracelets",
         "product_image": "shopify://shop_images/AJER772-W2.png",
