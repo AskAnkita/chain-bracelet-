@@ -14,12 +14,17 @@
   @param {string} [play_button_background] - an optional background color for the play button
   @param {object} [product] - the optional product for 3D models
   @param {string} [class] - optional class applied on the item
+  @param {boolean} [low_priority] - only relevant when preload is true: fetches eagerly (not lazily) but at low priority, so it doesn't compete with the actual first-paint image while still being ready before it's needed -- for media a visitor is likely to reach quickly (e.g. other images of the currently selected variant) without treating it as critical
 {%- enddoc -%}
 
 {%- liquid
   if preload
     assign loading = 'eager'
     assign fetchpriority = 'high'
+
+    if low_priority
+      assign fetchpriority = 'low'
+    endif
   else
     assign loading = 'lazy'
     assign fetchpriority = 'auto'

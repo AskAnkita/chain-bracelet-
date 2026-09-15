@@ -301,11 +301,33 @@
                 hidden
               {% endif %}
             >
-              {%- if default_media == media -%}
-                {%- assign preload = true -%}
-              {%- else -%}
-                {%- assign preload = false -%}
-              {%- endif -%}
+              {%- comment -%}
+                Only the very first image used to preload; every other slide -- including the
+                rest of the CURRENTLY selected variant's own photos -- was plain loading="lazy",
+                which only starts fetching once a slide is scrolled near, i.e. right at the
+                moment someone swipes to it or opens the zoom. That's the delay reported when
+                browsing through a variant's other shots or opening zoom on anything but the
+                first image. Every visible (non-hidden/non-filtered) slide now preloads too, at
+                low fetch priority so it never competes with the real first-paint image, just
+                arrives in the background well before it's actually clicked. Slides hidden for
+                a *different* metal stay lazy -- switching metal already costs a network
+                round-trip to re-render the section (see onSectionRerender_fn in theme.js), so
+                preloading every other metal's photos as well would spend bandwidth without
+                addressing that cost.
+              {%- endcomment -%}
+              {%- liquid
+                assign preload = false
+                assign low_priority = false
+
+                if default_media == media
+                  assign preload = true
+                elsif filtered_indexes contains media.position
+                  # stays lazy: hidden slide for a different metal than the one selected
+                else
+                  assign preload = true
+                  assign low_priority = true
+                endif
+              -%}
 
               {%- comment -%}
                 NOTE: for the product gallery, the autoplay does not work in a similar way. It is always false at the product level,
@@ -315,6 +337,7 @@
                 media: media,
                 sizes: sizes,
                 preload: preload,
+                low_priority: low_priority,
                 controls: true,
                 playsinline: true,
                 muted: enable_media_autoplay,
