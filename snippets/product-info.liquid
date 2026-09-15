@@ -178,6 +178,11 @@
               </div>
             {%- endif -%}
 
+          {%- when 'wishlist' -%}
+            {%- if product != blank -%}
+              {%- render 'wishlist-button', product: product, class: 'product-info__wishlist-button', show_label: true -%}
+            {%- endif -%}
+
           {%- when 'payment_terms' -%}
             {%- if product != blank -%}
               <payment-terms class="payment-terms">

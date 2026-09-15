@@ -1077,6 +1077,9 @@
       "show_accelerated_buttons_info": "Configure accelerated payment buttons in your [payment settings](https://www.shopify.com/admin/settings/payments).",
       "show_shipping_estimator": "Show shipping estimator"
     },
+    "main_wishlist": {
+      "name": "Wishlist page"
+    },
     "main_collection": {
       "name": "Collection page",
       "quick_links_menu": "Quick links menu",
@@ -1237,6 +1240,9 @@
         "price": {
           "name": "Price",
           "show_taxes_notice": "Show taxes notice"
+        },
+        "wishlist": {
+          "name": "Wishlist button"
         },
         "payment_terms": {
           "name": "Payment installments",

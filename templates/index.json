@@ -884,7 +884,7 @@
             "show_search": true,
             "show_account": true,
             "show_wishlist": true,
-            "wishlist_url": "",
+            "wishlist_url": "/pages/wishlist",
             "show_cart": true,
             "icon_size": 20,
             "icon_stroke_width": 1.5,

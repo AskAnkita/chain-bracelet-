@@ -1,0 +1,444 @@
+<title>September 14 Theme Log</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --bg: #faf6ee;
+    --surface: #ffffff;
+    --ink: #232b23;
+    --ink-muted: #6b7166;
+    --line: #e6ddc9;
+    --line-strong: #d8cbac;
+    --accent: #ab8a53;
+    --accent-ink: #4a3b20;
+    --accent-soft: #f1e6cd;
+    --primary: #33402f;
+    --primary-ink: #f5f0e6;
+    --shipped: #4b7a5e;
+    --shipped-soft: #e5efe4;
+    --action: #a8763e;
+    --action-soft: #f6e9d6;
+    --diagnosed: #5a7386;
+    --diagnosed-soft: #e6edf1;
+    --shadow: 0 1px 2px rgb(35 43 35 / .06), 0 8px 24px -12px rgb(35 43 35 / .18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1b201a;
+      --surface: #232a21;
+      --ink: #ede8db;
+      --ink-muted: #a3ab9b;
+      --line: #38402f;
+      --line-strong: #465036;
+      --accent: #c9a568;
+      --accent-ink: #f3e6c9;
+      --accent-soft: #3a3322;
+      --primary: #ede8db;
+      --primary-ink: #232a21;
+      --shipped: #8fbf9f;
+      --shipped-soft: #26332a;
+      --action: #dba55d;
+      --action-soft: #3a2f1e;
+      --diagnosed: #9bbdd1;
+      --diagnosed-soft: #23323b;
+      --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1b201a;
+    --surface: #232a21;
+    --ink: #ede8db;
+    --ink-muted: #a3ab9b;
+    --line: #38402f;
+    --line-strong: #465036;
+    --accent: #c9a568;
+    --accent-ink: #f3e6c9;
+    --accent-soft: #3a3322;
+    --primary: #ede8db;
+    --primary-ink: #232a21;
+    --shipped: #8fbf9f;
+    --shipped-soft: #26332a;
+    --action: #dba55d;
+    --action-soft: #3a2f1e;
+    --diagnosed: #9bbdd1;
+    --diagnosed-soft: #23323b;
+    --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px -12px rgb(0 0 0 / .5);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0;
+    padding-inline: 20px;
+    padding-block: 0 64px;
+  }
+
+  .wrap { max-width: 740px; margin-inline: auto; }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    background: var(--primary);
+    color: var(--primary-ink);
+    margin-inline: -20px;
+    padding: 40px 20px 34px;
+    margin-block-end: 40px;
+  }
+
+  .masthead__inner { max-width: 740px; margin-inline: auto; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .72;
+    display: flex;
+    align-items: center;
+    gap: .6em;
+    margin: 0 0 14px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+    line-height: 1.12;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .stat-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    padding-block-start: 18px;
+    border-top: 1px solid rgb(245 240 230 / .18);
+  }
+
+  .stat { min-width: 90px; }
+
+  .stat b {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+
+  .stat span {
+    font-size: .78rem;
+    opacity: .72;
+  }
+
+  /* ---------- Section labels ---------- */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 16px;
+  }
+
+  /* ---------- Attention callout ---------- */
+  .attention {
+    background: var(--action-soft);
+    border: 1px solid color-mix(in srgb, var(--action) 35%, transparent);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-block-end: 44px;
+  }
+
+  .attention h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 0 0 10px;
+    color: var(--action);
+  }
+
+  .attention ul {
+    margin: 0;
+    padding-inline-start: 1.2em;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .attention li::marker { color: var(--action); }
+
+  /* ---------- Log entries ---------- */
+  .log { display: flex; flex-direction: column; }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 18px;
+    padding-block: 26px;
+    border-top: 1px solid var(--line);
+  }
+
+  .log .entry:first-of-type { border-top: 1px solid var(--line-strong); }
+
+  .entry__index {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+
+  .entry__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-block-end: 8px;
+  }
+
+  .entry h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 1.18rem;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .68rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex: none;
+  }
+
+  .pill--shipped { background: var(--shipped-soft); color: var(--shipped); }
+  .pill--action { background: var(--action-soft); color: var(--action); }
+  .pill--diagnosed { background: var(--diagnosed-soft); color: var(--diagnosed); }
+
+  .entry p { margin: 0 0 10px; color: var(--ink); max-width: 62ch; }
+  .entry p:last-of-type { margin-bottom: 0; }
+  .entry p.detail { color: var(--ink-muted); font-size: .94rem; }
+
+  .files {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: .78rem;
+    color: var(--ink-muted);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-block-start: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .files span { white-space: nowrap; }
+
+  /* ---------- Footer ---------- */
+  .colophon {
+    margin-block-start: 48px;
+    padding-block-start: 22px;
+    border-top: 1px solid var(--line);
+    font-size: .85rem;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 480px) {
+    .entry { grid-template-columns: 24px 1fr; gap: 12px; }
+    .entry__index { font-size: .9rem; }
+  }
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="masthead__inner">
+      <p class="eyebrow">Chain &amp; Bracelet — Theme Dev Log</p>
+      <h1>What shipped on the storefront, Monday September&nbsp;14</h1>
+      <div class="stat-row">
+        <div class="stat"><b>9</b><span>changes made</span></div>
+        <div class="stat"><b>1</b><span>new feature — wishlist</span></div>
+        <div class="stat"><b>4</b><span>category templates</span></div>
+        <div class="stat"><b>3</b><span>need your action</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="attention">
+    <h2>Needs your action</h2>
+    <ul>
+      <li><strong>Create the Wishlist page</strong> in Shopify admin — Online Store → Pages → title "Wishlist", handle <code>wishlist</code>. The heart icon in the header already links to <code>/pages/wishlist</code> and the section is built; it just needs the page to exist.</li>
+      <li><strong>Fill in Shipping, Refund and Terms of Service policies</strong> under Settings → Policies if they're still blank — the footer's service icons now link straight to them, and an empty policy 404s.</li>
+      <li><strong>Local checkout 502 isn't a theme bug</strong> — it's a known Shopify CLI limitation previewing checkout through <code>127.0.0.1:9292</code>. Test checkout on the real preview URL instead (details in entry 8).</li>
+    </ul>
+  </div>
+
+  <p class="section-label">Log — in the order it happened</p>
+
+  <div class="log">
+
+    <div class="entry">
+      <div class="entry__index">01</div>
+      <div>
+        <div class="entry__head">
+          <h3>Collection page descriptions set to uppercase</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>The "Discover our elegant necklace collection…" style copy under each category heading now renders in caps, across every category page.</p>
+        <p class="detail">One CSS rule on the shared <code>.collection-description</code> class — the actual text merchants type in admin is untouched, only the display style changed.</p>
+        <div class="files"><span>assets/theme.css</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">02</div>
+      <div>
+        <div class="entry__head">
+          <h3>Trimmed the four footer service icons</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>Removed the placeholder second line ("Short content about your store") under Free Delivery Worldwide, Satisfied or Refunded, Top-Notch Support and Secure Payments.</p>
+        <div class="files"><span>sections/footer-group.json</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">03</div>
+      <div>
+        <div class="entry__head">
+          <h3>Newsletter signup — verified end-to-end</h3>
+          <span class="pill pill--diagnosed">Confirmed working</span>
+        </div>
+        <p>Checked both the homepage newsletter section and the popup: both use Shopify's native customer form correctly, tagging subscribers <code>newsletter</code>.</p>
+        <p class="detail">Tested live against the local dev server. A raw POST bypassing the browser got a 403 — that's the store's hCaptcha bot protection doing its job, not a broken form.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">04</div>
+      <div>
+        <div class="entry__head">
+          <h3>Product grid: 6 per row down to 4</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>Every category template was force-set to the "compact" 6-across desktop grid. Switched all of them to "medium" (4 across) so product photos read at a proper size.</p>
+        <div class="files">
+          <span>templates/collection.json</span>
+          <span>+ necklaces, bracelets, rings, earrings ×2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">05</div>
+      <div>
+        <div class="entry__head">
+          <h3>Footer "About" → "About Us"</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>Renamed the footer heading and removed the placeholder brand blurb underneath it.</p>
+        <div class="files"><span>sections/footer-group.json</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">06</div>
+      <div>
+        <div class="entry__head">
+          <h3>Footer service icons now link somewhere</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>Added link support to the icon block itself, then pointed each of the four at the right page and fixed their casing to Title Case.</p>
+        <p class="detail">Free Delivery Worldwide → Shipping policy · Satisfied Or Refunded → Refund policy · Top-Notch Support → Contact page · Secure Payments → Terms of service.</p>
+        <div class="files">
+          <span>sections/text-with-icons.liquid</span>
+          <span>sections/footer-group.json</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">07</div>
+      <div>
+        <div class="entry__head">
+          <h3>Homepage hero: "Shop the Collection" stacked over the image</h3>
+          <span class="pill pill--shipped">Shipped</span>
+        </div>
+        <p>In the Diamond Essentials banner, the link and the earring product shot sat side by side. They now stack — link on its own line, image underneath.</p>
+        <div class="files"><span>sections/image-text-image-banner.liquid</span></div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">08</div>
+      <div>
+        <div class="entry__head">
+          <h3>Diagnosed the local checkout 502</h3>
+          <span class="pill pill--diagnosed">Diagnosed</span>
+        </div>
+        <p>Traced the "Response body already used" crash to Shopify CLI's own dev proxy, which can't rewrite the redirect to hosted checkout — not something in the theme.</p>
+        <p class="detail">Fix: test checkout on the real <code>*.myshopify.com</code> preview link CLI prints on start, not <code>127.0.0.1:9292</code>. <code>--live-reload=full-page</code> is a fallback if localhost checkout matters.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry__index">09</div>
+      <div>
+        <div class="entry__head">
+          <h3>Built the wishlist / favorites feature</h3>
+          <span class="pill pill--action">Needs the admin page</span>
+        </div>
+        <p>The header already had a heart icon and counter with nothing behind them. Built out the whole feature: a heart toggle on every product card and on the product page, shared storage so the count badge and every button stay in sync, and a dedicated Wishlist page that lists saved products with a remove-from-here heart.</p>
+        <p class="detail">Product cards reveal the heart on hover (matching the existing "+" quick-add button), except once favorited — a saved heart stays visible so it's clear at a glance what's been saved.</p>
+        <div class="files">
+          <span>sections/header.liquid</span>
+          <span>sections/main-wishlist.liquid (new)</span>
+          <span>snippets/wishlist-button.liquid (new)</span>
+          <span>snippets/product-card.liquid</span>
+          <span>snippets/product-info.liquid</span>
+          <span>sections/main-product.liquid</span>
+          <span>templates/page.wishlist.json (new)</span>
+          <span>templates/product.json + product.pre-order.json</span>
+          <span>assets/theme.css</span>
+          <span>locales/en.default.json + .schema.json</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="colophon">
+    <span>Prepared September 15, 2026</span>
+    <span>Local theme dev — Shopify CLI 4.8.0</span>
+  </div>
+</div>

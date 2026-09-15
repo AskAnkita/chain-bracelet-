@@ -20,8 +20,9 @@
             "icon": "picto-delivery-truck",
             "icon_width": 24,
             "mobile_icon_width": 24,
-            "title": "Free delivery worldwide",
-            "content": "<p>Short content about your store</p>"
+            "title": "Free Delivery Worldwide",
+            "content": "",
+            "link": "/policies/shipping-policy"
           }
         },
         "icon-2": {
@@ -30,8 +31,9 @@
             "icon": "picto-happy-face",
             "icon_width": 24,
             "mobile_icon_width": 24,
-            "title": "Satisfied or refunded",
-            "content": "<p>Short content about your store</p>"
+            "title": "Satisfied Or Refunded",
+            "content": "",
+            "link": "/policies/refund-policy"
           }
         },
         "icon-3": {
@@ -40,8 +42,9 @@
             "icon": "picto-customer-support",
             "icon_width": 24,
             "mobile_icon_width": 24,
-            "title": "Top-notch support",
-            "content": "<p>Short content about your store</p>"
+            "title": "Top-Notch Support",
+            "content": "",
+            "link": "/pages/contact"
           }
         },
         "icon-4": {
@@ -50,8 +53,9 @@
             "icon": "picto-success",
             "icon_width": 24,
             "mobile_icon_width": 24,
-            "title": "Secure payments",
-            "content": "<p>Short content about your store</p>"
+            "title": "Secure Payments",
+            "content": "",
+            "link": "/policies/terms-of-service"
           }
         }
       },
@@ -95,8 +99,8 @@
         "text": {
           "type": "text",
           "settings": {
-            "title": "About",
-            "content": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>",
+            "title": "About us",
+            "content": "",
             "enable_follow_on_shop": true
           }
         }

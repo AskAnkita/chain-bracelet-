@@ -1,0 +1,32 @@
+{%- doc -%}
+  Renders a favorite/wishlist toggle for a product. Relies on the <wishlist-button>
+  custom element defined in sections/header.liquid, which reads/writes the shared
+  `wishlist` localStorage array (of product handles) and the `wishlist:updated` event
+  that the header's wishlist count badge also listens for.
+
+  @param {object} product - the product to favorite
+  @param {string} [class] - additional classes for the wrapping element
+  @param {boolean} [show_label] - if true, the "Add/Remove to wishlist" text is shown instead of being screen-reader only
+{%- enddoc -%}
+
+{%- capture add_label -%}{{ 'product.general.add_to_wishlist' | t }}{%- endcapture -%}
+{%- capture remove_label -%}{{ 'product.general.remove_from_wishlist' | t }}{%- endcapture -%}
+
+{%- liquid
+  assign icon_width = 24
+  if show_label
+    assign icon_width = 18
+  endif
+-%}
+
+<wishlist-button
+  product-handle="{{ product.handle }}"
+  add-label="{{ add_label }}"
+  remove-label="{{ remove_label }}"
+  class="wishlist-button {% if show_label %}wishlist-button--labeled{% endif %} {{ class }}"
+>
+  <button type="button" class="wishlist-button__toggle tap-area" aria-pressed="false">
+    {%- render 'icon' with 'wishlist', class: 'wishlist-button__icon', width: icon_width -%}
+    <span class="wishlist-button__label {% unless show_label %}sr-only{% endunless %}">{{ add_label }}</span>
+  </button>
+</wishlist-button>

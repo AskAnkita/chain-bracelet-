@@ -729,6 +729,80 @@
   );
 </script>
 
+{%- comment -%}
+  Shared wishlist storage helper (window.Wishlist), plus the <wishlist-button> toggle
+  used on the product page and product cards to add/remove a product by handle. This
+  runs unconditionally -- on every page, regardless of the header.show_wishlist setting
+  below -- so favoriting still works even on themes/pages where the header icon itself
+  is hidden. <wishlist-count> (the header badge) stays gated to when the icon shows.
+{%- endcomment -%}
+<script>
+  if (!window.Wishlist) {
+    window.Wishlist = {
+      get() {
+        try {
+          const stored = JSON.parse(localStorage.getItem('wishlist') || '[]');
+          return Array.isArray(stored) ? stored : [];
+        } catch (error) {
+          return [];
+        }
+      },
+      has(handle) {
+        return this.get().includes(handle);
+      },
+      toggle(handle) {
+        const current = this.get();
+        const index = current.indexOf(handle);
+        const added = index === -1;
+
+        if (added) {
+          current.push(handle);
+        } else {
+          current.splice(index, 1);
+        }
+
+        localStorage.setItem('wishlist', JSON.stringify(current));
+        document.dispatchEvent(new CustomEvent('wishlist:updated'));
+
+        return added;
+      }
+    };
+  }
+
+  if (!customElements.get('wishlist-button')) {
+    class WishlistButton extends HTMLElement {
+      connectedCallback() {
+        this.update = this.update.bind(this);
+        this.button = this.querySelector('button');
+        this.button?.addEventListener('click', this.onClick.bind(this));
+        this.update();
+        document.addEventListener('wishlist:updated', this.update);
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('wishlist:updated', this.update);
+      }
+
+      onClick() {
+        window.Wishlist.toggle(this.getAttribute('product-handle'));
+      }
+
+      update() {
+        const active = window.Wishlist.has(this.getAttribute('product-handle'));
+        this.classList.toggle('is-active', active);
+        this.button?.setAttribute('aria-pressed', active);
+
+        const label = this.button?.querySelector('.wishlist-button__label');
+        if (label) {
+          label.textContent = active ? this.getAttribute('remove-label') : this.getAttribute('add-label');
+        }
+      }
+    }
+
+    customElements.define('wishlist-button', WishlistButton);
+  }
+</script>
+
 {%- if section.settings.show_wishlist -%}
   <script>
     if (!customElements.get('wishlist-count')) {
@@ -746,14 +820,7 @@
         }
 
         update() {
-          let count = 0;
-          try {
-            const stored = JSON.parse(localStorage.getItem('wishlist') || '[]');
-            count = Array.isArray(stored) ? stored.length : 0;
-          } catch (error) {
-            count = 0;
-          }
-          this.textContent = count;
+          this.textContent = window.Wishlist.get().length;
         }
       }
 

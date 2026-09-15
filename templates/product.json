@@ -24,6 +24,10 @@
           "type": "price",
           "settings": {}
         },
+        "wishlist": {
+          "type": "wishlist",
+          "settings": {}
+        },
         "payment_terms": {
           "type": "payment_terms",
           "settings": {}
@@ -68,6 +72,7 @@
         "vendor",
         "title",
         "price",
+        "wishlist",
         "payment_terms",
         "description",
         "variant_picker",

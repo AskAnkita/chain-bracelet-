@@ -2287,6 +2287,80 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
   inset-inline-start: 0;
 }
 
+.wishlist-button {
+  display: inline-flex;
+}
+
+.wishlist-button__toggle {
+  background: rgb(var(--circle-button-background));
+  color: rgb(var(--circle-button-text-color));
+  padding: .625rem;
+}
+
+.wishlist-button__icon {
+  transition: transform .2s ease-in-out;
+}
+
+.wishlist-button.is-active .wishlist-button__icon {
+  fill: currentColor;
+}
+
+.wishlist-button__toggle:hover .wishlist-button__icon {
+  transform: scale(1.1);
+}
+
+.product-card__figure > .wishlist-button {
+  display: block;
+  z-index: 1;
+  position: absolute;
+  inset-block-start: .5rem;
+  inset-inline-end: .5rem;
+}
+
+@media screen and (pointer: fine) {
+  .product-card__figure > .wishlist-button {
+    opacity: 0;
+    transition: opacity .2s ease-in-out, transform .2s ease-in-out;
+    transform: translateY(5px);
+  }
+
+  /*
+    Once favorited, keep the heart visible even without hovering -- otherwise there's
+    no way to tell a card is already saved without hovering every single one.
+  */
+  .product-card:focus-within .wishlist-button,
+  .product-card:hover .wishlist-button,
+  .wishlist-button:focus-within,
+  .wishlist-button.is-active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+  Labeled variant, used on the product page: an icon + visible text link instead of the
+  circular icon-only button used on product cards and in the header.
+*/
+.wishlist-button--labeled .wishlist-button__toggle {
+  background: none;
+  color: rgb(var(--text-color));
+  align-items: center;
+  column-gap: .5rem;
+  padding: 0;
+}
+
+.wishlist-button--labeled .wishlist-button__label {
+  font-size: .8125rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-underline-offset: .25rem;
+  text-decoration: underline;
+}
+
+.wishlist-button--labeled.is-active .wishlist-button__label {
+  text-decoration: none;
+}
+
 .product-card__quick-add-button {
   background: rgb(var(--circle-button-background));
   color: rgb(var(--circle-button-text-color));
@@ -4427,6 +4501,10 @@ product-rerender {
 
 .collection-banner .breadcrumb {
   z-index: 2;
+}
+
+.collection-description {
+  text-transform: uppercase;
 }
 
 .collection {

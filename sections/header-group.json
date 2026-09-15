@@ -431,7 +431,7 @@
         "utility_padding": 0.2,
         "show_wishlist": true,
         "wishlist_label": "Wishlist",
-        "wishlist_url": "",
+        "wishlist_url": "/pages/wishlist",
         "menu": "customer-account-main-menu",
         "sidebar_menu": "customer-account-main-menu",
         "customer_account_menu": "customer-account-main-menu",

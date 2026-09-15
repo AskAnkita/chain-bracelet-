@@ -57,6 +57,10 @@
         {%- render 'product-badges', product: product, vertical: true, context: 'card' -%}
       {%- endif -%}
 
+      {%- unless hide_product_information -%}
+        {%- render 'wishlist-button', product: product, class: 'product-card__wishlist-button' -%}
+      {%- endunless -%}
+
       <a href="{{ product.url }}" class="product-card__media" draggable="false" data-instant>
         {%- if product.media.size > 0 -%}
           {%- capture sizes -%}

@@ -296,8 +296,10 @@
 
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 1.5rem;
         margin-block-start: 1.5rem;
       }
 
@@ -306,6 +308,16 @@
         margin: 0;
         font-size: .75rem;
         white-space: nowrap;
+      }
+
+      {% comment %}
+        The product image's usual margin (below) uses a negative offset to pull it tight
+        against the CTA text when they sit side by side in a row. Stacked in a column here,
+        that negative offset would just pull the image up into the text, so this cancels it
+        back to a plain top gap instead.
+      {% endcomment %}
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta .triptych-banner__product-image {
+        margin: 0;
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__product-image {

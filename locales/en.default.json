@@ -55,6 +55,11 @@
       "notify_me": "Notify me",
       "subscribed_successfully": "You have been subscribed to our newsletter."
     },
+    "wishlist": {
+      "loading": "Loading your wishlist...",
+      "empty": "You haven't added anything to your wishlist yet.",
+      "continue_shopping": "Continue shopping"
+    },
     "localization": {
       "country": "Country",
       "language": "Language",
@@ -114,7 +119,9 @@
       "available_colors_count": {
         "one": "{{ count }} color available",
         "other": "{{ count }} colors available"
-      }
+      },
+      "add_to_wishlist": "Add to wishlist",
+      "remove_from_wishlist": "Remove from wishlist"
     },
     "gallery": {
       "close": "Close gallery",

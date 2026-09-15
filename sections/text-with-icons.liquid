@@ -28,15 +28,15 @@
         {%- capture section_content -%}
           {%- for block in section.blocks -%}
             <div class="text-with-icons__item {% if forloop.first %}is-selected{% endif %} {% unless section.settings.stack_on_mobile %}snap-center{% endunless %}" role="group" aria-label="{{ 'general.accessibility.item_nth_of_count' | t: index: forloop.index, count: section.blocks.size }}" {{ block.shopify_attributes }}>
-              <div class="v-stack gap-6 justify-items-center sm:justify-items-{{ section.settings.text_alignment }}">
-                {%- liquid
-                  assign loading_strategy = nil
+              {%- liquid
+                assign loading_strategy = nil
 
-                  if section.index <= 3 and forloop.position <= 3
-                    assign loading_strategy = 'eager'
-                  endif
-                -%}
+                if section.index <= 3 and forloop.position <= 3
+                  assign loading_strategy = 'eager'
+                endif
+              -%}
 
+              {%- capture item_content -%}
                 {%- if block.settings.custom_icon != blank -%}
                   {%- capture sizes -%}{{ block.settings.icon_width }}px{%- endcapture -%}
                   {%- capture widths -%}{{ block.settings.icon_width }}, {{ block.settings.icon_width | times: 2 | at_most: block.settings.custom_icon.width }}{%- endcapture -%}
@@ -62,7 +62,17 @@
                     {%- endif -%}
                   </div>
                 {%- endif -%}
-              </div>
+              {%- endcapture -%}
+
+              {%- if block.settings.link != blank -%}
+                <a href="{{ block.settings.link }}" class="v-stack gap-6 justify-items-center sm:justify-items-{{ section.settings.text_alignment }}">
+                  {{- item_content -}}
+                </a>
+              {%- else -%}
+                <div class="v-stack gap-6 justify-items-center sm:justify-items-{{ section.settings.text_alignment }}">
+                  {{- item_content -}}
+                </div>
+              {%- endif -%}
             </div>
           {%- endfor -%}
         {%- endcapture -%}
@@ -488,6 +498,11 @@
           "id": "content",
           "label": "t:global.text.content",
           "default": "<p>Short content about your store</p>"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:global.text.link"
         }
       ]
     }

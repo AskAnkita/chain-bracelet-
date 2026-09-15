@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-wishlist",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Wishlist",
+        "content_width": "lg"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
