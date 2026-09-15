@@ -11,10 +11,6 @@
     if section.settings.content_style == 'editorial'
       assign editorial = true
     endif
-
-    # Half the "space above product shot" value trims each side of the shot's box in the
-    # editorial row, so a negative value eats into transparent padding baked into the file.
-    assign product_trim = section.settings.product_image_gap | divided_by: 2
   -%}
 
   <style>
@@ -251,7 +247,8 @@
         sizes above (which the shared kicker/heading/body/product-image classes still match).
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial {
-        padding: 3rem 1.5rem;
+        position: relative;
+        padding: 3rem 1.5rem 6rem;
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .prose {
@@ -295,46 +292,39 @@
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
         margin-block-start: 1.5rem;
       }
 
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta > p {
-        flex: none;
         margin: 0;
         font-size: .75rem;
-        white-space: nowrap;
       }
 
       {% comment %}
-        The product image's usual margin (below) uses a negative offset to pull it tight
-        against the CTA text when they sit side by side in a row. Stacked in a column here,
-        that negative offset would just pull the image up into the text, so this cancels it
-        back to a plain top gap instead.
+        The floating product shot: a small accent anchored to the bottom-right corner of the
+        whole panel (per the editorial reference: "small floating product image positioned
+        toward the bottom-right"), not stacked with or beside the text. Sized as a fraction of
+        the configured product_image_width rather than that width directly, since a floating
+        accent should read as small next to the centered text above it.
       {% endcomment %}
-      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__cta .triptych-banner__product-image {
-        margin: 0;
-      }
-
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__product-image {
-        width: {{ section.settings.product_image_width }}px;
-        max-width: 45vw;
+        width: calc({{ section.settings.product_image_width }}px * .85);
+        max-width: 42vw;
         min-width: 0;
         max-height: none;
         height: auto;
         object-fit: contain;
         transform: none;
-        margin: {{ product_trim }}px 0 {{ product_trim }}px {{ product_trim }}px;
+        position: absolute;
+        inset-block-end: 1.5rem;
+        inset-inline-end: 1.5rem;
+        margin: 0;
       }
 
       @media screen and (min-width: 1000px) {
         #shopify-section-{{ section.id }} .triptych-banner__content--editorial {
           gap: 0;
-          padding: 3rem clamp(1.5rem, 3vw, 3rem);
+          padding: 3rem clamp(1.5rem, 3vw, 3rem) 7rem;
         }
 
         #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__title {
@@ -407,18 +397,21 @@
               <div class="triptych-banner__quote">{{- section.settings.quote_text -}}</div>
             {%- endif -%}
 
-            {%- if section.settings.button_text != blank or product_image != blank -%}
+            {%- if section.settings.button_text != blank -%}
               <div class="triptych-banner__cta">
-                {%- if section.settings.button_text != blank -%}
-                  <p class="h6">
-                    {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
-                  </p>
-                {%- endif -%}
-
-                {{- product_image -}}
+                <p class="h6">
+                  {%- render 'button', href: section.settings.button_link, content: section.settings.button_text, style: 'link', focusable: false -%}
+                </p>
               </div>
             {%- endif -%}
           </div>
+
+          {%- comment -%}
+            Small floating product shot, anchored to the bottom-right corner of the whole
+            panel rather than stacked with (or beside) the text -- an editorial accent that
+            ties the story back to the product without reading as a normal product card.
+          {%- endcomment -%}
+          {{- product_image -}}
         </div>
       {%- else -%}
         <div class="triptych-banner__content">

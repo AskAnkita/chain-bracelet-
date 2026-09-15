@@ -618,9 +618,19 @@
     {%- assign menu = section.settings.menu -%}
     {%- assign sidebar_menu = section.settings.sidebar_menu -%}
 
+    {%- comment -%}
+      header__primary-nav--center used to be conditional on section.settings.layout being
+      one of two legacy values, from before this theme's header was rebuilt to always be
+      the compact bar (see the file's top comment: "logo hard left, menu centred, icons
+      hard right" -- unconditionally, on every page). That left the menu's centering
+      silently dependent on whatever the old layout setting happened to be saved as, so two
+      stores/themes with identical code render differently just because they saved a
+      different pre-redesign layout value. Since compact_header is always true now,
+      centering should be too.
+    {%- endcomment -%}
     {%- if menu.links.size > 0 or sidebar_menu.links.size > 0 -%}
       <nav
-        class="header__primary-nav {% if section.settings.layout == 'logo_center_navigation_below' or section.settings.layout == 'logo_left_navigation_center' %}header__primary-nav--center{% endif %}"
+        class="header__primary-nav {% if compact_header %}header__primary-nav--center{% endif %}"
         aria-label="{{ 'header.general.primary_navigation' | t | escape }}"
       >
         <button
