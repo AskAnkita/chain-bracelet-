@@ -67,12 +67,23 @@
     "category_showcase": {
       "type": "category-products-showcase",
       "blocks": {
+        "earrings": {
+          "type": "category",
+          "settings": {
+            "collection": "earrings",
+            "products_count": 3,
+            "title": "",
+            "image": "shopify://shop_images/6411652352769478a5ff94cda58850c1.jpg",
+            "tile_color_scheme": "scheme-2"
+          }
+        },
         "necklaces": {
           "type": "category",
           "settings": {
             "collection": "necklaces",
             "products_count": 3,
             "title": "",
+            "image": "shopify://shop_images/1d1a0bce-8b8e-434a-9617-590a7f02f5a0_1c763e38-3fdc-4575-98af-35c247c26392.png",
             "tile_color_scheme": "scheme-2"
           }
         },
@@ -89,15 +100,6 @@
           "type": "category",
           "settings": {
             "collection": "rings",
-            "products_count": 3,
-            "title": "",
-            "tile_color_scheme": "scheme-2"
-          }
-        },
-        "earrings": {
-          "type": "category",
-          "settings": {
-            "collection": "earrings",
             "products_count": 3,
             "title": "",
             "tile_color_scheme": "scheme-2"

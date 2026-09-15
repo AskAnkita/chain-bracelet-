@@ -311,7 +311,7 @@
         "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
         "quote_text": "",
         "button_text": "Shop the Collection",
-        "button_link": "shopify://collections/bracelets",
+        "button_link": "shopify://collections",
         "product_image": "shopify://shop_images/AJER772-W2.png",
         "product_image_alt": "",
         "product_image_width": 240,
