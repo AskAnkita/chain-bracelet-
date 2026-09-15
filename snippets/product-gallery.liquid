@@ -327,19 +327,42 @@
                   assign preload = true
                   assign low_priority = true
                 endif
+
+                assign show_controls = true
+                if enable_media_autoplay
+                  assign show_controls = false
+                endif
               -%}
 
               {%- comment -%}
-                NOTE: for the product gallery, the autoplay does not work in a similar way. It is always false at the product level,
-                and the product-gallery component itself will autoplay (if needed)
+                Passing autoplay straight through (rather than leaving it false here and only
+                imperatively calling .play() from onMediaSettle_fn in theme.js, as this used
+                to) matters specifically for grid/grid_2x layouts: those show every media item
+                at once, with no single "active" slide for onMediaSettle_fn to ever fire on for
+                anything past the first tile, so a video sitting anywhere but position 1 never
+                autoplayed no matter what this section's autoplay setting said. The <video-media>
+                element (base-media.js) already watches its own visibility via IntersectionObserver
+                whenever it has the autoplay attribute, so handing it autoplay directly here makes
+                each video start on its own once it's actually visible, in grid layouts as much as
+                carousel ones -- the onMediaSettle_fn path still also fires for whichever slide is
+                "active", but .play() on an already-playing video is a no-op, so the two don't
+                conflict.
+
+                controls is now off specifically when autoplaying: the browser's native <video
+                controls> bar (seek/volume/fullscreen/PiP) doesn't know the video started playing
+                on its own via our IntersectionObserver rather than a click, so it can render
+                already-visible instead of in its normal hover-to-reveal state -- needing an
+                actual hover-then-unhover to make it re-evaluate and hide. An autoplaying preview
+                isn't meant to be operated like a player anyway; the point is it just plays.
               {%- endcomment -%}
               {%- render 'media',
                 media: media,
                 sizes: sizes,
                 preload: preload,
                 low_priority: low_priority,
-                controls: true,
+                controls: show_controls,
                 playsinline: true,
+                autoplay: enable_media_autoplay,
                 muted: enable_media_autoplay,
                 loop: enable_video_looping,
                 group: 'product',

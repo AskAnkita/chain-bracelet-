@@ -24,10 +24,6 @@
           "type": "price",
           "settings": {}
         },
-        "wishlist": {
-          "type": "wishlist",
-          "settings": {}
-        },
         "payment_terms": {
           "type": "payment_terms",
           "settings": {}
@@ -65,7 +61,6 @@
         "vendor",
         "title",
         "price",
-        "wishlist",
         "payment_terms",
         "separator",
         "description",
@@ -77,7 +72,9 @@
       "settings": {
         "allow_transparent_header": true,
         "transparent_header_use_primary_colors": true,
-        "desktop_media_grid_gap": 8
+        "desktop_media_grid_gap": 8,
+        "enable_media_autoplay": true,
+        "enable_video_looping": true
       }
     },
     "related-products": {

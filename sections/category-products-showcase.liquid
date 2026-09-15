@@ -1,0 +1,214 @@
+{%- comment -%}
+  One row per merchant-picked collection: a tall image tile (title overlaid, links to the
+  collection) followed by that collection's own top N products, all in one row. Meant for
+  the "/collections" all-collections page, to preview what's inside each category instead
+  of only linking out to it -- main-list-collections.liquid's own grid is tile-only, with
+  no product preview.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+  <style>
+    #shopify-section-{{ section.id }} .category-products-showcase__row {
+      display: grid;
+      gap: 1rem;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__row + .category-products-showcase__row {
+      margin-block-start: var(--section-vertical-spacing, 2.5rem);
+    }
+
+    {%- comment -%}
+      Mobile: a horizontal scroll-snap strip (matching the carousel convention used
+      elsewhere in the theme, e.g. product-offers) rather than a squeezed N-column grid --
+      a tile plus 3 product cards has no readable width left per column below ~700px.
+    {%- endcomment -%}
+    @media screen and (max-width: 699px) {
+      #shopify-section-{{ section.id }} .category-products-showcase__row {
+        grid-auto-flow: column;
+        grid-auto-columns: 74%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        margin-inline: calc(var(--container-gutter, 1rem) * -1);
+        padding-inline: var(--container-gutter, 1rem);
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__row > * {
+        scroll-snap-align: start;
+      }
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} .category-products-showcase__row {
+        grid-template-columns: repeat(var(--category-products-showcase-columns, 4), 1fr);
+      }
+    }
+
+    {%- comment -%}
+      The tile has no separate caption below it (its label sits inside the photo), so
+      stretching it to the row's full height (image + title + price of its neighboring
+      cards) would make it taller than the product photos themselves. Pin it to the top
+      and match the product image's own square ratio instead, so it lines up with just
+      the image portion of the cards next to it.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .category-products-showcase__tile {
+      position: relative;
+      align-self: start;
+      aspect-ratio: 1;
+    }
+  </style>
+
+  {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="container">
+      <div class="section-stack">
+        {%- render 'section-header',
+          subheading: section.settings.subheading,
+          heading: section.settings.heading,
+          heading_style: section.settings.heading_style,
+          content: section.settings.content
+        -%}
+
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign showcase_collection = block.settings.collection
+            assign products_count = block.settings.products_count
+            assign columns = products_count | plus: 1
+          -%}
+
+          {%- if showcase_collection != blank -%}
+            <div class="category-products-showcase__row" style="--category-products-showcase-columns: {{ columns }};" {{ block.shopify_attributes }}>
+              <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group">
+                {%- liquid
+                  assign tile_image = block.settings.image | default: showcase_collection.image
+                -%}
+
+                {%- if tile_image != blank -%}
+                  {{- tile_image | image_url: width: tile_image.width | image_tag: loading: 'lazy', sizes: '(max-width: 699px) 74vw, 25vw', widths: '400,600,800,1000,1200', class: 'zoom-image group-hover:zoom' -}}
+                {%- else -%}
+                  {%- capture collection_placeholder -%}{%- cycle 'collection-1', 'collection-2', 'collection-3' -%}{%- endcapture -%}
+                  {{- collection_placeholder | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
+                {%- endif -%}
+
+                <div class="content w-full align-self-end text-start">
+                  <div class="prose">
+                    <p class="h3">{{ block.settings.title | default: showcase_collection.title }}</p>
+                  </div>
+                </div>
+              </a>
+
+              {%- for product in showcase_collection.products limit: products_count -%}
+                {%- render 'product-card', product: product, reveal: false, position: forloop.index, section: section -%}
+              {%- else -%}
+                {%- for i in (1..products_count) -%}
+                  {%- render 'product-card-placeholder', reveal: false, loop_index: forloop.index0 -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Category showcase",
+  "class": "shopify-section--category-products-showcase",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:global.section.header_category"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "t:global.text.subheading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:global.text.heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:global.text.style",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category row",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "range",
+          "id": "products_count",
+          "min": 2,
+          "max": 4,
+          "default": 3,
+          "label": "Products to show"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:global.text.heading",
+          "info": "Falls back to the collection's own title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:global.image.image",
+          "info": "Falls back to the collection's own image"
+        },
+        {
+          "type": "color_scheme",
+          "id": "tile_color_scheme",
+          "label": "Tile text color scheme",
+          "default": "scheme-2"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category showcase",
+      "category": "t:global.categories.storytelling",
+      "blocks": [
+        { "type": "category" },
+        { "type": "category" }
+      ]
+    }
+  ]
+}
+{% endschema %}

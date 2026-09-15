@@ -57,8 +57,12 @@
         {%- render 'product-badges', product: product, vertical: true, context: 'card' -%}
       {%- endif -%}
 
+      {%- comment -%}
+        icon_width: 16 to match the quick-add "+" button's own icon size, so the two
+        (separate, top-right/bottom-right) corner buttons stay the same size as each other.
+      {%- endcomment -%}
       {%- unless hide_product_information -%}
-        {%- render 'wishlist-button', product: product, class: 'product-card__wishlist-button' -%}
+        {%- render 'wishlist-button', product: product, class: 'product-card__wishlist-button', icon_width: 16 -%}
       {%- endunless -%}
 
       <a href="{{ product.url }}" class="product-card__media" draggable="false" data-instant>
@@ -96,12 +100,20 @@
               class: main_image_classes
           -}}
 
+          {%- comment -%}
+            Reuses main_image_classes (just swapping --primary for --secondary) so the
+            hover/secondary image gets the exact same aspect-ratio + object-cover crop as the
+            primary one -- without this it only had object-fit: contain and no forced ratio,
+            so a non-square hover photo (a lifestyle/model shot, say) would fit inside its box
+            with letterboxing on the sides instead of filling it the way the primary image does.
+          {%- endcomment -%}
           {%- liquid
             if show_secondary_image and product.media.size > 1
               assign next_media = product.metafields.custom.card_hover_image.value | default: product.media[product.featured_media.position] | default: product.media[1]
 
               if next_media != blank
-                echo next_media | image_url: width: next_media.width | image_tag: class: 'product-card__image product-card__image--secondary', loading: 'lazy', fetchpriority: 'low', sizes: sizes, widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800', draggable: 'false', aria-hidden: 'true'
+                assign secondary_image_classes = main_image_classes | replace: '--primary', '--secondary'
+                echo next_media | image_url: width: next_media.width | image_tag: class: secondary_image_classes, loading: 'lazy', fetchpriority: 'low', sizes: sizes, widths: '200,300,400,500,600,700,800,1000,1200,1400,1600,1800', draggable: 'false', aria-hidden: 'true'
               endif
             endif
           -%}
@@ -120,7 +132,7 @@
               <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
               <button type="submit" class="product-card__quick-add-button">
                 <span class="sr-only">{{ 'product.general.add_to_cart_button' | t }}</span>
-                {%- render 'icon' with 'plus' -%}
+                {%- render 'icon' with 'plus', width: 16 -%}
               </button>
             {%- endform -%}
           </product-form>
@@ -129,7 +141,7 @@
 
           <button type="button" aria-controls="{{ quick_buy_id }}" class="product-card__quick-add-button">
             <span class="sr-only">{{ 'product.general.choose_options' | t }}</span>
-            {%- render 'icon' with 'plus' -%}
+            {%- render 'icon' with 'plus', width: 16 -%}
           </button>
 
           <quick-buy-modal

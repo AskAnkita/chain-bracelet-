@@ -86,15 +86,19 @@
             {%- assign atc_button_style = 'solid' -%}
           {%- endif -%}
 
-          {%- render 'button',
-            content: button_content,
-            type: 'submit',
-            disabled: button_disabled,
-            style: atc_button_style,
-            background: atc_button_background,
-            text_color: atc_button_text_color,
-            stretch: true
-          -%}
+          <div class="buy-buttons__row">
+            {%- render 'button',
+              content: button_content,
+              type: 'submit',
+              disabled: button_disabled,
+              style: atc_button_style,
+              background: atc_button_background,
+              text_color: atc_button_text_color,
+              stretch: true
+            -%}
+
+            {%- render 'wishlist-button', product: product, class: 'buy-buttons__wishlist-button', square: true -%}
+          </div>
 
           {%- if show_payment_button -%}
             {{- form | payment_button -}}

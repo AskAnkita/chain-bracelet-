@@ -349,17 +349,17 @@
                 height="{{ section.settings.left_image_mobile.height }}"
               >
             {%- endif -%}
-            {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.left_image_alt | default: '' -}}
+            {{- section.settings.left_image | image_url: width: section.settings.left_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', class: 'zoom-image group-hover:zoom', alt: section.settings.left_image_alt | default: '' -}}
           </picture>
         {%- else -%}
-          {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
+          {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
         {%- endif -%}
       {%- endcapture -%}
 
       {%- if section.settings.left_image_link != blank -%}
-        <a href="{{ section.settings.left_image_link }}" class="triptych-banner__media triptych-banner__media--left">{{- left_media -}}</a>
+        <a href="{{ section.settings.left_image_link }}" class="triptych-banner__media triptych-banner__media--left group">{{- left_media -}}</a>
       {%- else -%}
-        <div class="triptych-banner__media triptych-banner__media--left">{{- left_media -}}</div>
+        <div class="triptych-banner__media triptych-banner__media--left group">{{- left_media -}}</div>
       {%- endif -%}
 
       {%- comment -%}Center content{%- endcomment -%}
@@ -461,17 +461,17 @@
                 height="{{ section.settings.right_image_mobile.height }}"
               >
             {%- endif -%}
-            {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', alt: section.settings.right_image_alt | default: '' -}}
+            {{- section.settings.right_image | image_url: width: section.settings.right_image.width | image_tag: sizes: '(max-width: 999px) 100vw, 33vw', widths: '400,600,800,1000,1200,1600', loading: 'lazy', class: 'zoom-image group-hover:zoom', alt: section.settings.right_image_alt | default: '' -}}
           </picture>
         {%- else -%}
-          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder' -}}
+          {{- 'lifestyle-2' | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
         {%- endif -%}
       {%- endcapture -%}
 
       {%- if section.settings.right_image_link != blank -%}
-        <a href="{{ section.settings.right_image_link }}" class="triptych-banner__media triptych-banner__media--right">{{- right_media -}}</a>
+        <a href="{{ section.settings.right_image_link }}" class="triptych-banner__media triptych-banner__media--right group">{{- right_media -}}</a>
       {%- else -%}
-        <div class="triptych-banner__media triptych-banner__media--right">{{- right_media -}}</div>
+        <div class="triptych-banner__media triptych-banner__media--right group">{{- right_media -}}</div>
       {%- endif -%}
     </div>
     {%- if section.settings.section_width == 'contained' -%}</div>{%- endif -%}

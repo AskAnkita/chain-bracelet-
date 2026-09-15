@@ -79,7 +79,7 @@
             <legend>{{ option.name }}:</legend>
 
             {%- if resolved_option_selector_style == 'swatch' or resolved_option_selector_style == 'swatch_underline' or resolved_option_selector_style == 'variant_image' or resolved_option_selector_style == 'coin' -%}
-              <span>{{ option.selected_value }}</span>
+              <span class="variant-picker__selected-value">{{ option.selected_value }}</span>
             {%- endif -%}
           </div>
 
@@ -107,7 +107,7 @@
             {%- capture popover_id -%}popover-variant-dropdown-{{ section.id }}-{{ product.id }}-{{ option.position }}{%- endcapture -%}
 
             <button type="button" class="select" aria-controls="{{ popover_id }}" aria-expanded="false">
-              <span id="{{ popover_id }}-selected-value">{{- option.selected_value -}}</span>
+              <span id="{{ popover_id }}-selected-value" class="variant-picker__selected-value">{{- option.selected_value -}}</span>
               {%- render 'icon' with 'dropdown-chevron' -%}
             </button>
 

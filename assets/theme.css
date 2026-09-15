@@ -2295,7 +2295,8 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
 .wishlist-button__toggle {
   background: rgb(var(--circle-button-background));
   color: rgb(var(--circle-button-text-color));
-  padding: .625rem;
+  /* .5rem padding + 16px icon = 2rem box, same total size as before the icon grew from 12px */
+  padding: .5rem;
 }
 
 .wishlist-button__icon {
@@ -2362,11 +2363,31 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
   text-decoration: none;
 }
 
+/*
+  Square variant used next to "Add to cart": matches the theme's regular .button shape
+  (border + border-radius) instead of the filled circle used on product cards, and is a
+  fixed 1:1 square sized off the ATC button's own padding so the two line up edge to edge.
+*/
+.wishlist-button--square .wishlist-button__toggle {
+  aspect-ratio: 1;
+  height: 100%;
+  border: 1px solid rgb(var(--button-outline-color, var(--border-color)));
+  border-radius: var(--button-border-radius);
+  background: none;
+  color: rgb(var(--text-color));
+}
+
+.wishlist-button--square.is-active .wishlist-button__toggle {
+  color: rgb(var(--button-background, var(--text-color)));
+  border-color: rgb(var(--button-background, var(--border-color)));
+}
+
 .product-card__quick-add-button {
   background: rgb(var(--circle-button-background));
   color: rgb(var(--circle-button-text-color));
   z-index: 1;
-  padding: .625rem;
+  /* .5rem padding + 16px icon = 2rem box, same total size as before the icon grew from 12px */
+  padding: .5rem;
   position: absolute;
   inset-block-end: .5rem;
   inset-inline-end: .5rem;
@@ -6627,6 +6648,11 @@ shopify-account::part(signed-out-avatar) {
   }
 }
 
+.variant-picker__selected-value {
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
 .variant-picker .popover {
   --popover-block-offset: .5rem;
   --popover-body-padding-inline: 1.25rem;
@@ -6647,6 +6673,16 @@ shopify-account::part(signed-out-avatar) {
 .buy-buttons {
   row-gap: 1rem;
   display: grid;
+}
+
+.buy-buttons__row {
+  align-items: stretch;
+  gap: .75rem;
+  display: flex;
+}
+
+.buy-buttons__row > .button {
+  flex: 1;
 }
 
 .pickup-location {

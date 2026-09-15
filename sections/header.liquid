@@ -783,14 +783,25 @@
     class WishlistButton extends HTMLElement {
       connectedCallback() {
         this.update = this.update.bind(this);
-        this.button = this.querySelector('button');
-        this.button?.addEventListener('click', this.onClick.bind(this));
-        this.update();
+        {%- comment -%}
+          Listens on `this` (bubbled from the inner <button>) rather than the <button>
+          itself: this element is upgraded -- and connectedCallback runs -- the instant its
+          opening tag is parsed, since customElements.define() above already ran earlier in
+          the document (in the header). At that point its own <button> child hasn't been
+          parsed yet, so a listener attached directly to it (via a cached this.button, as
+          this used to do) silently attaches to nothing and every click was a no-op.
+        {%- endcomment -%}
+        this.addEventListener('click', this.onClick.bind(this));
+        queueMicrotask(this.update);
         document.addEventListener('wishlist:updated', this.update);
       }
 
       disconnectedCallback() {
         document.removeEventListener('wishlist:updated', this.update);
+      }
+
+      get button() {
+        return this.querySelector('button');
       }
 
       onClick() {
