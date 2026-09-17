@@ -5416,6 +5416,45 @@ shopify-account::part(signed-out-avatar) {
   line-height: 1.7;
 }
 
+/*
+  Best-effort attempt to make the account menu open as a full-height, right-side
+  slide-in panel (matching .cart-drawer) instead of its default popover/dialog.
+  shopify-account is a Shopify-platform component, not theme-authored, so its
+  shadow DOM part names aren't documented anywhere we could confirm; this targets
+  the part names Shopify's other web components (and the Shoelace/Web Awesome
+  design system they're built on) commonly use for a dialog's backdrop and sliding
+  panel. Any selector below that doesn't match a real part is a harmless no-op --
+  verify in the live preview, and if nothing changes, these names are wrong and
+  it'll need Shopify's actual docs (or dev tools inspection of the shadow DOM) to
+  find the right ones.
+*/
+shopify-account::part(overlay),
+shopify-account::part(backdrop) {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+shopify-account::part(panel),
+shopify-account::part(dialog),
+shopify-account::part(base),
+shopify-account::part(content) {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inset-inline-start: auto;
+  top: 0;
+  right: 0;
+  left: auto;
+  width: 100%;
+  height: 100%;
+  max-width: min(92vw, 28.125rem);
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+  transform: none;
+}
+
 .header__dropdown-menu {
   background: rgb(var(--background));
   width: max-content;

@@ -288,15 +288,22 @@
       waiting for a [allow-transparent-header] section like the home masthead does.
       Same open-menu/open-search exclusion as that rule, so an open dropdown still
       forces solid and stays readable.
+
+      Policy pages (refund, privacy, terms, shipping) are excluded: they're plain text
+      on a flat background with no hero to sit over, so a transparent bar just meant
+      unreadable text at the same color as the page behind it. They get the solid bar
+      unconditionally instead.
     {%- endcomment -%}
-    #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
-      --header-show-transparent-logo: 1;
-      --header-separation-border-color: 0 0 0 / 0;
-      --background: 0 0 0 / 0;
-      --background-gradient: 0 0 0 / 0;
-      --border-color: 0 0 0 / 0;
-      --text-color: var(--header-transparent-header-text-color);
-    }
+    {%- if request.page_type != 'policy' -%}
+      #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
+        --header-show-transparent-logo: 1;
+        --header-separation-border-color: 0 0 0 / 0;
+        --background: 0 0 0 / 0;
+        --background-gradient: 0 0 0 / 0;
+        --border-color: 0 0 0 / 0;
+        --text-color: var(--header-transparent-header-text-color);
+      }
+    {%- endif -%}
 
     {%- comment -%}
       x-header adds .is-solid once #header-scroll-tracker leaves the viewport. On the
