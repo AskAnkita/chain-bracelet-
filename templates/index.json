@@ -302,7 +302,7 @@
         "right_image_focus": 60,
         "content_style": "editorial",
         "center_background_color": "#f5f0e6",
-        "eyebrow_text": "The Chain and Bracelet Edit",
+        "eyebrow_text": "",
         "logo_image": "shopify://shop_images/chain-and-bracelet-icon-green.svg",
         "logo_width": 48,
         "kicker_text": "Timeless",
@@ -316,37 +316,6 @@
         "product_image_alt": "",
         "product_image_width": 240,
         "product_image_gap": -80
-      }
-    },
-    "rich_text_1": {
-      "type": "rich-text",
-      "blocks": {
-        "subheading_1": {
-          "type": "subheading",
-          "disabled": true,
-          "settings": {
-            "text": "Our goal"
-          }
-        },
-        "heading_1": {
-          "type": "heading",
-          "settings": {
-            "text": "Offer elegant, timeless and high quality products",
-            "heading_tag": "h1"
-          }
-        }
-      },
-      "block_order": [
-        "subheading_1",
-        "heading_1"
-      ],
-      "name": "t:sections.rich_text.presets.rich_text.name",
-      "settings": {
-        "color_scheme": "",
-        "separate_section_with_border": false,
-        "content_width": "xs",
-        "text_position": "center",
-        "remove_vertical_spacing": false
       }
     },
     "featured_collections_1": {
@@ -923,7 +892,6 @@
     "slideshow",
     "media_grid_1",
     "image_text_image_banner_1",
-    "rich_text_1",
     "featured_collections_1",
     "featured_collections_2",
     "scrolling_content_1",

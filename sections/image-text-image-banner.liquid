@@ -258,6 +258,10 @@
         width: 100%;
       }
 
+      #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__logo {
+        margin-block-end: .875rem;
+      }
+
       #shopify-section-{{ section.id }} .triptych-banner__content--editorial .triptych-banner__eyebrow {
         font-size: .75rem;
         letter-spacing: .18em;
@@ -377,6 +381,10 @@
         {%- endcomment -%}
         <div class="triptych-banner__content triptych-banner__content--editorial">
           <div class="prose">
+            {%- if section.settings.logo_image != blank -%}
+              {{- section.settings.logo_image | image_url: width: 160 | image_tag: widths: '80,160', alt: '', loading: 'lazy', class: 'triptych-banner__logo' -}}
+            {%- endif -%}
+
             {%- if section.settings.eyebrow_text != blank -%}
               <p class="triptych-banner__eyebrow">{{- section.settings.eyebrow_text -}}</p>
             {%- endif -%}
@@ -666,7 +674,7 @@
         { "value": "classic", "label": "Classic (logo mark, stacked heading)" },
         { "value": "editorial", "label": "Editorial (eyebrow, one-line heading)" }
       ],
-      "info": "Editorial puts the link beside the product shot and hides the logo mark.",
+      "info": "Editorial puts the link beside the product shot.",
       "default": "classic"
     },
     {
@@ -686,8 +694,7 @@
       "type": "image_picker",
       "id": "logo_image",
       "label": "Logo mark",
-      "info": "Small mark shown above the heading. Falls back to nothing when empty.",
-      "visible_if": "{{ section.settings.content_style == 'classic' }}"
+      "info": "Small mark shown above the heading. Falls back to nothing when empty."
     },
     {
       "type": "range",
