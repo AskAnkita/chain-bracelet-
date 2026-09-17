@@ -55,7 +55,7 @@
 
   @media screen and (min-width: 1000px) {
     #shopify-section-{{ section.id }} {
-      --header-padding-block: 2rem;
+      --header-padding-block: {% if section.settings.reduce_padding %}0.65rem{% else %}2rem{% endif %};
       {%- case section.settings.layout -%}
         {%- when 'logo_left_navigation_inline' -%}
           --header-grid: "logo primary-nav secondary-nav" / auto minmax(0, 1fr) auto;
@@ -325,22 +325,25 @@
       grid-row: 1;
       align-self: center;
       justify-self: start;
-      display: flex;
-      align-items: center;
       position: relative;
+      width: {{ section.settings.center_icon_width | times: 3 | round }}px;
+      height: 1px;
     }
 
     {%- comment -%}
-      The mark is a lone brand cue in a single-row bar here, not the centrepiece of a
-      three-row masthead, so it's sized to fill the bar's height rather than pinned to
-      a small width -- the merchant's logo file is roughly square, so a width cap left
-      it far shorter than the nav links beside it. Driving it by height instead makes
-      it match the nav row; width follows the image's aspect ratio. Still derived from
-      the merchant's center_icon width setting so it tracks that knob, just read as a
-      height now. The width cap is a safety rail for very wide logo files.
+      The mark can be sized larger than the compact bar itself (a big brand mark on a
+      thin bar is the point), so it's taken out of flow and centered on the anchor's
+      midpoint instead of sized to fit inside it -- otherwise a bigger mark would drag
+      the whole row taller with it. The anchor above still reserves real width (from
+      the same center_icon width setting, as a safety rail for wide logo files) so the
+      nav either side doesn't drift when the mark is absolutely positioned.
     {%- endcomment -%}
     {%- assign compact_mark_height = section.settings.center_icon_width | times: 1.1 | round -%}
     #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
       height: {{ compact_mark_height }}px;
       width: auto;
       max-width: {{ section.settings.center_icon_width | times: 3 | round }}px;
@@ -352,6 +355,17 @@
       #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
         height: {{ section.settings.center_icon_width | times: 1.35 | round }}px;
       }
+    }
+
+    {%- comment -%}
+      Wins over the shared inset:0 crossfade rule above (written for the old in-flow
+      marks) so the transparent copy centers on the same midpoint as the opaque one
+      instead of pinning to the anchor's top-left corner.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .header-compact .header__compact-mark .header__mark-image--transparent {
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
     }
 
     #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
@@ -369,7 +383,6 @@
     @media screen and (min-width: 1000px) {
       #shopify-section-{{ section.id }} .header-compact x-header {
         --header-grid: "logo primary-nav secondary-nav" / auto minmax(0, 1fr) auto !important;
-        --header-padding-block: 1.2rem !important;
         align-items: center !important;
       }
 
@@ -530,14 +543,14 @@
 
         <a href="{{ routes.root_url }}" class="header__utility-mark" aria-label="{{ shop.name }}">
           {%- if section.settings.center_icon -%}
-            {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
+            {{- section.settings.center_icon | image_url: width: 1440 | image_tag: widths: '480,960,1440', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
 
             {%- comment -%}
               The light mark for the transparent header. Decorative: the <a> carries the
               label and the solid mark above already names the shop, so alt stays empty.
             {%- endcomment -%}
             {%- if section.settings.transparent_center_icon -%}
-              {{- section.settings.transparent_center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
+              {{- section.settings.transparent_center_icon | image_url: width: 1440 | image_tag: widths: '480,960,1440', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
             {%- endif -%}
           {%- else -%}
             {%- render 'icon' with 'gem' -%}
@@ -594,10 +607,10 @@
       {%- endcomment -%}
       <a href="{{ routes.root_url }}" class="header__compact-mark" aria-label="{{ shop.name }}">
         {%- if section.settings.center_icon -%}
-          {{- section.settings.center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
+          {{- section.settings.center_icon | image_url: width: 1440 | image_tag: widths: '480,960,1440', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
 
           {%- if section.settings.transparent_center_icon -%}
-            {{- section.settings.transparent_center_icon | image_url: width: 80 | image_tag: widths: '40,80', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
+            {{- section.settings.transparent_center_icon | image_url: width: 1440 | image_tag: widths: '480,960,1440', alt: '', loading: 'lazy', class: 'header__mark-image header__mark-image--transparent' -}}
           {%- endif -%}
         {%- else -%}
           {%- render 'icon' with 'gem' -%}
@@ -956,8 +969,8 @@
       "type": "range",
       "id": "center_icon_width",
       "min": 12,
-      "max": 80,
-      "step": 1,
+      "max": 160,
+      "step": 2,
       "unit": "px",
       "label": "Center mark width",
       "default": 22
