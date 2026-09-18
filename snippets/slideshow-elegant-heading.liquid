@@ -16,7 +16,18 @@
 <div class="slideshow-elegant" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }};">
   {%- if block.settings.title_image != blank -%}
     <p class="slideshow-elegant__heading-image">
-      {{- block.settings.title_image | image_url: width: 400 | image_tag: widths: '150,250,400', alt: block.settings.title_image.alt | default: block.settings.title | strip_html -}}
+      {%- assign title_image_alt = block.settings.title_image.alt | default: block.settings.title | strip_html | escape -%}
+      {{- block.settings.title_image | image_url: width: 600 | image_tag: widths: '180,300,450,600', alt: title_image_alt -}}
+    </p>
+  {%- elsif block.settings.title_image_asset != blank -%}
+    <p class="slideshow-elegant__heading-image">
+      <img
+        src="{{ block.settings.title_image_asset | asset_url }}"
+        alt="{{ block.settings.title | strip_html | escape }}"
+        loading="eager"
+        width="2172"
+        height="724"
+      >
     </p>
   {%- endif -%}
 
