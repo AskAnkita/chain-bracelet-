@@ -32,6 +32,32 @@
         color: var(--elegant-accent);
       }
 
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__eyebrow {
+        color: var(--elegant-accent);
+        font-family: var(--heading-font-family);
+        font-size: clamp(.75rem, .65rem + .35vw, .95rem);
+        font-weight: 500;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+        margin-block-end: .6em;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__heading-image {
+        display: flex;
+        justify-content: var(--elegant-justify);
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__heading-image {
+        margin-block-end: clamp(1rem, 2vw, 1.5rem);
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__heading-image img {
+        display: block;
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+      }
+
       #shopify-section-{{ section.id }} .slideshow-elegant__divider,
       #shopify-section-{{ section.id }} .slideshow-elegant__ornament {
         display: flex;
@@ -226,10 +252,10 @@
             endif
           %}
 
-          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {% if block.settings.elegant_heading %}slideshow__slide-content--elegant{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %}">
+          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {% if block.settings.elegant_heading %}slideshow__slide-content--elegant{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %} {% if block.settings.elegant_heading %}--elegant-accent: {{ block.settings.accent_color }};{% endif %}">
             <div class="prose" {% if block.settings.enable_text_shadow %}style="text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});"{% endif %}>
               {%- if block.settings.subheading != blank -%}
-                <p class="h6">{{ block.settings.subheading }}</p>
+                <p class="h6 {% if block.settings.elegant_heading %}slideshow-elegant__eyebrow{% endif %}">{{ block.settings.subheading }}</p>
               {%- endif -%}
 
               {%- if block.settings.elegant_heading -%}
@@ -479,6 +505,12 @@
           "id": "title",
           "label": "t:global.text.heading",
           "default": "Image slide"
+        },
+        {
+          "type": "image_picker",
+          "id": "title_image",
+          "label": "Heading image",
+          "info": "Shows in place of the text heading above when set."
         },
         {
           "type": "select",
