@@ -14,13 +14,20 @@
 -%}
 
 <div class="slideshow-elegant" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }};">
+  {%- liquid
+    assign heading_image_class = 'slideshow-elegant__heading-image'
+    if block.settings.title == blank
+      assign heading_image_class = heading_image_class | append: ' slideshow-elegant__heading-image--title'
+    endif
+  -%}
+
   {%- if block.settings.subheading == blank and block.settings.title_image != blank -%}
-    <p class="slideshow-elegant__heading-image">
+    <p class="{{ heading_image_class }}">
       {%- assign title_image_alt = block.settings.title_image.alt | default: block.settings.title | strip_html | escape -%}
-      {{- block.settings.title_image | image_url: width: 600 | image_tag: widths: '180,300,450,600', alt: title_image_alt -}}
+      {{- block.settings.title_image | image_url: width: 1200 | image_tag: widths: '300,450,600,900,1200', alt: title_image_alt -}}
     </p>
   {%- elsif block.settings.subheading == blank and block.settings.title_image_asset != blank -%}
-    <p class="slideshow-elegant__heading-image">
+    <p class="{{ heading_image_class }}">
       <img
         src="{{ block.settings.title_image_asset | asset_url }}"
         alt="{{ block.settings.title | strip_html | escape }}"

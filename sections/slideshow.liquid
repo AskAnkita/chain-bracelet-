@@ -59,6 +59,14 @@
         height: auto;
       }
 
+      {%- comment -%}
+        When there's no separate heading text, the image IS the title -- size it like
+        a hero heading instead of the small eyebrow logo above it.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow-elegant__heading-image--title img {
+        max-width: clamp(280px, 36vw, 640px);
+      }
+
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .h1 {
         max-width: 9.2em;
         margin-block-start: .1rem;
