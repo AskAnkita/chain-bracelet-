@@ -60,11 +60,23 @@
       }
 
       {%- comment -%}
-        When there's no separate heading text, the image IS the title -- size it like
-        a hero heading instead of the small eyebrow logo above it.
+        Heading image: replaces the text heading entirely (not the small eyebrow logo
+        above it), so it's sized like a hero title instead.
       {%- endcomment -%}
-      #shopify-section-{{ section.id }} .slideshow-elegant__heading-image--title img {
+      #shopify-section-{{ section.id }} .slideshow-elegant__heading-picture {
+        display: flex;
+        justify-content: var(--elegant-justify);
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__heading-picture {
+        margin-block: .1rem 0;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__heading-picture img {
+        display: block;
+        width: 100%;
         max-width: clamp(280px, 36vw, 640px);
+        height: auto;
       }
 
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .h1 {
@@ -566,6 +578,12 @@
           "id": "title_image_asset",
           "label": "Eyebrow asset filename",
           "info": "Optional theme asset filename used when no image is selected above."
+        },
+        {
+          "type": "image_picker",
+          "id": "heading_image",
+          "label": "Heading image",
+          "info": "Replaces the text heading below with this image (e.g. a wordmark). Leave blank to use the text heading and style instead."
         },
         {
           "type": "select",

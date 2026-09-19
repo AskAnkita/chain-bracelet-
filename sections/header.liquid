@@ -112,6 +112,19 @@
     padding-inline: var(--container-gutter);
   }
 
+  {%- comment -%}
+    The site-wide --container-gutter (1.25rem on mobile) reads as too tight for the
+    header specifically: the hamburger and cart icons sit almost flush against the
+    screen edges. Bumped up for this section only, so other sections' side spacing is
+    untouched.
+  {%- endcomment -%}
+  @media screen and (max-width: 699px) {
+    #shopify-section-{{ section.id }} .header,
+    #shopify-section-{{ section.id }} .header__utility-row {
+      padding-inline: 1.75rem !important;
+    }
+  }
+
   #shopify-section-{{ section.id }} .header__utility-row--top {
     justify-content: space-between;
     gap: 1rem;
