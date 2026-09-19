@@ -95,20 +95,11 @@
             "show_menu_title": true,
             "menu_title": ""
           }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "title": "About us",
-            "content": "",
-            "enable_follow_on_shop": true
-          }
         }
       },
       "block_order": [
         "newsletter",
-        "links",
-        "text"
+        "links"
       ],
       "settings": {
         "color_scheme": "",

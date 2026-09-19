@@ -219,7 +219,7 @@
     endif
   %}
 
-  <body class="{{ features_class }} color-scheme color-scheme--{{ settings.default_color_scheme.id }}">
+  <body class="{{ features_class }} color-scheme color-scheme--{{ settings.default_color_scheme.id }}{% if request.page_type == 'policy' and request.path contains 'shipping-policy' %} policy-shipping{% endif %}">
     {%- render 'shadow-dom-templates' -%}
 
     <loading-bar class="loading-bar" aria-hidden="true"></loading-bar>

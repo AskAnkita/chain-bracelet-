@@ -150,6 +150,14 @@
       }
 
       @media screen and (max-width: 699px) {
+        #shopify-section-{{ section.id }} .content-over-media--elegant:before {
+          background: linear-gradient(90deg, rgb(0 0 0 / .46) 0%, rgb(0 0 0 / .28) 48%, rgb(0 0 0 / .08) 100%);
+        }
+
+        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant {
+          text-shadow: 0 2px 10px rgb(0 0 0 / .32);
+        }
+
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .h1 {
           font-size: clamp(2.25rem, 13vw, 4rem);
         }
@@ -181,7 +189,7 @@
   >
     {%- for block in section.blocks -%}
       {%- capture slide -%}
-        <div class="content-over-media content-over-media--{{ section.settings.media_size }}" style="--content-over-media-content-max-width: {{ block.settings.content_max_width }}px; --content-over-media-gradient-overlay: {{ block.settings.gradient_overlay }}">
+        <div class="content-over-media content-over-media--{{ section.settings.media_size }} {% if block.settings.elegant_heading %}content-over-media--elegant{% endif %}" style="--content-over-media-content-max-width: {{ block.settings.content_max_width }}px; --content-over-media-gradient-overlay: {{ block.settings.gradient_overlay }}">
           {%- comment -%}---------------- MEDIA ----------------{%- endcomment -%}
           {%- if block.type == 'image' -%}
             {%- if block.settings.image != blank -%}

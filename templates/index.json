@@ -14,6 +14,7 @@
       "blocks": {
         "banner_text_left": {
           "type": "image",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/fd91f459-6b7a-4f9d-ac1e-d440a3e86af8-2.png",
             "mobile_image": "shopify://shop_images/33ac6553-ab44-4a92-9cbf-363e7f34a9b5.png",
@@ -90,18 +91,17 @@
         },
         "slide_1": {
           "type": "image",
-          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/fd91f459-6b7a-4f9d-ac1e-d440a3e86af8-2.png",
             "mobile_image": "shopify://shop_images/33ac6553-ab44-4a92-9cbf-363e7f34a9b5.png",
             "subheading": "",
             "title": "modern handmade jewellery",
             "title_image_asset": "",
-            "heading_style": "h1",
-            "elegant_heading": false,
+            "heading_style": "h3",
+            "elegant_heading": true,
             "divider_text": "",
             "accent_text": "",
-            "accent_color": "#9a763c",
+            "accent_color": "#C38118",
             "show_ornament": false,
             "tagline": "",
             "mobile_text_position": "place-self-center-start text-start",
@@ -120,7 +120,7 @@
             "button_2_text_color": "#000000",
             "background": "",
             "background_opacity": 4,
-            "text_color": "#ffffff",
+            "text_color": "#d4af37",
             "border_color": "",
             "gradient_overlay": "linear-gradient(0deg, rgba(39, 35, 27, 0.3), rgba(4, 4, 4, 0) 100%)",
             "enable_text_shadow": false,
@@ -313,7 +313,7 @@
         "kicker_text": "Timeless",
         "heading_line_1": "Diamond",
         "heading_line_2": "Essentials",
-        "body_text": "<p>Modern chains and diamond bracelets, meticulously crafted to elevate every moment, every day.</p>",
+        "body_text": "<p>MODERN CHAINS AND DIAMOND BRACELETS, METICULOUSLY CRAFTED TO ELEVATE EVERY MOMENT, EVERY DAY</p>",
         "quote_text": "",
         "button_text": "Shop the Collection",
         "button_link": "shopify://collections",
@@ -330,7 +330,7 @@
           "settings": {
             "collection": "pear-bracelet",
             "products_count": 8,
-            "title": "",
+            "title": "ELEGANT, TIMELESS AND HIGH QUALITY PRODUCTS",
             "link_url": "",
             "link_text": "View all"
           }
@@ -351,7 +351,7 @@
         "header_alignment": "center",
         "heading_style": "h2",
         "subheading": "",
-        "hide_collection_title": true
+        "hide_collection_title": false
       }
     },
     "featured_collections_2": {

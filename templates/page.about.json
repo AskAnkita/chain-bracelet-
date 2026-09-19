@@ -10,39 +10,23 @@
     "intro": {
       "type": "rich-text",
       "blocks": {
-        "subheading": {
-          "type": "subheading",
-          "settings": {
-            "text": "Our story"
-          }
-        },
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Jewellery made by hand, made to keep",
+            "text": "About Chain &amp; Bracelet",
             "heading_tag": "h1"
           }
         },
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>We started with one idea: a chain or a bracelet should feel personal, last for years, and still make sense on an ordinary Tuesday. Everything we make is built around that balance of substance and ease &mdash; solid metal, honest stones, and a finish you can live in.</p>"
-          }
-        },
-        "cta": {
-          "type": "button",
-          "settings": {
-            "style": "solid",
-            "text": "Shop the collection",
-            "url": "shopify://collections/all"
+            "content": "<p>For over five decades, our family&rsquo;s history has been woven into the fine jewelry industry. Rooted in a 50-year legacy of traditional craftsmanship, Chain &amp; Bracelet was founded to bridge generations of expertise with modern, timeless design.</p>"
           }
         }
       },
       "block_order": [
-        "subheading",
         "heading",
-        "paragraph",
-        "cta"
+        "paragraph"
       ],
       "settings": {
         "content_width": "md",
@@ -53,28 +37,21 @@
     "story": {
       "type": "image-with-text",
       "blocks": {
-        "subheading": {
-          "type": "subheading",
-          "settings": {
-            "text": "The workshop"
-          }
-        },
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Every piece finished by hand",
+            "text": "Manufacturing across Southeast Asia and the Middle East",
             "heading_tag": "h2"
           }
         },
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>What began as a single studio bench is now a small workshop of jewellers who still assemble, set, and polish each piece themselves. We weigh every stone, test every clasp, and check every link before it earns our name. Nothing ships until it is something we would wear ourselves.</p>"
+            "content": "<p>We oversee the entire journey of our pieces, partnering directly with our dedicated manufacturing facilities across Southeast Asia and the Middle East. By combining time-honored artisanal techniques with state-of-the-art production, we ensure every link, detail, and accent meets the highest standards of structural integrity and refined luxury.</p>"
           }
         }
       },
       "block_order": [
-        "subheading",
         "heading",
         "paragraph"
       ],
@@ -86,61 +63,18 @@
         "reveal_on_scroll": true
       }
     },
-    "values": {
-      "type": "text-with-icons",
-      "blocks": {
-        "craft": {
-          "type": "item",
-          "settings": {
-            "icon": "picto-jewelry",
-            "title": "Handmade craftsmanship",
-            "content": "<p>Assembled, stone-set, and finished by hand in our own workshop &mdash; not on a production line.</p>",
-            "icon_width": 28
-          }
-        },
-        "materials": {
-          "type": "item",
-          "settings": {
-            "icon": "picto-leaf",
-            "title": "Solid gold &amp; silver",
-            "content": "<p>10k&ndash;18k solid gold and 925 sterling silver, set with traceable lab-grown diamonds. Never plated brass.</p>",
-            "icon_width": 28
-          }
-        },
-        "guarantee": {
-          "type": "item",
-          "settings": {
-            "icon": "picto-shield",
-            "title": "Lifetime care",
-            "content": "<p>Free re-tightening, re-polishing, and repairs for as long as you own the piece.</p>",
-            "icon_width": 28
-          }
-        }
-      },
-      "block_order": [
-        "craft",
-        "materials",
-        "guarantee"
-      ],
-      "settings": {
-        "color_scheme": "scheme-2",
-        "text_alignment": "center",
-        "stack_on_mobile": false
-      }
-    },
     "promise": {
       "type": "rich-text",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "paragraph": {
+          "type": "richtext",
           "settings": {
-            "text": "&ldquo;We make pieces we would wear every day &mdash; and we build them to survive it.&rdquo;",
-            "heading_tag": "h3"
+            "content": "<p>Our collections are crafted exclusively from high-quality materials, built to elevate everyday wear and capture contemporary trends without sacrificing endurance. At Chain &amp; Bracelet, we honor where we came from by delivering uncompromising quality, authentic value, and timeless elegance directly to you.</p>"
           }
         }
       },
       "block_order": [
-        "heading"
+        "paragraph"
       ],
       "settings": {
         "color_scheme": "scheme-3",
@@ -149,51 +83,76 @@
         "separate_section_with_border": true
       }
     },
-    "materials": {
-      "type": "multi-column",
+    "heritage_heading": {
+      "type": "rich-text",
       "blocks": {
-        "metal": {
-          "type": "image_with_text",
+        "heading": {
+          "type": "heading",
           "settings": {
-            "image": "",
-            "title": "Real metal",
-            "heading_tag": "h3",
-            "content": "<p>Solid 10k&ndash;18k gold and 925 sterling silver. The weight in your hand is the metal, not a coating.</p>"
-          }
-        },
-        "diamonds": {
-          "type": "image_with_text",
-          "settings": {
-            "image": "",
-            "title": "Lab-grown diamonds",
-            "heading_tag": "h3",
-            "content": "<p>Physically identical to mined stones, hand-set for consistent sparkle across every link.</p>"
-          }
-        },
-        "build": {
-          "type": "image_with_text",
-          "settings": {
-            "image": "",
-            "title": "Built to last",
-            "heading_tag": "h3",
-            "content": "<p>Reinforced clasps and soldered links, stress-tested so an everyday piece stays an everyday piece.</p>"
+            "text": "Our Craftsmanship &amp; Heritage",
+            "heading_tag": "h2"
           }
         }
       },
       "block_order": [
-        "metal",
-        "diamonds",
-        "build"
+        "heading"
       ],
       "settings": {
-        "columns_per_row": 3,
-        "stack_on_mobile": true,
-        "subheading": "The details",
-        "title": "What goes into every piece",
-        "heading_style": "h2",
-        "text_alignment": "start",
-        "content_alignment": "start",
-        "spacing": "md"
+        "content_width": "md",
+        "text_position": "center",
+        "separate_section_with_border": false
+      }
+    },
+    "values": {
+      "type": "text-with-icons",
+      "blocks": {
+        "mastery": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-award-gift",
+            "title": "Generational Mastery",
+            "content": "<p>Passed down through five decades, our deep-rooted expertise guides every design decision &mdash; from the precision of our links to the perfect balance of each setting.</p>",
+            "icon_width": 28
+          }
+        },
+        "manufacturing": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-earth",
+            "title": "Global Manufacturing",
+            "content": "<p>Operating our own specialized facilities across Southeast Asia and the Middle East allows us to maintain direct oversight over ethical sourcing, material purity, and superior quality control.</p>",
+            "icon_width": 28
+          }
+        },
+        "essentials": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-jewelry",
+            "title": "Elevated Essentials",
+            "content": "<p>Designed for longevity, our pieces seamlessly fuse current fashion movements with enduring silhouette styles, creating modern heirlooms meant to be worn every day.</p>",
+            "icon_width": 28
+          }
+        },
+        "value": {
+          "type": "item",
+          "settings": {
+            "icon": "picto-money",
+            "title": "Direct Value",
+            "content": "<p>By eliminating intermediary markup and managing production in-house, we deliver genuine luxury and fine craftsmanship without unnecessary cost.</p>",
+            "icon_width": 28
+          }
+        }
+      },
+      "block_order": [
+        "mastery",
+        "manufacturing",
+        "essentials",
+        "value"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "text_alignment": "center",
+        "stack_on_mobile": false
       }
     },
     "newsletter": {
@@ -202,7 +161,7 @@
         "subheading": "Keep me updated",
         "title": "Stay in the loop",
         "heading_style": "h2",
-        "content": "<p>New releases, restocks, and the occasional workshop story. No noise.</p>",
+        "content": "<p>New arrivals, collection launches, and stories from Chain &amp; Bracelet.</p>",
         "button_text": "Subscribe"
       }
     }
@@ -211,9 +170,9 @@
     "main",
     "intro",
     "story",
-    "values",
     "promise",
-    "materials",
+    "heritage_heading",
+    "values",
     "newsletter"
   ]
 }
