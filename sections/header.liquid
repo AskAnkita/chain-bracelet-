@@ -292,9 +292,12 @@
       Policy pages (refund, privacy, terms, shipping) are excluded: they're plain text
       on a flat background with no hero to sit over, so a transparent bar just meant
       unreadable text at the same color as the page behind it. They get the solid bar
-      unconditionally instead.
+      unconditionally instead. The About page is excluded for the same reason -- it
+      opens with plain text, not a hero image. Matched by handle rather than only
+      template_suffix so it still applies before the page is switched to the
+      page.about template.
     {%- endcomment -%}
-    {%- if request.page_type != 'policy' -%}
+    {%- if request.page_type != 'policy' and page.template_suffix != 'about' and page.handle != 'about-us' -%}
       #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
         --header-show-transparent-logo: 1;
         --header-separation-border-color: 0 0 0 / 0;
@@ -701,7 +704,7 @@
             {%- endfor -%}
 
             {%- comment -%}Right nav items (Rings, Earrings, Size Guide, About Us){%- endcomment -%}
-            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about" | split: "," -%}
+            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: "," -%}
             {%- for item in right_nav_items -%}
               {%- assign item_parts = item | split: "|" -%}
               {%- assign link_title = item_parts[0] -%}

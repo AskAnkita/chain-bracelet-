@@ -13,14 +13,14 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "About Chain &amp; Bracelet",
+            "text": "About Chain & Bracelet",
             "heading_tag": "h1"
           }
         },
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>For over five decades, our family&rsquo;s history has been woven into the fine jewelry industry. Rooted in a 50-year legacy of traditional craftsmanship, Chain &amp; Bracelet was founded to bridge generations of expertise with modern, timeless design.</p>"
+            "content": "<p>For over five decades, our family&rsquo;s history has been woven into the fine jewelry industry. Rooted in a 50-year legacy of traditional craftsmanship, Chain & Bracelet was founded to bridge generations of expertise with modern, timeless design.</p>"
           }
         }
       },
@@ -69,7 +69,7 @@
         "paragraph": {
           "type": "richtext",
           "settings": {
-            "content": "<p>Our collections are crafted exclusively from high-quality materials, built to elevate everyday wear and capture contemporary trends without sacrificing endurance. At Chain &amp; Bracelet, we honor where we came from by delivering uncompromising quality, authentic value, and timeless elegance directly to you.</p>"
+            "content": "<p>Our collections are crafted exclusively from high-quality materials, built to elevate everyday wear and capture contemporary trends without sacrificing endurance. At Chain & Bracelet, we honor where we came from by delivering uncompromising quality, authentic value, and timeless elegance directly to you.</p>"
           }
         }
       },
@@ -89,7 +89,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "text": "Our Craftsmanship &amp; Heritage",
+            "text": "Our Craftsmanship & Heritage",
             "heading_tag": "h2"
           }
         }
@@ -161,7 +161,7 @@
         "subheading": "Keep me updated",
         "title": "Stay in the loop",
         "heading_style": "h2",
-        "content": "<p>New arrivals, collection launches, and stories from Chain &amp; Bracelet.</p>",
+        "content": "<p>New arrivals, collection launches, and stories from Chain & Bracelet.</p>",
         "button_text": "Subscribe"
       }
     }

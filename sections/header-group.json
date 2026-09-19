@@ -421,7 +421,7 @@
         "logo_max_width": 240,
         "logo_mobile_max_width": 160,
         "about_label": "About C&B",
-        "about_url": "",
+        "about_url": "shopify://pages/about-us",
         "center_icon": "shopify://shop_images/26300b3c-29ef-4689-a0b9-a95e9359f44f.png",
         "transparent_center_icon": "shopify://shop_images/26300b3c-29ef-4689-a0b9-a95e9359f44f.png",
         "center_icon_width": 32,
