@@ -424,9 +424,11 @@
       unconditionally instead. The About page is excluded for the same reason -- it
       opens with plain text, not a hero image. Matched by handle rather than only
       template_suffix so it still applies before the page is switched to the
-      page.about template.
+      page.about template. The wishlist page is excluded too: its product grid starts
+      right under the bar on the plain background. Matched by template (which also
+      covers previewing it on any page with ?view=wishlist) or by the page's handle.
     {%- endcomment -%}
-    {%- if request.page_type != 'policy' and page.template_suffix != 'about' and page.handle != 'about-us' -%}
+    {%- if request.page_type != 'policy' and page.template_suffix != 'about' and page.handle != 'about-us' and template.suffix != 'wishlist' and page.handle != 'wishlist' -%}
       #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
         --header-show-transparent-logo: 1;
         --header-separation-border-color: 0 0 0 / 0;
@@ -990,6 +992,15 @@
         {%- endcomment -%}
         this.addEventListener('click', this.onClick.bind(this));
         queueMicrotask(this.update);
+        {%- comment -%}
+          Same parsing race for the initial state: the microtask can run before the
+          <button> exists, so the heart was filled (is-active is on this element) but its
+          button kept aria-pressed="false" and the "Add to wishlist" label on a saved
+          product. Running update again once the document is parsed catches those.
+        {%- endcomment -%}
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', this.update, { once: true });
+        }
         document.addEventListener('wishlist:updated', this.update);
       }
 

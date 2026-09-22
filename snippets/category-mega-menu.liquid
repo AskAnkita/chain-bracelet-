@@ -5,9 +5,9 @@
   can fall back to a plain link.
 
   Without a block, the panel builds itself from the category's collection:
-  - links: the products' `Type:` and `Style:` tags, as one list in columns, each
-    linking to the collection filtered by that tag (e.g. Style:Halo goes to
-    /collections/necklaces/style-halo);
+  - links: the products' `Type:` and `Style:` tags (plus `Shape:` for Earrings and
+    Bracelets), as one list in columns, each linking to the collection filtered by
+    that tag (e.g. Style:Halo goes to /collections/necklaces/style-halo);
   - images: the collection's own image, then `second_image` (the category's flat-lay).
 
   A "Category mega menu" block overrides any of it: its menu replaces the tag links,
@@ -37,13 +37,21 @@
   {%- elsif collection -%}
     {%- comment -%}
       One list: the Type tags first, then Style, flowing into as few columns as fit
-      6 rows each, then evened out (13 links: 5 + 5 + 3, not 6 + 6 + 1). Add 'Shape'
-      back to tag_groups to list the stone shapes too. Type skips the tag that just
-      repeats the category (Type:Necklace under Necklaces), since it matches nearly
-      every product in it.
+      6 rows each, then evened out (13 links: 5 + 5 + 3, not 6 + 6 + 1). Earrings and
+      Bracelets have only a few of those, so they also list the stone shapes, as
+      "Heart Cut" etc. (the wording the product titles use; a bare "Emerald" would read
+      as the stone). Type skips the tag that just repeats the category (Type:Necklace
+      under Necklaces), since it matches nearly every product in it.
     {%- endcomment -%}
-    {%- assign generic_type = collection.title | downcase | remove_last: 's' -%}
-    {%- assign tag_groups = 'Type,Style' | split: ',' -%}
+    {%- liquid
+      assign generic_type = collection.title | downcase | remove_last: 's'
+      assign tag_groups = 'Type,Style' | split: ','
+
+      case collection.handle
+        when 'earrings', 'bracelets'
+          assign tag_groups = 'Type,Style,Shape' | split: ','
+      endcase
+    -%}
 
     {%- assign tag_count = 0 -%}
     {%- capture tag_links -%}
@@ -56,6 +64,9 @@
             {%- assign value = tag | remove_first: prefix | strip -%}
             {%- assign value_downcase = value | downcase -%}
             {%- unless value_downcase == generic_type -%}
+              {%- if group == 'Shape' -%}
+                {%- assign value = value | append: ' Cut' -%}
+              {%- endif -%}
               {%- assign tag_count = tag_count | plus: 1 -%}
               <li>
                 <a href="{{ collection.url }}/{{ tag | handleize }}" class="link-reverse">{{ value }}</a>

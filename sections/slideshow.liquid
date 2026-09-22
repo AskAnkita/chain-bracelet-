@@ -123,11 +123,25 @@
         font-style: italic;
       }
 
+      {%- comment -%}
+        "Same font as the menu" option: the theme heading font, uppercase and letter-spaced
+        like the header links, at a smaller size since it's much wider than the serif.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--menu-font .slideshow-elegant__title {
+        max-width: 14em;
+        font-family: var(--heading-font-family);
+        font-weight: var(--heading-font-weight);
+        font-stretch: normal;
+        font-size: clamp(1.75rem, 2.8vw, 3.25rem);
+        line-height: 1.15;
+        letter-spacing: .14em;
+        word-spacing: normal;
+        text-transform: uppercase;
+      }
+
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
-        min-width: clamp(13rem, 19vw, 17rem);
         margin-block-start: clamp(1.15rem, 1.9vw, 1.65rem);
-        padding: .9rem 1.85rem;
-        box-shadow: 0 1rem 2rem rgb(0 0 0 / .16);
+        padding: .85rem 2rem;
       }
 
       #shopify-section-{{ section.id }} .slideshow-elegant__divider,
@@ -214,8 +228,7 @@
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
-          min-width: 12rem;
-          padding: .85rem 1.4rem;
+          padding: .8rem 1.4rem;
         }
       }
     </style>
@@ -663,11 +676,18 @@
           "type": "range",
           "id": "title_font_weight",
           "label": "Heading thickness",
-          "info": "Thin (100) to bold (700).",
+          "info": "Thin (100) to bold (700). Serif font only.",
           "min": 100,
           "max": 700,
           "step": 50,
           "default": 300
+        },
+        {
+          "type": "checkbox",
+          "id": "title_menu_font",
+          "label": "Use menu font for heading",
+          "info": "Off: serif font. On: the menu's font, in capitals.",
+          "default": false
         },
         {
           "type": "text",
