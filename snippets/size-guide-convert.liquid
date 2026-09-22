@@ -1,0 +1,27 @@
+{%- doc -%}
+  "This -> that" converter rows used by the designed size-guide tabs.
+
+  @param {string} rows - one row per line, two values separated by "|"
+  @param {string} [col1] - left column heading
+  @param {string} [col2] - right column heading
+{%- enddoc -%}
+
+{%- assign lines = rows | newline_to_br | split: '<br />' -%}
+
+<div class="sg-lg__convert">
+  {%- if col1 != blank or col2 != blank -%}
+    <div class="sg-lg__convert-head">
+      <span>{{ col1 }}</span>
+      <span>{{ col2 }}</span>
+    </div>
+  {%- endif -%}
+  {%- for row in lines -%}
+    {%- assign cells = row | strip | split: '|' -%}
+    {%- if cells.size == 0 -%}{%- continue -%}{%- endif -%}
+    <div class="sg-lg__convert-row">
+      <span>{{ cells[0] | strip }}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5"/></svg>
+      <strong>{{ cells[1] | strip }}</strong>
+    </div>
+  {%- endfor -%}
+</div>

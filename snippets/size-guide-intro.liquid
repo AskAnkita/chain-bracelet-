@@ -1,0 +1,21 @@
+{%- doc -%}
+  Opening row of a designed size-guide tab: lead copy beside a "quick pick" card.
+
+  @param {string} text - lead copy (rich text)
+  @param {string} [tip_label] - small label above the tip
+  @param {string} [tip] - the quick-pick recommendation
+{%- enddoc -%}
+
+{%- if text != blank or tip != blank -%}
+  <div class="sg-lg__intro">
+    {%- if text != blank -%}
+      <div class="sg-lg__lead">{{ text }}</div>
+    {%- endif -%}
+    {%- if tip != blank -%}
+      <div class="sg-lg__pick">
+        {%- if tip_label != blank -%}<p class="sg-lg__pick-label">{{ tip_label }}</p>{%- endif -%}
+        <p class="sg-lg__pick-text">{{ tip }}</p>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

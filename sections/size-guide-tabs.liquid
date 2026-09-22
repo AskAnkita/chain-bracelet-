@@ -378,6 +378,653 @@
     font-size: .88rem;
     opacity: .8;
   }
+
+  /* =========================================================
+     Necklace + bracelet tabs -- designed length guides
+     (snippets/size-guide-necklace, size-guide-bracelet)
+     ========================================================= */
+  .sg .sg-lg {
+    counter-reset: sg-lg-section;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    max-inline-size: 58rem;
+    margin-inline: auto;
+  }
+
+  .sg .sg-lg :is(p, li) {
+    margin: 0 !important;
+  }
+
+  .sg .sg__panel .sg-lg p,
+  .sg .sg-lg li {
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+
+  .sg .sg-lg a:not(.button) {
+    text-decoration: underline;
+    text-decoration-color: var(--sg-gold);
+    text-underline-offset: 3px;
+  }
+
+  .sg .sg-lg .sg-lg__rte > * + * {
+    margin-block-start: .9rem !important;
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__small {
+    font-size: .82rem;
+    opacity: .7;
+  }
+
+  /* intro: lead copy + quick pick card */
+  .sg .sg-lg__intro {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (min-width: 760px) {
+    .sg .sg-lg__intro {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__lead p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .sg .sg-lg__pick {
+    padding: 1.25rem 1.4rem;
+    border-radius: 1rem;
+    background: rgb(var(--sg-accent));
+    color: rgb(var(--sg-surface));
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__pick-label {
+    margin-block-end: .4rem !important;
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__pick-text {
+    font-size: .92rem;
+    line-height: 1.5;
+  }
+
+  /* numbered section heads */
+  .sg .sg-lg__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sg .sg-lg__head {
+    display: flex;
+    align-items: baseline;
+    gap: .9rem;
+    padding-block-end: .9rem;
+    border-block-end: 1px solid var(--sg-line);
+  }
+
+  .sg .sg-lg__num::before {
+    counter-increment: sg-lg-section;
+    content: counter(sg-lg-section, decimal-leading-zero);
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__title {
+    margin: 0 !important;
+    font-family: var(--heading-font-family);
+    font-size: clamp(1.35rem, 2.6vw, 1.7rem);
+    font-weight: var(--heading-font-weight, 400);
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 1;
+  }
+
+  /* length explorer: chips + illustration + detail card */
+  .sg .sg-lg__explorer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .sg .sg-lg__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .sg .sg-lg__chip {
+    padding: .55rem 1.1rem;
+    border: 1px solid rgb(var(--sg-accent) / .2);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: .88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .18s, color .18s, border-color .18s;
+  }
+
+  .sg .sg-lg__chip:hover {
+    border-color: rgb(var(--sg-accent) / .6);
+  }
+
+  .sg .sg-lg__chip.is-active {
+    border-color: rgb(var(--sg-accent));
+    background: rgb(var(--sg-accent));
+    color: rgb(var(--sg-surface));
+  }
+
+  .sg .sg-lg__stage {
+    display: grid;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 700px) {
+    .sg .sg-lg__stage {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .sg .sg-lg__media {
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .sg .sg-lg__media :is(img, svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    margin: 0 !important;
+  }
+
+  .sg .sg-lg__line {
+    fill: none;
+    stroke: #b08d57;
+    stroke-width: 1.5;
+    opacity: .3;
+    transition: opacity .25s, stroke-width .25s;
+  }
+
+  .sg .sg-lg__line.is-active {
+    stroke: var(--sg-gold);
+    stroke-width: 3.5;
+    opacity: 1;
+  }
+
+  .sg .sg-lg__details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem;
+    border-radius: 1rem;
+    background: var(--sg-tint);
+    border: 1px solid var(--sg-line);
+  }
+
+  .sg .sg-lg__detail {
+    display: none;
+    flex-direction: column;
+    gap: .5rem;
+    animation: sg-fade .25s ease;
+  }
+
+  .sg .sg-lg__detail.is-active {
+    display: flex;
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__detail-size {
+    font-family: var(--heading-font-family);
+    font-size: clamp(2.6rem, 6vw, 3.4rem);
+    line-height: 1;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__detail-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .sg .sg-lg__badge {
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    background: var(--sg-gold);
+    color: #fff;
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__detail-text p {
+    font-size: .92rem;
+    opacity: .8;
+  }
+
+  .sg .sg-lg__aside {
+    margin-block-start: auto;
+    padding-block-start: 1rem;
+    border-block-start: 1px dashed rgb(var(--sg-accent) / .25);
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__aside p {
+    font-size: .85rem;
+  }
+
+  /* rich-text lists shown as numbered cards */
+  .sg .sg-lg__cards ol {
+    counter-reset: sg-lg-card;
+    display: grid;
+    gap: .9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 700px) {
+    .sg .sg-lg__cards ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .sg .sg-lg__cards li {
+    position: relative;
+    padding: 1.25rem 1.25rem 1.25rem 3.4rem;
+    border: 1px solid var(--sg-line);
+    border-radius: .9rem;
+    font-size: .9rem;
+    list-style: none;
+  }
+
+  .sg .sg-lg__cards li::marker {
+    content: "";
+  }
+
+  .sg .sg-lg__cards li::before {
+    counter-increment: sg-lg-card;
+    content: counter(sg-lg-card);
+    position: absolute;
+    inset-block-start: 1.2rem;
+    inset-inline-start: 1.1rem;
+    display: grid;
+    place-items: center;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    border-radius: 50%;
+    background: var(--sg-tint);
+    border: 1px solid rgb(var(--sg-accent) / .15);
+    color: var(--sg-gold);
+    font-size: .75rem;
+    font-weight: 600;
+  }
+
+  .sg .sg-lg__cards li strong {
+    display: block;
+    margin-block-end: .2rem;
+    font-weight: 600;
+  }
+
+  /* measure at home: copy beside ruler, then a step row */
+  .sg .sg-lg__measure {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  @media (min-width: 760px) {
+    .sg .sg-lg__measure {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 2rem;
+    }
+  }
+
+  .sg .sg-lg__ruler {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background: var(--sg-tint);
+    border: 1px solid var(--sg-line);
+  }
+
+  .sg .sg-lg__ruler :is(img, svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    margin: 0 !important;
+  }
+
+  .sg .sg-lg__steps ol {
+    counter-reset: sg-lg-step;
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 700px) {
+    .sg .sg-lg__steps ol {
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+  }
+
+  .sg .sg-lg__steps li {
+    padding-block-start: .9rem;
+    border-block-start: 2px solid var(--sg-gold);
+    font-size: .88rem;
+    list-style: none;
+  }
+
+  .sg .sg-lg__steps li::marker {
+    content: "";
+  }
+
+  .sg .sg-lg__steps li::before {
+    counter-increment: sg-lg-step;
+    content: "Step " counter(sg-lg-step);
+    display: block;
+    margin-block-end: .35rem;
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg-lg__note {
+    padding: .75rem 1rem;
+    border-radius: .6rem;
+    background: var(--sg-tint);
+  }
+
+  /* bracelet: wrist -> bracelet converter + fit chips */
+  .sg .sg-lg__convert {
+    overflow: hidden;
+    border: 1px solid var(--sg-line);
+    border-radius: 1rem;
+  }
+
+  .sg .sg-lg__convert-head,
+  .sg .sg-lg__convert-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: .85rem 1.25rem;
+  }
+
+  .sg .sg-lg__convert-head {
+    grid-template-columns: 1fr 1fr;
+    background: var(--sg-tint);
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .75;
+  }
+
+  .sg .sg-lg__convert-head span:last-child,
+  .sg .sg-lg__convert-row strong {
+    text-align: end;
+  }
+
+  .sg .sg-lg__convert-row {
+    border-block-start: 1px solid var(--sg-line);
+    font-size: .92rem;
+  }
+
+  .sg .sg-lg__convert-row svg {
+    inline-size: 1.1rem;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg-lg__convert-row strong {
+    font-weight: 600;
+  }
+
+  .sg .sg-lg__fits ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sg .sg-lg .sg-lg__fits li {
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background: var(--sg-tint);
+    border: 1px solid var(--sg-line);
+    font-size: .82rem;
+    list-style: none;
+  }
+
+  .sg .sg-lg__fits li::marker {
+    content: "";
+  }
+
+  /* size chart + "find my size" (rings) */
+  .sg .sg-lg__chart {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sg .sg-lg__finder {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: rgb(var(--sg-accent));
+    color: rgb(var(--sg-surface));
+    font-size: .9rem;
+  }
+
+  .sg .sg-lg__finder-field {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    background: rgb(var(--sg-surface));
+    color: rgb(var(--sg-accent));
+  }
+
+  .sg .sg-lg__finder-field:focus-within {
+    box-shadow: 0 0 0 2px var(--sg-gold);
+  }
+
+  .sg .sg-lg__finder-field input {
+    inline-size: 4.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+
+  .sg .sg-lg__finder-result {
+    font-weight: 600;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg-lg__table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--sg-line);
+    border-radius: 1rem;
+  }
+
+  .sg .sg__panel .sg-lg__table {
+    display: table;
+    margin: 0 !important;
+    font-size: .9rem;
+  }
+
+  .sg .sg__panel .sg-lg__table :is(th, td) {
+    padding: .7rem 1rem;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .sg .sg__panel .sg-lg__table thead th {
+    background: var(--sg-tint);
+    font-size: .65rem;
+    font-weight: 600;
+    opacity: .75;
+  }
+
+  .sg .sg__panel .sg-lg__table :is(td, tbody th):first-child {
+    font-weight: 600;
+  }
+
+  .sg .sg__panel .sg-lg__table tbody tr.is-match {
+    background: rgb(var(--sg-accent));
+    color: rgb(var(--sg-surface));
+  }
+
+  /* FAQs: heading column beside the accordions */
+  @media (min-width: 860px) {
+    .sg .sg-lg__faq {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .sg .sg-lg__faq .sg-lg__head {
+      position: sticky;
+      inset-block-start: 6rem;
+    }
+  }
+
+  .sg .sg-lg__faq-list .accordion {
+    margin: 0 !important;
+    border-block-end: 1px solid var(--sg-line);
+  }
+
+  .sg .sg-lg__faq-list .accordion__toggle {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* bracelet videos + bangle feature */
+  .sg .sg-lg__videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: .75rem;
+  }
+
+  .sg .sg-lg__video video {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: .9rem;
+    margin: 0 !important;
+  }
+
+  .sg .sg-lg__feature {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: var(--sg-tint);
+    border: 1px solid var(--sg-line);
+  }
+
+  @media (min-width: 700px) {
+    .sg .sg-lg__feature {
+      padding: 2.25rem;
+    }
+
+    .sg .sg-lg__feature--media {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: 2.5rem;
+    }
+  }
+
+  .sg .sg-lg__feature-media img {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: .9rem;
+    margin: 0 !important;
+  }
+
+  .sg .sg-lg__feature-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sg .sg-lg__feature-copy > * {
+    margin: 0 !important;
+  }
+
+  .sg .sg-lg__feature-copy ol {
+    margin: 0;
+    padding-inline-start: 1.2rem;
+  }
+
+  /* closing trust note */
+  .sg .sg-lg__trust {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem 1.4rem;
+    border-radius: 1rem;
+    border: 1px dashed rgb(var(--sg-accent) / .25);
+  }
+
+  .sg .sg-lg__trust-icon {
+    flex: none;
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    color: var(--sg-gold);
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__trust-title {
+    margin-block-end: .2rem !important;
+    font-size: .9rem;
+    font-weight: 600;
+  }
+
+  .sg .sg__panel .sg-lg .sg-lg__trust-text p {
+    font-size: .85rem;
+    opacity: .75;
+  }
 </style>
 
 <div class="section-spacing section-spacing--tight color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
@@ -407,7 +1054,10 @@
   Same shape for every category: three steps on one side, an illustration on the
   other. A category's image_picker setting, when filled, replaces its SVG.
 {%- endcomment -%}
-<div hidden id="sg-diagrams-{{ section.id }}">
+<div hidden id="sg-diagrams-{{ section.id }}"{% if section.settings.nl_enabled and section.settings.nl_hide_pendant_tab %} data-drop-pendant{% endif %}>
+  {%- if section.settings.rg_enabled -%}
+    {%- render 'size-guide-designed', section: section, key: 'ring', prefix: 'rg', block_prefix: 'ring' -%}
+  {%- else -%}
   <template data-key="ring">
     <div class="sg__measure">
       <ol class="sg__measure-steps">
@@ -436,7 +1086,11 @@
       </div>
     </div>
   </template>
+  {%- endif -%}
 
+  {%- if section.settings.br_enabled -%}
+    {%- render 'size-guide-bracelet', section: section -%}
+  {%- else -%}
   <template data-key="wrist">
     <div class="sg__measure">
       <ol class="sg__measure-steps">
@@ -458,7 +1112,11 @@
       </div>
     </div>
   </template>
+  {%- endif -%}
 
+  {%- if section.settings.nl_enabled -%}
+    {%- render 'size-guide-necklace', section: section -%}
+  {%- else -%}
   <template data-key="necklace">
     <div class="sg__measure">
       <ol class="sg__measure-steps">
@@ -487,6 +1145,7 @@
       </div>
     </div>
   </template>
+  {%- endif -%}
 
   <template data-key="pendant">
     <div class="sg__measure">
@@ -515,6 +1174,9 @@
     </div>
   </template>
 
+  {%- if section.settings.er_enabled -%}
+    {%- render 'size-guide-designed', section: section, key: 'earring', prefix: 'er', block_prefix: 'earring', image: section.settings.img_earring -%}
+  {%- else -%}
   <template data-key="earring">
     <div class="sg__measure">
       <ol class="sg__measure-steps">
@@ -544,11 +1206,47 @@
       </div>
     </div>
   </template>
+  {%- endif -%}
 </div>
 
 <script>
   (function () {
     if (customElements.get('content-tabs-split')) return;
+
+    // length explorer chips in the designed necklace/bracelet tabs: highlight the matching
+    // chip, detail card and illustration line (everything sharing that data-index)
+    document.addEventListener('input', function (e) {
+      var finder = e.target.closest('[data-sg-finder]');
+      if (!finder || e.target.tagName !== 'INPUT') return;
+      var col = parseInt(finder.getAttribute('data-column'), 10);
+      var value = parseFloat(e.target.value);
+      var heads = finder.querySelectorAll('thead th');
+      var best = null;
+      var bestDiff = Infinity;
+      finder.querySelectorAll('tbody tr').forEach(function (tr) {
+        tr.classList.remove('is-match');
+        var cell = tr.children[col];
+        var diff = cell ? Math.abs(parseFloat(cell.textContent) - value) : NaN;
+        if (diff < bestDiff) { bestDiff = diff; best = tr; }
+      });
+      var out = finder.querySelector('.sg-lg__finder-result');
+      if (!best || isNaN(value) || bestDiff > 3) { out.textContent = ''; return; }
+      best.classList.add('is-match');
+      out.textContent = Array.prototype.slice.call(best.children, 0, Math.min(3, col)).map(function (td, i) {
+        return (heads[i] ? heads[i].textContent.trim() + ' ' : '') + td.textContent.trim();
+      }).join(' · ');
+    });
+
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest('.sg-lg__chip');
+      if (!chip) return;
+      var explorer = chip.closest('[data-sg-explorer]');
+      explorer.querySelectorAll('[data-index]').forEach(function (el) {
+        var on = el.getAttribute('data-index') === chip.getAttribute('data-index');
+        el.classList.toggle('is-active', on);
+        if (el.classList.contains('sg-lg__chip')) el.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    });
 
     var ICONS = {
       ring: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="14" r="7"/><path d="M9 5.5 12 8l3-2.5L13.5 3h-3z"/></svg>',
@@ -560,6 +1258,7 @@
     };
 
     var diagRoot = document.getElementById('sg-diagrams-{{ section.id }}');
+    var dropPendant = !!(diagRoot && diagRoot.hasAttribute('data-drop-pendant'));
 
     function keyFor(text) {
       var t = (text || '').toLowerCase();
@@ -589,10 +1288,17 @@
 
         nodes.forEach(function (node) {
           if (node.nodeType === 1 && node.tagName === 'H2') {
+            // the Pendants tab is covered inside the designed Necklaces tab -- drop it and its copy
+            if (dropPendant && keyFor(node.textContent) === 'pendant' && !/necklace/i.test(node.textContent)) {
+              current = document.createElement('div');
+              return;
+            }
             // a trailing heading that isn't a jewellery category (e.g. "Still not sure?")
             // folds into the previous tab instead of getting its own
             if (panels.length && !keyFor(node.textContent)) {
-              current = panels[panels.length - 1].el;
+              var last = panels[panels.length - 1];
+              last.folded = last.folded || node;
+              current = last.el;
               current.appendChild(node);
               return;
             }
@@ -644,6 +1350,13 @@
 
           var tpl = key && diagRoot ? diagRoot.querySelector('template[data-key="' + key + '"]') : null;
           if (tpl) {
+            // a data-replace template stands in for the tab's own copy (up to any folded-in trailing heading)
+            if (tpl.hasAttribute('data-replace')) {
+              var heading = p.el.firstChild;
+              while (heading.nextSibling && heading.nextSibling !== p.folded) {
+                p.el.removeChild(heading.nextSibling);
+              }
+            }
             p.el.insertBefore(tpl.content.cloneNode(true), p.el.children[1] || null);
           }
 
@@ -693,9 +1406,18 @@
       "id": "page_width",
       "label": "Content width",
       "options": [
-        { "value": "sm", "label": "Small" },
-        { "value": "md", "label": "Medium" },
-        { "value": "lg", "label": "Large" }
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        }
       ],
       "default": "md"
     },
@@ -739,12 +1461,761 @@
     {
       "type": "image_picker",
       "id": "img_pendant",
-      "label": "Pendants"
+      "label": "Pendants (shown in the Necklaces tab)"
     },
     {
       "type": "image_picker",
       "id": "img_earring",
       "label": "Earrings"
+    },
+    {
+      "type": "header",
+      "content": "Designed guides",
+      "info": "Each tab can show a designed guide in place of the page content."
+    },
+    {
+      "type": "text",
+      "id": "popular_label",
+      "label": "\"Most loved\" badge text",
+      "default": "Most loved"
+    },
+    {
+      "type": "header",
+      "content": "Necklace guide",
+      "info": "Uses the \"Necklaces & chains\" image above as its main photo. Add \"Necklace length\" and \"Necklace FAQ\" blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "nl_enabled",
+      "label": "Show designed necklace guide",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "nl_intro",
+      "label": "Intro",
+      "default": "<p>The same chain can look delicate or dramatic depending on where it falls. Use this guide to see where each length lands, then measure at home to find yours.</p>"
+    },
+    {
+      "type": "text",
+      "id": "nl_tip_label",
+      "label": "Quick pick label",
+      "default": "Quick pick"
+    },
+    {
+      "type": "text",
+      "id": "nl_tip",
+      "label": "Quick pick",
+      "default": "Start with 18\". It suits almost every neckline and layers easily with a shorter or longer chain."
+    },
+    {
+      "type": "text",
+      "id": "nl_lengths_title",
+      "label": "Lengths heading",
+      "default": "Find your length"
+    },
+    {
+      "type": "richtext",
+      "id": "nl_extender",
+      "label": "Extender note",
+      "default": "<p><strong>Between two sizes?</strong> An extender adds a couple of inches to any chain, so you can wear it both ways.</p>"
+    },
+    {
+      "type": "text",
+      "id": "nl_consider_title",
+      "label": "Good to know heading",
+      "default": "Good to know"
+    },
+    {
+      "type": "richtext",
+      "id": "nl_consider",
+      "label": "Good to know cards",
+      "default": "<ol><li><strong>Chain weight changes the fit</strong>Thicker and beaded chains take up more room, so they sit higher than a fine chain of the same length.</li><li><strong>Pendants hang lower</strong>We measure the chain only, so the pendant itself will rest a little below the length you choose.</li><li><strong>Two lengths means adjustable</strong>A necklace listed as 16\"–18\" has a built-in extender, so it can be worn at either length.</li><li><strong>Layering?</strong>Space each chain about 2\" apart so every layer stays visible and they tangle less.</li></ol>",
+      "info": "Each list item becomes a card. Bold text at the start of an item becomes the card's title."
+    },
+    {
+      "type": "text",
+      "id": "nl_measure_title",
+      "label": "Measuring heading",
+      "default": "Measure at home"
+    },
+    {
+      "type": "richtext",
+      "id": "nl_measure_text",
+      "label": "Measuring text",
+      "default": "<p>Grab a necklace you already love and measure it. Then decide whether you want your new one shorter, longer or the same.</p><p>No necklace to hand? A length of string works just as well.</p>"
+    },
+    {
+      "type": "text",
+      "id": "nl_ruler_prefix",
+      "label": "Printable ruler text",
+      "default": "No ruler?"
+    },
+    {
+      "type": "text",
+      "id": "nl_ruler_link_text",
+      "label": "Printable ruler link text",
+      "default": "Download a printable one"
+    },
+    {
+      "type": "url",
+      "id": "nl_ruler_url",
+      "label": "Printable ruler link",
+      "info": "Link to a printable ruler PDF. The line is hidden until this is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "nl_ruler_image",
+      "label": "Ruler image",
+      "info": "Replaces the built-in chain-and-ruler drawing."
+    },
+    {
+      "type": "richtext",
+      "id": "nl_steps",
+      "label": "Measuring steps",
+      "default": "<ol><li>Drape your necklace or string around your neck until it sits where you like it.</li><li>Unclasp it or mark the string, then lay it out straight. Include the clasp in the length.</li><li>Measure it against a ruler and pick the closest size.</li></ol>",
+      "info": "Each list item becomes a step."
+    },
+    {
+      "type": "text",
+      "id": "nl_note",
+      "label": "Measuring note",
+      "default": "All of our necklace lengths are measured in inches."
+    },
+    {
+      "type": "checkbox",
+      "id": "nl_hide_pendant_tab",
+      "label": "Fold the Pendants tab into Necklaces",
+      "info": "Hides the separate Pendants tab. Pendant sizing is shown inside the Necklaces tab instead.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "nl_pendant_title",
+      "label": "Pendant heading",
+      "default": "Pendant necklaces"
+    },
+    {
+      "type": "richtext",
+      "id": "nl_pendant_text",
+      "label": "Pendant intro",
+      "default": "<p>A pendant always hangs a little below its chain, because the chain length is measured without it. Choose the pendant size first, then pair it with a chain that lets it sit where you want it.</p>"
+    },
+    {
+      "type": "text",
+      "id": "nl_pendant_col1",
+      "label": "Pairing column 1 heading",
+      "default": "Pendant"
+    },
+    {
+      "type": "text",
+      "id": "nl_pendant_col2",
+      "label": "Pairing column 2 heading",
+      "default": "Pair it with"
+    },
+    {
+      "type": "textarea",
+      "id": "nl_pendant_chain",
+      "label": "Pendant pairing",
+      "default": "Petite · up to 10 mm | 16\"–18\" chain\nClassic · 12–18 mm | 18\" chain\nStatement · 20 mm + | 20\"–22\" chain\nLocket or coin | 18\"–20\" chain",
+      "info": "One row per line, with the two values separated by a pipe \"|\"."
+    },
+    {
+      "type": "text",
+      "id": "nl_faq_title",
+      "label": "FAQ heading",
+      "default": "Questions, answered"
+    },
+    {
+      "type": "text",
+      "id": "nl_trust_title",
+      "label": "Closing note heading",
+      "default": "Written by our jewellers"
+    },
+    {
+      "type": "richtext",
+      "id": "nl_trust_text",
+      "label": "Closing note",
+      "default": "<p>This guide comes from the people who design and finish our pieces, and from the fit questions our customers ask us most.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Bracelet guide",
+      "info": "Uses the \"Bracelets\" image above as its main photo. Add \"Bracelet length\", \"Bracelet FAQ\" and \"Bracelet video\" blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "br_enabled",
+      "label": "Show designed bracelet guide",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "br_intro",
+      "label": "Intro",
+      "default": "<p>A good bracelet fit is easy to forget: it moves with you without sliding off your hand or pinching at the clasp. Here's how to find it.</p>"
+    },
+    {
+      "type": "text",
+      "id": "br_tip_label",
+      "label": "Quick pick label",
+      "default": "Quick pick"
+    },
+    {
+      "type": "text",
+      "id": "br_tip",
+      "label": "Quick pick",
+      "default": "Not sure? 7\" fits most wrists and is the safest choice for a gift."
+    },
+    {
+      "type": "text",
+      "id": "br_lengths_title",
+      "label": "Lengths heading",
+      "default": "Find your length"
+    },
+    {
+      "type": "text",
+      "id": "br_choose_title",
+      "label": "How to choose heading",
+      "default": "Choosing a size"
+    },
+    {
+      "type": "richtext",
+      "id": "br_choose",
+      "label": "How to choose cards",
+      "default": "<ol><li><strong>Start with your wrist</strong>Measure where the bracelet will actually sit, just above the wrist bone.</li><li><strong>Decide on the feel</strong>Close to the skin, or loose with a little movement? It's personal, so go with what you like wearing.</li><li><strong>Allow for thickness</strong>Chunky and beaded styles feel smaller on the wrist, so go up about ½\".</li><li><strong>Plan your stack</strong>Mix lengths, for example 6.5\" and 7\", so each piece sits in its own place.</li></ol>",
+      "info": "Each list item becomes a card. Bold text at the start of an item becomes the card's title."
+    },
+    {
+      "type": "text",
+      "id": "br_measure_title",
+      "label": "Measuring heading",
+      "default": "Measure at home"
+    },
+    {
+      "type": "text",
+      "id": "br_ruler_prefix",
+      "label": "Printable ruler text",
+      "default": "No ruler?"
+    },
+    {
+      "type": "text",
+      "id": "br_ruler_link_text",
+      "label": "Printable ruler link text",
+      "default": "Download a printable one"
+    },
+    {
+      "type": "url",
+      "id": "br_ruler_url",
+      "label": "Printable ruler link",
+      "info": "Link to a printable ruler PDF. The line is hidden until this is set."
+    },
+    {
+      "type": "richtext",
+      "id": "br_measure_text",
+      "label": "Measuring text",
+      "default": "<p>The quickest way: lay a bracelet you already own flat and measure it end to end, clasp included.</p><p>No bracelet? Use a soft tape, string or a strip of paper and follow the steps below.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "br_ruler_image",
+      "label": "Ruler image",
+      "info": "Replaces the built-in bracelet-and-ruler drawing."
+    },
+    {
+      "type": "richtext",
+      "id": "br_steps",
+      "label": "Measuring steps",
+      "default": "<ol><li>Wrap the string around your wrist where a bracelet would sit.</li><li>Keep it snug. One finger should still slide underneath.</li><li>Mark the overlap and measure it flat against a ruler.</li><li>Measure again to double-check.</li></ol>",
+      "info": "Each list item becomes a step."
+    },
+    {
+      "type": "text",
+      "id": "br_note",
+      "label": "Measuring note",
+      "default": "Your wrist measurement isn't your bracelet size. Use the table below to add a little room."
+    },
+    {
+      "type": "text",
+      "id": "br_table_col1",
+      "label": "Table column 1 heading",
+      "default": "Your wrist"
+    },
+    {
+      "type": "text",
+      "id": "br_table_col2",
+      "label": "Table column 2 heading",
+      "default": "Your bracelet"
+    },
+    {
+      "type": "textarea",
+      "id": "br_table",
+      "label": "Size table",
+      "default": "Up to 6\" | 6.5\"\n6.25\"–6.5\" | 7\"\n6.75\"–7\" | 7.5\"",
+      "info": "One row per line, with the two values separated by a pipe \"|\"."
+    },
+    {
+      "type": "richtext",
+      "id": "br_fit_tips",
+      "label": "Fit tips",
+      "default": "<ul><li>Snug: wrist + ¼\"</li><li>Classic: wrist + ½\"</li><li>Relaxed: wrist + ¾\" to 1\"</li></ul>",
+      "info": "Each list item is shown as a chip."
+    },
+    {
+      "type": "text",
+      "id": "br_faq_title",
+      "label": "FAQ heading",
+      "default": "Questions, answered"
+    },
+    {
+      "type": "text",
+      "id": "br_bangle_title",
+      "label": "Bangles heading",
+      "default": "Sizing a bangle"
+    },
+    {
+      "type": "richtext",
+      "id": "br_bangle_text",
+      "label": "Bangles text",
+      "default": "<p>Bangles have no clasp, so they need to slip over your hand. Measure your hand, not your wrist.</p><ol><li>Tuck your thumb in towards your little finger, as if sliding a bangle on.</li><li>Wrap a soft tape around the widest part of your hand.</li><li>Add about ½\" so it moves comfortably.</li></ol><p>Already have a bangle that fits? Measure straight across the inside and compare.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "br_bangle_image",
+      "label": "Bangles image"
+    },
+    {
+      "type": "text",
+      "id": "br_bangle_button_label",
+      "label": "Bangles button label",
+      "default": "Shop bangles"
+    },
+    {
+      "type": "url",
+      "id": "br_bangle_button_link",
+      "label": "Bangles button link",
+      "info": "The button is hidden until this is set."
+    },
+    {
+      "type": "text",
+      "id": "br_trust_title",
+      "label": "Closing note heading",
+      "default": "Written by our jewellers"
+    },
+    {
+      "type": "richtext",
+      "id": "br_trust_text",
+      "label": "Closing note",
+      "default": "<p>This guide comes from the people who design and finish our pieces, and from the fit questions our customers ask us most.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Closing note (rings & earrings)"
+    },
+    {
+      "type": "text",
+      "id": "trust_title",
+      "label": "Heading",
+      "default": "Written by our jewellers"
+    },
+    {
+      "type": "richtext",
+      "id": "trust_text",
+      "label": "Text",
+      "default": "<p>This guide comes from the people who design and finish our pieces, and from the fit questions our customers ask us most.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Ring guide",
+      "info": "Add \"Ring FAQ\" blocks for the questions."
+    },
+    {
+      "type": "checkbox",
+      "id": "rg_enabled",
+      "label": "Show designed ring guide",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "rg_intro",
+      "label": "Intro",
+      "default": "<p>A ring should slide over your knuckle with a little resistance and then sit comfortably without spinning. Measure at home in two minutes, then find your size in the chart.</p>"
+    },
+    {
+      "type": "text",
+      "id": "rg_tip_label",
+      "label": "Quick pick label",
+      "default": "Quick pick"
+    },
+    {
+      "type": "text",
+      "id": "rg_tip",
+      "label": "Quick pick",
+      "default": "Between two sizes? Go up. A ring that is slightly loose is easier to live with than one that pinches."
+    },
+    {
+      "type": "text",
+      "id": "rg_measure_title",
+      "label": "Measuring heading",
+      "default": "Measure at home"
+    },
+    {
+      "type": "richtext",
+      "id": "rg_measure_text",
+      "label": "Measuring text",
+      "default": "<p>All you need is a thin strip of paper and a ruler with millimetres. Measure at the end of the day, when your fingers are at their largest.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "rg_measure_image",
+      "label": "Measuring image",
+      "info": "Replaces the built-in paper-strip drawing."
+    },
+    {
+      "type": "richtext",
+      "id": "rg_steps",
+      "label": "Measuring steps",
+      "default": "<ol><li>Wrap the paper snugly around the base of your finger.</li><li>Mark the point where the paper overlaps.</li><li>Lay it flat and measure up to the mark in millimetres.</li><li>Type that number into the size finder below.</li></ol>",
+      "info": "Each list item becomes a step."
+    },
+    {
+      "type": "text",
+      "id": "rg_note",
+      "label": "Measuring note",
+      "default": "Make sure the paper can still slide over your knuckle. If it can't, use the knuckle measurement instead."
+    },
+    {
+      "type": "text",
+      "id": "rg_chart_title",
+      "label": "Chart heading",
+      "default": "Ring size chart"
+    },
+    {
+      "type": "textarea",
+      "id": "rg_chart",
+      "label": "Size chart",
+      "default": "US | UK | EU | Diameter (mm) | Circumference (mm)\n4 | H½ | 47 | 14.9 | 46.8\n4.5 | I½ | 48 | 15.3 | 48.0\n5 | J½ | 49 | 15.7 | 49.3\n5.5 | K½ | 51 | 16.1 | 50.6\n6 | L½ | 52 | 16.5 | 51.9\n6.5 | M½ | 53 | 16.9 | 53.1\n7 | O | 54 | 17.3 | 54.4\n7.5 | P | 56 | 17.7 | 55.7\n8 | Q | 57 | 18.1 | 57.0\n8.5 | Q½ | 58 | 18.5 | 58.3\n9 | R½ | 60 | 19.0 | 59.5\n9.5 | S½ | 61 | 19.4 | 60.8\n10 | T½ | 62 | 19.8 | 62.1",
+      "info": "One row per line, cells separated by a pipe \"|\". The first line is the header row."
+    },
+    {
+      "type": "text",
+      "id": "rg_finder_label",
+      "label": "Size finder label",
+      "default": "Your measurement"
+    },
+    {
+      "type": "number",
+      "id": "rg_finder_column",
+      "label": "Size finder column",
+      "info": "Which chart column (counting from 1) the size finder matches against. Leave the label empty to hide the finder.",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "rg_cards_title",
+      "label": "Good to know heading",
+      "default": "Good to know"
+    },
+    {
+      "type": "richtext",
+      "id": "rg_cards",
+      "label": "Good to know cards",
+      "default": "<ol><li><strong>Wide bands fit tighter</strong>Bands wider than 6 mm cover more of the finger, so go up half a size.</li><li><strong>Mind the knuckle</strong>If your knuckle is much wider than the base of your finger, choose a size that just slides over it.</li><li><strong>Temperature matters</strong>Fingers shrink in the cold and swell in the heat. Measure at room temperature.</li><li><strong>Dominant hand</strong>Fingers on your dominant hand are often slightly larger.</li></ol>",
+      "info": "Each list item becomes a card. Bold text at the start of an item becomes the card's title."
+    },
+    {
+      "type": "text",
+      "id": "rg_faq_title",
+      "label": "FAQ heading",
+      "default": "Questions, answered"
+    },
+    {
+      "type": "header",
+      "content": "Earring guide",
+      "info": "Uses the \"Earrings\" image above as its main photo. Add \"Earring style\" and \"Earring FAQ\" blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "er_enabled",
+      "label": "Show designed earring guide",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "er_intro",
+      "label": "Intro",
+      "default": "<p>With earrings, size means how far a piece drops below the piercing, or how wide a hoop is. Use this guide to picture each one before you choose.</p>"
+    },
+    {
+      "type": "text",
+      "id": "er_tip_label",
+      "label": "Quick pick label",
+      "default": "Quick pick"
+    },
+    {
+      "type": "text",
+      "id": "er_tip",
+      "label": "Quick pick",
+      "default": "For everyday wear, a 12 mm hoop or a small stud goes with everything, even with a hat or a scarf."
+    },
+    {
+      "type": "text",
+      "id": "er_options_title",
+      "label": "Styles heading",
+      "default": "How each style sits"
+    },
+    {
+      "type": "text",
+      "id": "er_convert_title",
+      "label": "Hoop sizes heading",
+      "default": "Hoop sizes"
+    },
+    {
+      "type": "text",
+      "id": "er_convert_col1",
+      "label": "Hoop column 1 heading",
+      "default": "Hoop diameter"
+    },
+    {
+      "type": "text",
+      "id": "er_convert_col2",
+      "label": "Hoop column 2 heading",
+      "default": "How it sits"
+    },
+    {
+      "type": "textarea",
+      "id": "er_convert",
+      "label": "Hoop sizes",
+      "default": "8–10 mm | Hugs the lobe\n12–15 mm | Small everyday hoop\n18–25 mm | Classic hoop, just below the lobe\n30 mm + | Statement, towards the jaw",
+      "info": "One row per line, with the two values separated by a pipe \"|\"."
+    },
+    {
+      "type": "text",
+      "id": "er_cards_title",
+      "label": "Good to know heading",
+      "default": "Good to know"
+    },
+    {
+      "type": "richtext",
+      "id": "er_cards",
+      "label": "Good to know cards",
+      "default": "<ol><li><strong>Second and third piercings</strong>Upper and helix piercings suit studs and huggies of 8 mm or less.</li><li><strong>Weight matters</strong>Longer drops look best in lighter pieces, so they don't pull on the lobe.</li><li><strong>Sensitive ears</strong>Solid gold posts and backs are the most comfortable for all-day wear.</li><li><strong>Mix sizes</strong>Pair a larger hoop in the first piercing with smaller pieces above it.</li></ol>",
+      "info": "Each list item becomes a card. Bold text at the start of an item becomes the card's title."
+    },
+    {
+      "type": "text",
+      "id": "er_faq_title",
+      "label": "FAQ heading",
+      "default": "Questions, answered"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "necklace_length",
+      "name": "Necklace length",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "18\""
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Upper chest"
+        },
+        {
+          "type": "checkbox",
+          "id": "popular",
+          "label": "Show \"Most loved\" badge",
+          "info": "The first block with this ticked is shown first.",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Falls just below the collarbone.</p>"
+        }
+      ]
+    },
+    {
+      "type": "bracelet_length",
+      "name": "Bracelet length",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "7\""
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Everyday fit"
+        },
+        {
+          "type": "checkbox",
+          "id": "popular",
+          "label": "Show \"Most loved\" badge",
+          "info": "The first block with this ticked is shown first.",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Moves a little without sliding over your hand.</p>"
+        }
+      ]
+    },
+    {
+      "type": "necklace_faq",
+      "name": "Necklace FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is the most popular necklace length?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>18\" is the length most people choose.</p>"
+        }
+      ]
+    },
+    {
+      "type": "bracelet_faq",
+      "name": "Bracelet FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is the average bracelet size?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Most adult wrists suit a bracelet between 6.5\" and 8\".</p>"
+        }
+      ]
+    },
+    {
+      "type": "bracelet_video",
+      "name": "Bracelet video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        }
+      ]
+    },
+    {
+      "type": "pendant_size",
+      "name": "Pendant size",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "Classic"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "12–18 mm"
+        },
+        {
+          "type": "checkbox",
+          "id": "popular",
+          "label": "Show \"Most loved\" badge",
+          "info": "The first block with this ticked is shown first.",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Noticeable without being heavy.</p>"
+        }
+      ]
+    },
+    {
+      "type": "ring_faq",
+      "name": "Ring FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What if I'm between sizes?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Choose the larger size.</p>"
+        }
+      ]
+    },
+    {
+      "type": "earring_option",
+      "name": "Earring style",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size",
+          "label": "Size",
+          "default": "Huggie"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "8–12 mm"
+        },
+        {
+          "type": "checkbox",
+          "id": "popular",
+          "label": "Show \"Most loved\" badge",
+          "info": "The first block with this ticked is shown first.",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>A small hoop that hugs the lobe.</p>"
+        }
+      ]
+    },
+    {
+      "type": "earring_faq",
+      "name": "Earring FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Which hoop size is most popular?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>12–15 mm.</p>"
+        }
+      ]
     }
   ],
   "presets": [

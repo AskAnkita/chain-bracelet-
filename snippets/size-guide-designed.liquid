@@ -1,0 +1,217 @@
+{%- doc -%}
+  Designed tab for the size guide page (sections/size-guide-tabs.liquid), shared by the
+  Rings and Earrings tabs. Same visual language (.sg-lg) as the necklace and bracelet guides.
+
+  Every part is optional and only renders when its settings are filled in:
+  intro -> option explorer -> measure at home -> size chart (+ finder) -> converter
+  -> good-to-know cards -> FAQs -> closing note.
+
+  Settings are read as `<prefix>_<name>` (e.g. rg_intro); blocks as `<block_prefix>_option`
+  and `<block_prefix>_faq`.
+
+  @param {object} section - the size-guide-tabs section
+  @param {string} key - tab key the section script matches on ('ring', 'earring')
+  @param {string} prefix - settings prefix ('rg', 'er')
+  @param {string} block_prefix - block type prefix ('ring', 'earring')
+  @param {object} [image] - photo for the option explorer
+{%- enddoc -%}
+
+{%- liquid
+  assign s = section.settings
+  assign k_intro = prefix | append: '_intro'
+  assign k_tip_label = prefix | append: '_tip_label'
+  assign k_tip = prefix | append: '_tip'
+  assign k_options_title = prefix | append: '_options_title'
+  assign k_measure_title = prefix | append: '_measure_title'
+  assign k_measure_text = prefix | append: '_measure_text'
+  assign k_measure_image = prefix | append: '_measure_image'
+  assign k_steps = prefix | append: '_steps'
+  assign k_note = prefix | append: '_note'
+  assign k_chart_title = prefix | append: '_chart_title'
+  assign k_chart = prefix | append: '_chart'
+  assign k_finder_label = prefix | append: '_finder_label'
+  assign k_finder_column = prefix | append: '_finder_column'
+  assign k_convert_title = prefix | append: '_convert_title'
+  assign k_convert_col1 = prefix | append: '_convert_col1'
+  assign k_convert_col2 = prefix | append: '_convert_col2'
+  assign k_convert = prefix | append: '_convert'
+  assign k_cards_title = prefix | append: '_cards_title'
+  assign k_cards = prefix | append: '_cards'
+  assign k_faq_title = prefix | append: '_faq_title'
+
+  assign option_type = block_prefix | append: '_option'
+  assign faq_type = block_prefix | append: '_faq'
+  assign options = section.blocks | where: 'type', option_type
+  assign faqs = section.blocks | where: 'type', faq_type
+
+  assign active = 0
+  for block in options
+    if block.settings.popular
+      assign active = forloop.index0
+      break
+    endif
+  endfor
+-%}
+
+<template data-key="{{ key }}" data-replace>
+  <div class="sg-lg">
+    {%- render 'size-guide-intro', text: s[k_intro], tip_label: s[k_tip_label], tip: s[k_tip] -%}
+
+    {%- comment -%} Option explorer {%- endcomment -%}
+    {%- if options.size > 0 -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_options_title] }}</h3>
+        </div>
+
+        {%- render 'size-guide-explorer', section: section, blocks: options, active: active, image: image, art: key, label: s[k_options_title] -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Measure at home {%- endcomment -%}
+    {%- if s[k_measure_text] != blank or s[k_steps] != blank -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_measure_title] }}</h3>
+        </div>
+
+        <div class="sg-lg__measure">
+          <div class="sg-lg__rte">{{ s[k_measure_text] }}</div>
+
+          <div class="sg-lg__ruler">
+            {%- if s[k_measure_image] != blank -%}
+              {{- s[k_measure_image] | image_url: width: 1200 | image_tag: widths: '400,600,800,1200', loading: 'lazy', sizes: '(max-width: 699px) 92vw, 420px', alt: s[k_measure_image].alt -}}
+            {%- else -%}
+              <svg viewBox="0 0 480 170" role="img" aria-label="A paper strip wrapped round a finger, then measured against a ruler" font-family="Archivo, system-ui, sans-serif">
+                <rect x="40" y="20" width="56" height="130" rx="28" fill="#e8d3bd"/>
+                <rect x="36" y="78" width="64" height="16" rx="3" fill="#fff" stroke="#b08d57" stroke-width="2"/>
+                <path d="M126 86 h36 m-10 -8 10 8 -10 8" fill="none" stroke="#b08d57" stroke-width="2"/>
+                <rect x="190" y="70" width="270" height="10" rx="2" fill="#fff" stroke="#b08d57" stroke-width="2"/>
+                <path d="M392 64 v22" stroke="#b08d57" stroke-width="2"/>
+                <rect x="190" y="92" width="270" height="44" rx="4" fill="#fff" stroke="#d6d0c8"/>
+                <g stroke="#9a9189" stroke-width="1">
+                  {%- for i in (0..54) -%}
+                    {%- assign tx = i | times: 4.9 | plus: 192 -%}
+                    {%- assign m = i | modulo: 10 -%}
+                    {%- if m == 0 -%}
+                      <line x1="{{ tx }}" y1="92" x2="{{ tx }}" y2="106"/>
+                    {%- elsif m == 5 -%}
+                      <line x1="{{ tx }}" y1="92" x2="{{ tx }}" y2="102"/>
+                    {%- else -%}
+                      <line x1="{{ tx }}" y1="92" x2="{{ tx }}" y2="98"/>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </g>
+                <g fill="#1c1c1c" font-size="9" text-anchor="middle">
+                  {%- for i in (1..5) -%}
+                    {%- assign nx = i | times: 49 | plus: 192 -%}
+                    <text x="{{ nx }}" y="122">{{ i | times: 10 }}</text>
+                  {%- endfor -%}
+                  <text x="440" y="122" font-size="7" font-weight="700">MM</text>
+                </g>
+              </svg>
+            {%- endif -%}
+          </div>
+        </div>
+
+        {%- if s[k_steps] != blank -%}
+          <div class="sg-lg__rte sg-lg__steps">{{ s[k_steps] }}</div>
+        {%- endif -%}
+
+        {%- if s[k_note] != blank -%}
+          <p class="sg-lg__small sg-lg__note">{{ s[k_note] }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Size chart with "find my size" {%- endcomment -%}
+    {%- if s[k_chart] != blank -%}
+      {%- liquid
+        assign chart_rows = s[k_chart] | newline_to_br | split: '<br />'
+        assign finder_column = s[k_finder_column] | default: 0 | minus: 1
+      -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_chart_title] }}</h3>
+        </div>
+
+        <div class="sg-lg__chart" data-sg-finder data-column="{{ finder_column }}">
+          {%- if s[k_finder_label] != blank and finder_column >= 0 -%}
+            <label class="sg-lg__finder">
+              <span>{{ s[k_finder_label] }}</span>
+              <span class="sg-lg__finder-field">
+                <input type="number" inputmode="decimal" step="0.1" min="30" max="80" placeholder="54">
+                <span aria-hidden="true">mm</span>
+              </span>
+              <output class="sg-lg__finder-result" aria-live="polite"></output>
+            </label>
+          {%- endif -%}
+
+          <div class="sg-lg__table-wrap">
+            <table class="sg-lg__table">
+              {%- assign header_done = false -%}
+              {%- for row in chart_rows -%}
+                {%- assign cells = row | strip | split: '|' -%}
+                {%- if cells.size == 0 -%}{%- continue -%}{%- endif -%}
+                {%- if header_done == false -%}
+                  {%- assign header_done = true -%}
+                  <thead>
+                    <tr>{%- for cell in cells -%}<th scope="col">{{ cell | strip }}</th>{%- endfor -%}</tr>
+                  </thead>
+                  <tbody>
+                {%- else -%}
+                  <tr>{%- for cell in cells -%}<td>{{ cell | strip }}</td>{%- endfor -%}</tr>
+                {%- endif -%}
+              {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Two-column converter {%- endcomment -%}
+    {%- if s[k_convert] != blank -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_convert_title] }}</h3>
+        </div>
+        {%- render 'size-guide-convert', rows: s[k_convert], col1: s[k_convert_col1], col2: s[k_convert_col2] -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Good to know {%- endcomment -%}
+    {%- if s[k_cards] != blank -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_cards_title] }}</h3>
+        </div>
+        <div class="sg-lg__rte sg-lg__cards">{{ s[k_cards] }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} FAQs {%- endcomment -%}
+    {%- if faqs.size > 0 -%}
+      <div class="sg-lg__section sg-lg__faq">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ s[k_faq_title] }}</h3>
+        </div>
+        <div class="sg-lg__faq-list">
+          {%- for block in faqs -%}
+            {%- render 'accordion', title: block.settings.question, content: block.settings.answer, prose_content: true, block: block -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if s.trust_text != blank -%}
+      {%- render 'size-guide-trust', title: s.trust_title, text: s.trust_text -%}
+    {%- endif -%}
+  </div>
+</template>

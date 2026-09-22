@@ -1,0 +1,74 @@
+{%- doc -%}
+  Size explorer used by the designed size-guide tabs: a row of size chips, an illustration
+  (or photo) that highlights the chosen size, and a detail card for it. The section script
+  switches chips; everything sharing a data-index toggles .is-active together.
+
+  @param {object} section - the size-guide-tabs section (for the "Most loved" label)
+  @param {array} blocks - option blocks with size, title, text and popular settings
+  @param {number} active - index shown first
+  @param {string} art - built-in drawing: 'necklace', 'wrist', 'pendant' or 'earring'
+  @param {string} label - accessible name for the chip row
+  @param {object} [image] - photo that replaces the drawing
+  @param {string} [aside] - rich text shown under the detail card
+{%- enddoc -%}
+
+<div class="sg-lg__explorer" data-sg-explorer>
+  <div class="sg-lg__chips" role="tablist" aria-label="{{ label | escape }}">
+    {%- for block in blocks -%}
+      <button type="button" role="tab" class="sg-lg__chip {% if forloop.index0 == active %}is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-selected="{% if forloop.index0 == active %}true{% else %}false{% endif %}" {{ block.shopify_attributes }}>
+        {{- block.settings.size -}}
+      </button>
+    {%- endfor -%}
+  </div>
+
+  <div class="sg-lg__stage">
+    <div class="sg-lg__media">
+      {%- if image != blank -%}
+        {{- image | image_url: width: 1200 | image_tag: widths: '400,600,800,1000,1200', loading: 'lazy', sizes: '(max-width: 699px) 92vw, 420px', alt: image.alt -}}
+      {%- else -%}
+        <svg viewBox="0 0 400 400" role="img" aria-label="{{ label | escape }}">
+          <rect width="400" height="400" fill="#f3ece3"/>
+          {%- case art -%}
+            {%- when 'necklace' -%}
+              {%- assign shapes = 'M151 92 Q200 128 249 92|M148 100 Q200 170 252 100|M142 108 Q200 212 258 108|M134 114 Q200 252 266 114|M124 120 Q200 304 276 120' | split: '|' -%}
+              <path d="M150 0 V88 Q145 128 0 150 V400 H400 V150 Q255 128 250 88 V0 Z" fill="#e8d3bd"/>
+            {%- when 'wrist' -%}
+              {%- assign shapes = 'M154 200 a46 16 0 1 0 92 0 a46 16 0 1 0 -92 0|M144 204 a56 24 0 1 0 112 0 a56 24 0 1 0 -112 0|M132 210 a68 34 0 1 0 136 0 a68 34 0 1 0 -136 0' | split: '|' -%}
+              <rect x="160" y="30" width="80" height="340" rx="38" fill="#e8d3bd"/>
+            {%- when 'pendant' -%}
+              {%- comment -%} one chain, three pendant sizes hanging from the same bail {%- endcomment -%}
+              {%- assign shapes = 'M200 232 a9 9 0 1 1 0 18 a9 9 0 1 1 0 -18|M200 232 c14 0 22 12 22 26 s-10 30 -22 30 -22 -16 -22 -30 8 -26 22 -26z|M200 232 l36 40 -36 56 -36 -56z' | split: '|' -%}
+              <path d="M150 0 V88 Q145 128 0 150 V400 H400 V150 Q255 128 250 88 V0 Z" fill="#e8d3bd"/>
+              <path d="M142 108 Q200 212 258 108" fill="none" stroke="#b08d57" stroke-width="1.6"/>
+              <path d="M200 160 V232" stroke="#b08d57" stroke-width="1.6"/>
+            {%- when 'earring' -%}
+              {%- assign shapes = 'M185 280 a5 5 0 1 1 0 10 a5 5 0 1 1 0 -10|M185 277 a15 15 0 1 1 0 30 a15 15 0 1 1 0 -30|M185 285 V330 a9 9 0 1 1 0 18 a9 9 0 1 1 0 -18|M185 285 V350 M185 350 l-16 30 h32 z' | split: '|' -%}
+              <path d="M210 60 C140 60 110 110 110 160 C110 205 140 220 140 255 C140 285 160 300 185 300 C205 300 215 285 215 265 C215 235 245 215 250 170 C255 110 250 60 210 60 Z" fill="#e8d3bd"/>
+              <path d="M205 105 C170 105 155 135 160 165 C165 190 190 190 190 215" fill="none" stroke="#c9a684" stroke-width="3" stroke-linecap="round"/>
+          {%- endcase -%}
+          {%- for block in blocks -%}
+            {%- if shapes[forloop.index0] == blank -%}{%- break -%}{%- endif -%}
+            <path class="sg-lg__line {% if forloop.index0 == active %}is-active{% endif %}" data-index="{{ forloop.index0 }}" d="{{ shapes[forloop.index0] }}"/>
+          {%- endfor -%}
+        </svg>
+      {%- endif -%}
+    </div>
+
+    <div class="sg-lg__details">
+      {%- for block in blocks -%}
+        <div class="sg-lg__detail {% if forloop.index0 == active %}is-active{% endif %}" data-index="{{ forloop.index0 }}" role="tabpanel">
+          <p class="sg-lg__detail-size">{{ block.settings.size }}</p>
+          <p class="sg-lg__detail-name">
+            {{- block.settings.title -}}
+            {%- if block.settings.popular -%}<span class="sg-lg__badge">{{ section.settings.popular_label }}</span>{%- endif -%}
+          </p>
+          <div class="sg-lg__detail-text">{{ block.settings.text }}</div>
+        </div>
+      {%- endfor -%}
+
+      {%- if aside != blank -%}
+        <div class="sg-lg__aside">{{ aside }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,164 @@
+{%- doc -%}
+  Designed "Necklaces" tab for the size guide page (sections/size-guide-tabs.liquid).
+
+  Rendered as a <template data-key="necklace" data-replace>: the section script clones it
+  into the necklace tab in place of the tab's own page content. Everything here is edited
+  in the theme editor -- section settings plus "Necklace length", "Pendant size" and
+  "Necklace FAQ" blocks. The Pendants tab is folded into this one.
+  Shares its layout styles (.sg-lg) with snippets/size-guide-bracelet.liquid.
+
+  @param {object} section - the size-guide-tabs section
+{%- enddoc -%}
+
+{%- liquid
+  assign lengths = section.blocks | where: 'type', 'necklace_length'
+  assign faqs = section.blocks | where: 'type', 'necklace_faq'
+  assign pendants = section.blocks | where: 'type', 'pendant_size'
+
+  assign pendant_active = 0
+  for block in pendants
+    if block.settings.popular
+      assign pendant_active = forloop.index0
+      break
+    endif
+  endfor
+
+  assign active = 0
+  for block in lengths
+    if block.settings.popular
+      assign active = forloop.index0
+      break
+    endif
+  endfor
+-%}
+
+<template data-key="necklace" data-replace>
+  <div class="sg-lg">
+    {%- render 'size-guide-intro', text: section.settings.nl_intro, tip_label: section.settings.nl_tip_label, tip: section.settings.nl_tip -%}
+
+    {%- comment -%} 01 -- length explorer {%- endcomment -%}
+    {%- if lengths.size > 0 -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ section.settings.nl_lengths_title }}</h3>
+        </div>
+
+        {%- render 'size-guide-explorer', section: section, blocks: lengths, active: active, image: section.settings.img_necklace, art: 'necklace', label: section.settings.nl_lengths_title, aside: section.settings.nl_extender -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 02 -- pendant necklaces: pendant size + the chain to pair it with {%- endcomment -%}
+    {%- if pendants.size > 0 or section.settings.nl_pendant_chain != blank -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ section.settings.nl_pendant_title }}</h3>
+        </div>
+
+        {%- if section.settings.nl_pendant_text != blank -%}
+          <div class="sg-lg__rte">{{ section.settings.nl_pendant_text }}</div>
+        {%- endif -%}
+
+        {%- if pendants.size > 0 -%}
+          {%- render 'size-guide-explorer', section: section, blocks: pendants, active: pendant_active, image: section.settings.img_pendant, art: 'pendant', label: section.settings.nl_pendant_title -%}
+        {%- endif -%}
+
+        {%- if section.settings.nl_pendant_chain != blank -%}
+          {%- render 'size-guide-convert', rows: section.settings.nl_pendant_chain, col1: section.settings.nl_pendant_col1, col2: section.settings.nl_pendant_col2 -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 03 -- good to know {%- endcomment -%}
+    {%- if section.settings.nl_consider != blank -%}
+      <div class="sg-lg__section">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ section.settings.nl_consider_title }}</h3>
+        </div>
+        <div class="sg-lg__rte sg-lg__cards">{{ section.settings.nl_consider }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 04 -- measure at home {%- endcomment -%}
+    <div class="sg-lg__section">
+      <div class="sg-lg__head">
+        <span class="sg-lg__num" aria-hidden="true"></span>
+        <h3 class="sg-lg__title">{{ section.settings.nl_measure_title }}</h3>
+      </div>
+
+      <div class="sg-lg__measure">
+        <div class="sg-lg__rte">
+          {{- section.settings.nl_measure_text -}}
+          {%- if section.settings.nl_ruler_url != blank -%}
+            <p class="sg-lg__small">{{ section.settings.nl_ruler_prefix }} <a href="{{ section.settings.nl_ruler_url }}" target="_blank" rel="noopener">{{ section.settings.nl_ruler_link_text }}</a></p>
+          {%- endif -%}
+        </div>
+
+        <div class="sg-lg__ruler">
+          {%- if section.settings.nl_ruler_image != blank -%}
+            {{- section.settings.nl_ruler_image | image_url: width: 1200 | image_tag: widths: '400,600,800,1200', loading: 'lazy', sizes: '(max-width: 699px) 92vw, 420px', alt: section.settings.nl_ruler_image.alt -}}
+          {%- else -%}
+            <svg viewBox="0 0 480 150" role="img" aria-label="A necklace laid flat beside a ruler" font-family="Archivo, system-ui, sans-serif">
+              <g fill="none" stroke="#b08d57" stroke-width="2.2">
+                <circle cx="36" cy="44" r="6"/>
+                {%- for i in (0..15) -%}
+                  {%- assign cx = i | times: 26.25 | plus: 56.5 -%}
+                  <ellipse cx="{{ cx }}" cy="44" rx="10" ry="3.6"/>
+                {%- endfor -%}
+              </g>
+              <rect x="20" y="78" width="440" height="46" rx="4" fill="#fff" stroke="#d6d0c8"/>
+              <g stroke="#9a9189" stroke-width="1">
+                {%- for i in (0..64) -%}
+                  {%- assign tx = i | times: 6.5625 | plus: 30 -%}
+                  {%- assign m = i | modulo: 4 -%}
+                  {%- if m == 0 -%}
+                    <line x1="{{ tx }}" y1="78" x2="{{ tx }}" y2="94"/>
+                  {%- elsif m == 2 -%}
+                    <line x1="{{ tx }}" y1="78" x2="{{ tx }}" y2="89"/>
+                  {%- else -%}
+                    <line x1="{{ tx }}" y1="78" x2="{{ tx }}" y2="85"/>
+                  {%- endif -%}
+                {%- endfor -%}
+              </g>
+              <g fill="#1c1c1c" font-size="10" text-anchor="middle">
+                {%- for i in (1..16) -%}
+                  {%- assign nx = i | times: 26.25 | plus: 30 -%}
+                  <text x="{{ nx }}" y="112">{{ i }}</text>
+                {%- endfor -%}
+              </g>
+            </svg>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if section.settings.nl_steps != blank -%}
+        <div class="sg-lg__rte sg-lg__steps">{{ section.settings.nl_steps }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.nl_note != blank -%}
+        <p class="sg-lg__small sg-lg__note">{{ section.settings.nl_note }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} 05 -- FAQs {%- endcomment -%}
+    {%- if faqs.size > 0 -%}
+      <div class="sg-lg__section sg-lg__faq">
+        <div class="sg-lg__head">
+          <span class="sg-lg__num" aria-hidden="true"></span>
+          <h3 class="sg-lg__title">{{ section.settings.nl_faq_title }}</h3>
+        </div>
+        <div class="sg-lg__faq-list">
+          {%- for block in faqs -%}
+            {%- render 'accordion', title: block.settings.question, content: block.settings.answer, prose_content: true, block: block -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.nl_trust_text != blank -%}
+      {%- render 'size-guide-trust', title: section.settings.nl_trust_title, text: section.settings.nl_trust_text -%}
+    {%- endif -%}
+  </div>
+</template>

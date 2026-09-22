@@ -1,0 +1,17 @@
+{%- doc -%}
+  Closing "who wrote this guide" note on a designed size-guide tab.
+
+  @param {string} [title] - short heading
+  @param {string} text - body copy (rich text)
+{%- enddoc -%}
+
+<div class="sg-lg__trust">
+  <svg class="sg-lg__trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+    <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>
+    <path d="m8.8 12.2 2.2 2.2 4.3-4.6"/>
+  </svg>
+  <div>
+    {%- if title != blank -%}<p class="sg-lg__trust-title">{{ title }}</p>{%- endif -%}
+    <div class="sg-lg__trust-text">{{ text }}</div>
+  </div>
+</div>
