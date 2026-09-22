@@ -1,0 +1,253 @@
+{%- doc -%}
+  Renders the customer's wishlist. Favorites are stored client-side (see the
+  window.Wishlist helper + <wishlist-button> defined in sections/header.liquid), so this
+  can't loop over products server-side -- it reads the saved handles from localStorage on
+  load and fetches each product's card, with its Add to cart and Remove buttons, from
+  sections/wishlist-card.liquid.
+
+  Shared by sections/main-wishlist.liquid (the Wishlist page) and
+  sections/main-not-found.liquid, which shows it at /pages/wishlist while the store has
+  no such page.
+
+  @param {string} id - unique suffix for this instance's element ids
+  @param {string} [heading] - page heading
+  @param {string} [color_scheme] - color scheme id
+  @param {string} [content_width] - container width: sm, md, lg or xl (default lg)
+{%- enddoc -%}
+
+<div class="color-scheme color-scheme--{{ color_scheme }}">
+  <div class="section-spacing container container--{{ content_width | default: 'lg' }}">
+    {%- comment -%}
+      Shown to shoppers who aren't logged in. It says only what's true: the list lives in
+      this browser, and logging in doesn't copy it to their account (saving to accounts
+      would take a wishlist app).
+    {%- endcomment -%}
+    {%- liquid
+      assign show_login_notice = false
+      if shop.customer_accounts_enabled and customer == blank
+        assign show_login_notice = true
+      endif
+    -%}
+
+    {%- if heading != blank or show_login_notice -%}
+      <div class="v-stack gap-4 text-center" style="margin-block-end: var(--section-stack-gap, 2rem);">
+        {%- if heading != blank -%}
+          <h1 class="h1">{{ heading }}</h1>
+        {%- endif -%}
+
+        {%- if show_login_notice -%}
+          <div class="wishlist__notice">
+            {%- render 'icon' with 'wishlist', width: 16, class: 'wishlist__notice-icon' -%}
+            <p class="wishlist__notice-text">{{ 'general.wishlist.device_only_notice' | t }}</p>
+            <a href="{{ routes.account_login_url }}" class="wishlist__notice-link">{{ 'general.wishlist.log_in' | t }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div id="wishlist-loading-{{ id }}" class="text-center">
+      <p class="text-subdued">{{ 'general.wishlist.loading' | t }}</p>
+    </div>
+
+    <div id="wishlist-empty-{{ id }}" class="v-stack gap-4 text-center" hidden>
+      <p class="text-subdued">{{ 'general.wishlist.empty' | t }}</p>
+      <a href="{{ routes.all_products_collection_url }}" class="button button--outline justify-self-center">
+        {{- 'general.wishlist.continue_shopping' | t -}}
+      </a>
+    </div>
+
+    <div id="wishlist-grid-{{ id }}" class="product-list" hidden></div>
+  </div>
+</div>
+
+<style>
+  {%- comment -%}
+    The logged-out notice: a thin-bordered strip centred under the heading. The link uses
+    the nav's capitals and tracking so it reads as the action, not as part of the sentence.
+  {%- endcomment -%}
+  .wishlist__notice {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    gap: .5rem .875rem;
+    padding: .75rem 1.25rem;
+    border: 1px solid rgb(var(--text-color) / .12);
+    background: rgb(var(--text-color) / .03);
+  }
+
+  .wishlist__notice-icon {
+    flex-shrink: 0;
+    opacity: .6;
+  }
+
+  .wishlist__notice-text {
+    margin: 0;
+    font-size: .8125rem;
+    color: rgb(var(--text-color) / .75);
+  }
+
+  .wishlist__notice-link {
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-size: .6875rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: .35em;
+  }
+
+  #wishlist-grid-{{ id }} {
+    --product-list-items-per-row: 2;
+  }
+
+  @media screen and (min-width: 700px) {
+    #wishlist-grid-{{ id }} {
+      --product-list-items-per-row: 3;
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+    #wishlist-grid-{{ id }} {
+      --product-list-items-per-row: 4;
+    }
+  }
+
+  {%- comment -%}
+    Tighter than theme.css's product-list spacing (up to 60px across, 64px down on
+    desktop). Set through the grid's own gap variables, which it also uses to size the
+    cards, so the freed space goes to the cards instead of leaving the row short. With
+    fewer than 4 items the row centres under the heading instead of sitting to the left.
+  {%- endcomment -%}
+  #wishlist-grid-{{ id }} {
+    --product-list-calculated-column-gap: .625rem;
+    --product-list-calculated-row-gap: 2rem;
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 700px) {
+    #wishlist-grid-{{ id }} {
+      --product-list-calculated-column-gap: 1rem;
+      --product-list-calculated-row-gap: 2.5rem;
+    }
+  }
+
+  {%- comment -%}
+    theme.css makes every .product-list child span two subgrid rows, which put the grid's
+    whole row gap (about 64px) between the card and its buttons. Items here are one
+    column instead: stretched to the row's height, with the buttons pushed to the
+    bottom, so they still line up across a row when titles wrap to different lengths.
+  {%- endcomment -%}
+  #wishlist-grid-{{ id }} .wishlist-card {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    grid-row: auto;
+  }
+
+  #wishlist-grid-{{ id }} .wishlist-card__actions {
+    display: grid;
+    justify-items: center;
+    row-gap: .75rem;
+    margin-block-start: auto;
+    padding-block-start: 1rem;
+  }
+
+  #wishlist-grid-{{ id }} .wishlist-card__actions product-form,
+  #wishlist-grid-{{ id }} .wishlist-card__actions form {
+    width: 100%;
+  }
+
+  #wishlist-grid-{{ id }} .wishlist-card__remove {
+    font-size: .8125rem;
+  }
+</style>
+
+<script>
+  (() => {
+    const loadingEl = document.getElementById('wishlist-loading-{{ id }}');
+    const emptyEl = document.getElementById('wishlist-empty-{{ id }}');
+    const gridEl = document.getElementById('wishlist-grid-{{ id }}');
+
+    function showEmpty() {
+      gridEl.hidden = true;
+      emptyEl.hidden = false;
+    }
+
+    // One product card per saved handle, rendered by sections/wishlist-card.liquid. `gone`
+    // is only true for a real 404 (product deleted or unpublished), so a slow or dropped
+    // connection never deletes anything from the wishlist.
+    async function fetchCard(handle) {
+      try {
+        const response = await fetch(`${window.Shopify.routes.root}products/${handle}?section_id=wishlist-card`);
+
+        if (!response.ok) {
+          return { handle, gone: response.status === 404 };
+        }
+
+        const html = await response.text();
+        return { handle, card: new DOMParser().parseFromString(html, 'text/html').querySelector('.wishlist-card') };
+      } catch (error) {
+        return { handle };
+      }
+    }
+
+    // "Remove from wishlist" under each card.
+    gridEl.addEventListener('click', (event) => {
+      const card = event.target.closest('[data-wishlist-remove]')?.closest('.wishlist-card');
+
+      if (card && window.Wishlist.has(card.dataset.handle)) {
+        window.Wishlist.toggle(card.dataset.handle);
+      }
+    });
+
+    // Once an item is out of the wishlist (via that button or anything else that changes it), drop its card.
+    document.addEventListener('wishlist:updated', () => {
+      gridEl.querySelectorAll('.wishlist-card').forEach((card) => {
+        if (!window.Wishlist.has(card.dataset.handle)) {
+          card.remove();
+        }
+      });
+
+      if (loadingEl.hidden && !gridEl.querySelector('.wishlist-card')) {
+        showEmpty();
+      }
+    });
+
+    async function init() {
+      const handles = window.Wishlist ? window.Wishlist.get() : [];
+
+      if (!handles.length) {
+        loadingEl.hidden = true;
+        emptyEl.hidden = false;
+        return;
+      }
+
+      const results = await Promise.all(handles.map(fetchCard));
+      const goneHandles = results.filter((result) => result.gone).map((result) => result.handle);
+
+      if (goneHandles.length) {
+        localStorage.setItem('wishlist', JSON.stringify(handles.filter((handle) => !goneHandles.includes(handle))));
+        document.dispatchEvent(new CustomEvent('wishlist:updated'));
+      }
+
+      const cards = results.map((result) => result.card).filter(Boolean);
+      loadingEl.hidden = true;
+
+      if (!cards.length) {
+        showEmpty();
+        return;
+      }
+
+      gridEl.append(...cards);
+      gridEl.hidden = false;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>

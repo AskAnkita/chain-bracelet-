@@ -427,8 +427,12 @@
       page.about template. The wishlist page is excluded too: its product grid starts
       right under the bar on the plain background. Matched by template (which also
       covers previewing it on any page with ?view=wishlist) or by the page's handle.
+      The 404 page is plain text on the flat background as well, and it's also what
+      serves the wishlist at /pages/wishlist while the store has no such page. So do
+      the search results and cart pages, which open with their title on the plain
+      background.
     {%- endcomment -%}
-    {%- if request.page_type != 'policy' and page.template_suffix != 'about' and page.handle != 'about-us' and template.suffix != 'wishlist' and page.handle != 'wishlist' -%}
+    {%- if request.page_type != 'policy' and request.page_type != '404' and request.page_type != 'search' and request.page_type != 'cart' and page.template_suffix != 'about' and page.handle != 'about-us' and template.suffix != 'wishlist' and page.handle != 'wishlist' -%}
       #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
         --header-show-transparent-logo: 1;
         --header-separation-border-color: 0 0 0 / 0;

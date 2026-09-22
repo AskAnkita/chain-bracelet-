@@ -58,7 +58,9 @@
     "wishlist": {
       "loading": "Loading your wishlist...",
       "empty": "You haven't added anything to your wishlist yet.",
-      "continue_shopping": "Continue shopping"
+      "continue_shopping": "Continue shopping",
+      "device_only_notice": "Your wishlist is saved on this device only.",
+      "log_in": "Log in"
     },
     "localization": {
       "country": "Country",

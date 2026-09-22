@@ -1,0 +1,59 @@
+{%- comment -%}
+  One wishlist item. snippets/wishlist.liquid fetches it once per saved product through
+  the Section Rendering API (/products/{handle}?section_id=wishlist-card). Rendering on
+  the product's own URL makes `product` available, so the item is the theme's regular
+  product card plus the wishlist's two actions, built in Liquid rather than JavaScript.
+  It has no presets, so it never shows up in the theme editor's "Add section" list.
+
+  Add to cart posts straight to the cart when there is only one variant to buy. Every
+  other product comes in several metals, so the button opens the theme's quick-buy
+  popup to choose one first, the same popup the collection cards' "+" button opens.
+  Both paths end in the theme's own cart drawer.
+{%- endcomment -%}
+{%- if product -%}
+  <div class="wishlist-card" data-handle="{{ product.handle | escape }}">
+    {%- comment -%}No heart on the image: the "Remove from wishlist" link below does that job here.{%- endcomment -%}
+    {%- render 'product-card', product: product, show_quick_buy: false, show_wishlist_button: false -%}
+
+    <div class="wishlist-card__actions">
+      {%- assign add_to_cart_label = 'product.general.add_to_cart_button' | t -%}
+
+      {%- if product.available -%}
+        {%- if product.variants.size == 1 and product.selling_plan_groups.size == 0 -%}
+          <product-form>
+            {%- form 'product', product -%}
+              <input type="hidden" name="on_success" value="force_open_drawer">
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              {%- render 'button', content: add_to_cart_label, type: 'submit', size: 'sm', stretch: true -%}
+            {%- endform -%}
+          </product-form>
+        {%- else -%}
+          {%- capture quick_buy_id -%}wishlist-quick-buy-{{ product.id }}{%- endcapture -%}
+          {%- render 'button', content: add_to_cart_label, size: 'sm', stretch: true, aria_controls: quick_buy_id -%}
+
+          <quick-buy-modal
+            handle="{{ product.handle }}?variant={{ product.selected_or_first_available_variant.id }}"
+            class="quick-buy-modal modal"
+            id="{{ quick_buy_id }}"
+            aria-label="{{ 'product.general.choose_options_with_title' | t: title: product.title | escape }}"
+          ></quick-buy-modal>
+        {%- endif -%}
+      {%- else -%}
+        {%- assign sold_out_label = 'product.general.sold_out_button' | t -%}
+        {%- render 'button', content: sold_out_label, size: 'sm', stretch: true, disabled: true -%}
+      {%- endif -%}
+
+      <button type="button" class="link wishlist-card__remove" data-wishlist-remove>
+        {{- 'product.general.remove_from_wishlist' | t -}}
+      </button>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Wishlist card",
+  "tag": "div"
+}
+{% endschema %}

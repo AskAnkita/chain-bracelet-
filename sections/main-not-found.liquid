@@ -1,19 +1,44 @@
+{%- comment -%}
+  The header's wishlist icon links to /pages/wishlist. Until the store has a page at that
+  address (Online Store > Pages, theme template "wishlist"), Shopify serves this 404
+  template there. The wishlist lives in the visitor's browser anyway, so the browser
+  swaps it in for the "not found" message when that's the address. This can't be
+  decided in Liquid: request.path is "/404" on this template, whatever was requested.
+  Once the page exists, page.wishlist.json serves it and this never runs. The response
+  status stays 404, which makes no difference to a browser-stored wishlist.
+{%- endcomment -%}
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
-<div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}">
-  <div class="container container--xs">
-    <div class="empty-state">
-      <div class="prose">
-        <h1 class="h4">{{ '404.general.title' | t }}</h1>
-        <p>{{ '404.general.not_found_info' | t }}</p>
+<div id="not-found-{{ section.id }}">
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}">
+    <div class="container container--xs">
+      <div class="empty-state">
+        <div class="prose">
+          <h1 class="h4">{{ '404.general.title' | t }}</h1>
+          <p>{{ '404.general.not_found_info' | t }}</p>
 
-        {%- assign button_content = '404.general.continue_shopping' | t -%}
-        {%- assign button_link = section.settings.link | default: routes.all_products_collection_url -%}
-        {%- render 'button', content: button_content, href: button_link -%}
+          {%- assign button_content = '404.general.continue_shopping' | t -%}
+          {%- assign button_link = section.settings.link | default: routes.all_products_collection_url -%}
+          {%- render 'button', content: button_content, href: button_link -%}
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<template id="wishlist-fallback-{{ section.id }}">
+  {%- render 'wishlist', id: section.id, heading: 'Wishlist', color_scheme: section.settings.color_scheme.id -%}
+</template>
+
+<script>
+  (() => {
+    if (!/\/pages\/wishlist\/?$/.test(window.location.pathname)) return;
+
+    const fallback = document.getElementById('wishlist-fallback-{{ section.id }}');
+    document.getElementById('not-found-{{ section.id }}').replaceWith(document.importNode(fallback.content, true));
+    document.title = 'Wishlist';
+  })();
+</script>
 
 {% schema %}
 {

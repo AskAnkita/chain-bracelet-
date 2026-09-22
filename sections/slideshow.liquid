@@ -105,16 +105,15 @@
         setting. max-width breaks a three-word title over two lines.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
-        max-width: 7em;
+        max-width: 8em;
         margin-block-start: .1rem;
         font-family: 'Noto Serif Display', 'Times New Roman', serif;
-        font-weight: var(--elegant-title-weight, 300);
-        font-stretch: 62.5%;
+        font-weight: var(--elegant-title-weight, 350);
+        font-stretch: 72%;
         font-style: normal;
-        font-size: clamp(3.25rem, 5.6vw, 7rem);
+        font-size: clamp(3rem, 5.2vw, 6.25rem);
         line-height: .95;
-        letter-spacing: -.02em;
-        word-spacing: -.04em;
+        letter-spacing: -.01em;
         text-transform: none;
         overflow-wrap: normal;
       }
@@ -124,24 +123,41 @@
       }
 
       {%- comment -%}
-        "Same font as the menu" option: the theme heading font, uppercase and letter-spaced
-        like the header links, at a smaller size since it's much wider than the serif.
+        "Thin condensed heading font" option: narrower, and a step thinner than the
+        "Heading thickness" setting.
       {%- endcomment -%}
-      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--menu-font .slideshow-elegant__title {
-        max-width: 14em;
-        font-family: var(--heading-font-family);
-        font-weight: var(--heading-font-weight);
-        font-stretch: normal;
-        font-size: clamp(1.75rem, 2.8vw, 3.25rem);
-        line-height: 1.15;
-        letter-spacing: .14em;
-        word-spacing: normal;
-        text-transform: uppercase;
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--condensed .slideshow-elegant__title {
+        font-weight: calc(var(--elegant-title-weight, 350) - 50);
+        font-stretch: 62.5%;
+        letter-spacing: -.02em;
+        word-spacing: -.04em;
       }
 
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
         margin-block-start: clamp(1.15rem, 1.9vw, 1.65rem);
         padding: .85rem 2rem;
+      }
+
+      {%- comment -%}
+        "Center-align heading and button": the block shrinks to its text and stays where the
+        content position puts it (e.g. middle left); only the lines and button inside it are
+        centred against each other.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow__slide-content--centered {
+        width: fit-content;
+        text-align: center;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--centered .slideshow-elegant {
+        --elegant-justify: center;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--centered .slideshow-elegant__title {
+        margin-inline: auto;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--centered .button-group {
+        justify-content: center;
       }
 
       #shopify-section-{{ section.id }} .slideshow-elegant__divider,
@@ -224,7 +240,7 @@
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
-          font-size: clamp(2.5rem, 12vw, 4.5rem);
+          font-size: clamp(2.5rem, 11vw, 4.5rem);
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
@@ -357,7 +373,7 @@
             endif
           %}
 
-          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {% if block.settings.elegant_heading %}slideshow__slide-content--elegant{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %} {% if block.settings.elegant_heading %}--elegant-accent: {{ block.settings.accent_color }};{% endif %}">
+          <div class="slideshow__slide-content {% if is_boxed %}slideshow__slide-content--boxed{% endif %} {% if has_border %}slideshow__slide-content--with-border{% endif %} {% if has_inside_offset %}slideshow__slide-content--with-border-offset{% endif %} {% if block.settings.elegant_heading %}slideshow__slide-content--elegant {% if block.settings.elegant_center_text %}slideshow__slide-content--centered{% endif %}{% endif %} {{ block.settings.mobile_text_position }} {{ block.settings.desktop_text_position }}" style="{% render 'surface', background: block.settings.background, background_opacity: block.settings.background_opacity, text_color: block.settings.text_color, border_color: block.settings.border_color %} {% if block.settings.enable_text_shadow %}text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});{% endif %} {% if block.settings.elegant_heading %}--elegant-accent: {{ block.settings.accent_color }};{% endif %}">
             <div class="prose" {% if block.settings.enable_text_shadow %}style="text-shadow: 2px 2px 4px rgba(0, 0, 0, {{ block.settings.text_shadow_opacity | divided_by: 100.0 }});"{% endif %}>
               {%- if block.settings.subheading != blank -%}
                 <p class="h6 {% if block.settings.elegant_heading %}slideshow-elegant__eyebrow{% endif %}">{{ block.settings.subheading }}</p>
@@ -669,25 +685,32 @@
           "type": "checkbox",
           "id": "elegant_heading",
           "label": "Add ornamental divider and second line",
-          "info": "Heading and second line use the Noto Serif Display font at hero size. Italicize a word in the heading for an italic accent.",
+          "info": "Heading and second line use a display serif at hero size. Italicize a word in the heading for an italic accent.",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "elegant_center_text",
+          "label": "Center-align heading and button",
+          "info": "The text stays where the content position puts it; only the lines inside it are centered.",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "title_condensed_font",
+          "label": "Use thin condensed heading font",
+          "info": "Makes the heading narrower and a little thinner.",
           "default": false
         },
         {
           "type": "range",
           "id": "title_font_weight",
           "label": "Heading thickness",
-          "info": "Thin (100) to bold (700). Serif font only.",
+          "info": "Thin (100) to bold (700).",
           "min": 100,
           "max": 700,
           "step": 50,
-          "default": 300
-        },
-        {
-          "type": "checkbox",
-          "id": "title_menu_font",
-          "label": "Use menu font for heading",
-          "info": "Off: serif font. On: the menu's font, in capitals.",
-          "default": false
+          "default": 350
         },
         {
           "type": "text",
