@@ -1,9 +1,9 @@
 {%- comment -%}
   Editorial hero heading for slideshow image slides: an optional small logo/wordmark
   image above the heading, the heading, an optional ornamental divider, a second line
-  in the accent color, an optional ornament and a letter-spaced tagline. Everything uses
-  the theme's heading font; styles live in sections/slideshow.liquid so they print once
-  per section.
+  in the accent color, an optional ornament and a letter-spaced tagline. The heading and
+  second line use the Noto Serif Display font, the rest the theme's heading font;
+  styles live in sections/slideshow.liquid so they print once per section.
 
   @param {object} block - the slideshow image block
 {%- endcomment -%}
@@ -13,7 +13,7 @@
   assign desktop_align = block.settings.desktop_text_position | split: 'text-' | last
 -%}
 
-<div class="slideshow-elegant" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }};">
+<div class="slideshow-elegant" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }}; --elegant-title-weight: {{ block.settings.title_font_weight | default: 300 }};">
   {%- if block.settings.subheading == blank and block.settings.title_image != blank -%}
     <p class="slideshow-elegant__heading-image">
       {%- assign title_image_alt = block.settings.title_image.alt | default: block.settings.title | strip_html | escape -%}
@@ -37,7 +37,7 @@
       {{- block.settings.heading_image | image_url: width: 1400 | image_tag: widths: '400,600,900,1200,1400', alt: heading_image_alt -}}
     </p>
   {%- elsif block.settings.title != blank -%}
-    <p class="{{ block.settings.heading_style }}">{{ block.settings.title }}</p>
+    <p class="{{ block.settings.heading_style }} slideshow-elegant__title">{{ block.settings.title }}</p>
   {%- endif -%}
 
   {%- if block.settings.divider_text != blank -%}
@@ -49,7 +49,7 @@
   {%- endif -%}
 
   {%- if block.settings.accent_text != blank -%}
-    <p class="{{ block.settings.heading_style }} slideshow-elegant__accent">{{ block.settings.accent_text }}</p>
+    <p class="{{ block.settings.heading_style }} slideshow-elegant__title slideshow-elegant__accent">{{ block.settings.accent_text }}</p>
   {%- endif -%}
 
   {%- if block.settings.show_ornament -%}

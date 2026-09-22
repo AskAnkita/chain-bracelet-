@@ -19,7 +19,27 @@
   -%}
 
   {%- if uses_elegant_heading -%}
+    <link rel="preload" href="{{ 'noto-serif-display.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+
     <style>
+      @font-face {
+        font-family: 'Noto Serif Display';
+        font-style: normal;
+        font-weight: 100 900;
+        font-stretch: 62.5% 100%;
+        font-display: swap;
+        src: url('{{ 'noto-serif-display.woff2' | asset_url }}') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Noto Serif Display';
+        font-style: italic;
+        font-weight: 100 900;
+        font-stretch: 62.5% 100%;
+        font-display: swap;
+        src: url('{{ 'noto-serif-display-italic.woff2' | asset_url }}') format('woff2');
+      }
+
       #shopify-section-{{ section.id }} .content-over-media > .slideshow__slide-content--elegant {
         text-shadow: none;
       }
@@ -79,17 +99,28 @@
         height: auto;
       }
 
-      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .h1 {
-        max-width: 9.2em;
+      {%- comment -%}
+        Title and second line: a condensed high-contrast display serif at hero size, whatever
+        heading style is picked, with its thickness from the slide's "Heading thickness"
+        setting. max-width breaks a three-word title over two lines.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
+        max-width: 7em;
         margin-block-start: .1rem;
-        font-family: Baskerville, "Libre Baskerville", "Cormorant Garamond", Georgia, "Times New Roman", serif;
-        font-weight: 400;
+        font-family: 'Noto Serif Display', 'Times New Roman', serif;
+        font-weight: var(--elegant-title-weight, 300);
+        font-stretch: 62.5%;
         font-style: normal;
-        font-size: clamp(3rem, 4.55vw, 5.35rem);
-        line-height: 1.03;
-        letter-spacing: .01em;
+        font-size: clamp(3.25rem, 5.6vw, 7rem);
+        line-height: .95;
+        letter-spacing: -.02em;
+        word-spacing: -.04em;
         text-transform: none;
         overflow-wrap: normal;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow-elegant__title :is(em, i) {
+        font-style: italic;
       }
 
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
@@ -178,8 +209,8 @@
           text-shadow: 0 2px 10px rgb(0 0 0 / .32);
         }
 
-        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .h1 {
-          font-size: clamp(2.25rem, 13vw, 4rem);
+        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
+          font-size: clamp(2.5rem, 12vw, 4.5rem);
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
@@ -625,8 +656,18 @@
           "type": "checkbox",
           "id": "elegant_heading",
           "label": "Add ornamental divider and second line",
-          "info": "Uses the heading font and heading style above.",
+          "info": "Heading and second line use the Noto Serif Display font at hero size. Italicize a word in the heading for an italic accent.",
           "default": false
+        },
+        {
+          "type": "range",
+          "id": "title_font_weight",
+          "label": "Heading thickness",
+          "info": "Thin (100) to bold (700).",
+          "min": 100,
+          "max": 700,
+          "step": 50,
+          "default": 300
         },
         {
           "type": "text",

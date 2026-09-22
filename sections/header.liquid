@@ -102,8 +102,124 @@
     transition: background .2s, color .2s;
   }
 
-  #shopify-section-{{ section.id }} .header__primary-nav-item > a {
+  #shopify-section-{{ section.id }} .header__primary-nav-item > a,
+  #shopify-section-{{ section.id }} .header__primary-nav-item summary {
     font-size: {{ section.settings.menu_text_size }}rem;
+  }
+
+  {%- comment -%}
+    Category mega menu panel (snippets/category-mega-menu.liquid). theme.css's .mega-menu
+    already drops it full width below the bar, caps its height and paints the scheme
+    background; this lays out the inside and keeps it short. The images get up to 46rem
+    against the right edge, under the header icons; the links are centred in whatever
+    is left, so a short list doesn't leave one big gap beside the images. On narrower
+    screens the links keep their full width and the images give way.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu {
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, 46rem);
+    align-items: start;
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+    padding-block: 1.75rem 2rem;
+    box-shadow: 0 1.25rem 1.5rem -1.25rem rgb(0 0 0 / .15);
+  }
+
+  {%- comment -%}With only links or only images, that one half takes the whole row.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu:has(> :only-child) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu > :only-child {
+    justify-self: center;
+  }
+
+  {%- comment -%}
+    Links flow down each column, then across; the snippet sets the row count inline
+    (evened-out columns of up to 6 for tag links, `links_per_column` for a block's menu).
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__links {
+    justify-self: center;
+    display: grid;
+    grid-template-rows: repeat(var(--category-mega-menu-rows), auto);
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    column-gap: clamp(3rem, 5vw, 4.5rem);
+    row-gap: .85rem;
+  }
+
+  {%- comment -%}
+    theme.liquid styles every `.header__primary-nav a` as small tracked caps for the bar
+    itself, and this panel sits inside that nav. Same specificity as that rule, but this
+    style block comes later in the page, so it wins: the image captions read as plain
+    sentence-case text.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu a {
+    font-size: .9375rem;
+    line-height: 1.5;
+    letter-spacing: .01em;
+    text-transform: none;
+  }
+
+  {%- comment -%}The links themselves use the nav bar's typeface: heading font, capitals, wide tracking.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__links a {
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-style: var(--heading-font-style);
+    font-size: .8rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__promo {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: 1rem;
+    width: 100%;
+  }
+
+  {%- comment -%}Doubled class to outrank theme.liquid's nowrap on nav links, so captions can wrap.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu .category-mega-menu__card {
+    display: grid;
+    row-gap: .6rem;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  {%- comment -%}
+    A fixed height and the full width of the card, cropped to fit. Not sized from the
+    image's aspect ratio: Safari gave a fixed-height, aspect-ratio box inside the card
+    no width of its own, so the banner collapsed to the caption's width.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__media {
+    height: 14rem;
+    overflow: hidden;
+    background: rgb(var(--text-color) / .05);
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  {%- comment -%}
+    The collection banners are wide, with the jewellery right of centre (all four
+    category banners are shot that way), so a half-width crop keeps the right side in
+    frame. A focal point set on the image in Shopify admin still wins: image_tag writes
+    it inline.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__banner {
+    object-position: 70% 50%;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__caption {
+    font-size: 1rem;
+  }
+
+  {%- comment -%}Keep the category's hover underline showing while its panel is open.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .header__primary-nav-item details[aria-expanded="true"] > summary[data-title]::before {
+    transform: scaleX(1);
   }
 
   #shopify-section-{{ section.id }} .header__utility-row {
@@ -419,7 +535,11 @@
         pointer-events: auto !important;
       }
 
-      #shopify-section-{{ section.id }} .header-compact .header__primary-nav :is(ul, menu) {
+      {%- comment -%}
+        `>` scopes this and the rule below to the bar's own list; without it they also
+        reached the link list inside each category mega menu panel.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav > :is(ul, menu) {
         gap: 2rem !important;
         max-width: none !important;
         flex-wrap: nowrap;
@@ -429,7 +549,7 @@
         No centred wordmark to make room for, so close the gap theme.liquid opens
         after the second link.
       {%- endcomment -%}
-      #shopify-section-{{ section.id }} .header-compact .header__primary-nav :is(ul, menu) > li:nth-child(2) {
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav > :is(ul, menu) > li:nth-child(2) {
         margin-inline-end: 0 !important;
       }
     }
@@ -692,51 +812,70 @@
               {%- endif -%}
             {%- endfor -%}
 
-            {%- comment -%}Left nav items (Necklaces, Bracelets){%- endcomment -%}
-            {%- assign left_nav_items = "NECKLACES|/collections/necklaces,BRACELETS|/collections/bracelets" | split: "," -%}
-            {%- for item in left_nav_items -%}
-              {%- assign item_parts = item | split: "|" -%}
-              {%- assign link_title = item_parts[0] -%}
-              {%- assign link_url = item_parts[1] -%}
-              {% liquid
-                assign link_title_downcase = link_title | strip | downcase
-                assign luxury_mega_menu_block = ''
-                for block in section.blocks
-                  assign block_menu_item_downcase = block.settings.menu_item | strip | downcase
-                  if block.type == 'luxury_mega_menu'
-                    if block_menu_item_downcase == link_title_downcase
-                      assign luxury_mega_menu_block = block
-                      break
-                    endif
-                  endif
-                endfor
-              %}
-              <li class="header__primary-nav-item">
-                <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
-              </li>
-            {%- endfor -%}
+            {%- comment -%}
+              Each collection link gets a dropdown panel (snippets/category-mega-menu.liquid),
+              filled from that collection's product tags and image unless a "Category mega
+              menu" block attached to it (its `menu_item` is the category's lowercased title)
+              overrides them. When the snippet has nothing to show, the item stays a plain
+              link, which is also what Size Guide and About Us get.
 
-            {%- comment -%}Right nav items (Rings, Earrings, Size Guide, About Us){%- endcomment -%}
-            {%- assign right_nav_items = "RINGS|/collections/rings,EARRINGS|/collections/earrings,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: "," -%}
-            {%- for item in right_nav_items -%}
-              {%- assign item_parts = item | split: "|" -%}
-              {%- assign link_title = item_parts[0] -%}
-              {%- assign link_url = item_parts[1] -%}
-              {% liquid
+              The summary keeps the category's URL in data-follow-link: with the hover
+              trigger, clicking the open item goes to the collection; on touch screens the
+              first tap opens the panel and the second follows the link.
+
+              The third field on a category is the panel's second image: the same flat-lay
+              the home page's category tiles (media_grid_1 in templates/index.json) use, by
+              its filename in Content > Files. A block's Image 2 replaces it; if the file is
+              ever deleted, the panel just shows the one banner.
+            {%- endcomment -%}
+            {%- assign nav_items = "NECKLACES|/collections/necklaces|1683baf2-9f89-47cf-9d71-35ec8238b993.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: "," -%}
+            {%- for item in nav_items -%}
+              {%- liquid
+                assign item_parts = item | split: "|"
+                assign link_title = item_parts[0]
+                assign link_url = item_parts[1]
                 assign link_title_downcase = link_title | strip | downcase
-                assign luxury_mega_menu_block = ''
+
+                assign category_image = nil
+                if item_parts[2] != blank
+                  assign category_image = images[item_parts[2]]
+                endif
+
+                assign category_menu_block = nil
                 for block in section.blocks
-                  assign block_menu_item_downcase = block.settings.menu_item | strip | downcase
-                  if block.type == 'luxury_mega_menu'
-                    if block_menu_item_downcase == link_title_downcase
-                      assign luxury_mega_menu_block = block
-                      break
-                    endif
+                  if block.type == 'category_mega_menu' and block.settings.menu_item == link_title_downcase
+                    assign category_menu_block = block
+                    break
                   endif
                 endfor
-              %}
+
+                assign category_collection = nil
+                if link_url contains '/collections/'
+                  assign collection_handle = link_url | remove_first: '/collections/'
+                  assign category_collection = collections[collection_handle]
+                endif
+
+                assign category_menu = ''
+                if category_menu_block or category_collection
+                  capture category_menu
+                    render 'category-mega-menu', block: category_menu_block, collection: category_collection, second_image: category_image
+                  endcapture
+                endif
+              -%}
               <li class="header__primary-nav-item">
-                <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
+                {%- if category_menu != blank -%}
+                  <mega-menu-disclosure follow-summary-link trigger="{{ section.settings.menu_open_trigger }}" class="contents">
+                    <details class="header__menu-disclosure">
+                      <summary data-follow-link="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">
+                        {{- link_title -}}
+                      </summary>
+
+                      {{- category_menu -}}
+                    </details>
+                  </mega-menu-disclosure>
+                {%- else -%}
+                  <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
+                {%- endif -%}
               </li>
             {%- endfor -%}
           </ul>
@@ -774,6 +913,27 @@
     '--header-height',
     `${document.getElementById('shopify-section-{{ section.id }}').clientHeight.toFixed(2)}px`
   );
+</script>
+
+{%- comment -%}
+  Lazy images inside the category mega menus' closed details elements don't reliably start
+  loading when the panel opens (the banner stayed an empty box). They stay lazy on page
+  load, so visitors who never touch the menu don't pay for them, and switch to eager
+  the first time the pointer or keyboard focus reaches the menu, which starts them
+  downloading before a panel is even open.
+{%- endcomment -%}
+<script>
+  (() => {
+    const nav = document.querySelector('#shopify-section-{{ section.id }} .header__primary-nav');
+    if (!nav) return;
+
+    const loadPanelImages = () => {
+      nav.querySelectorAll('.category-mega-menu img[loading="lazy"]').forEach((image) => image.loading = 'eager');
+    };
+
+    nav.addEventListener('pointerover', loadPanelImages, { once: true });
+    nav.addEventListener('focusin', loadPanelImages, { once: true });
+  })();
 </script>
 
 {%- comment -%}
@@ -1353,6 +1513,93 @@
           "type": "url",
           "id": "image_2_link",
           "label": "t:global.text.link"
+        }
+      ]
+    },
+    {
+      "type": "category_mega_menu",
+      "name": "Category mega menu",
+      "settings": [
+        {
+          "type": "select",
+          "id": "menu_item",
+          "label": "Category",
+          "info": "The header link this panel opens under. Without a block, the panel shows the category's product tags and collection image; this block overrides them.",
+          "options": [
+            {
+              "value": "necklaces",
+              "label": "Necklaces"
+            },
+            {
+              "value": "bracelets",
+              "label": "Bracelets"
+            },
+            {
+              "value": "rings",
+              "label": "Rings"
+            },
+            {
+              "value": "earrings",
+              "label": "Earrings"
+            }
+          ],
+          "default": "necklaces"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Links",
+          "info": "Replaces the automatic Type / Shape / Style columns. The menu's top-level links are listed in columns. Create menus in Content > Menus."
+        },
+        {
+          "type": "range",
+          "id": "links_per_column",
+          "min": 3,
+          "max": 12,
+          "step": 1,
+          "label": "Links per column",
+          "default": 7
+        },
+        {
+          "type": "header",
+          "content": "Image 1",
+          "info": "Defaults to the collection's image, captioned Best Sellers next to Image 2, or Shop All on its own."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image",
+          "info": "Shown at a 10:7 landscape crop. 1200 x 840px recommended."
+        },
+        {
+          "type": "text",
+          "id": "image_1_label",
+          "label": "Caption"
+        },
+        {
+          "type": "url",
+          "id": "image_1_link",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image",
+          "info": "Shown at a 10:7 landscape crop. 1200 x 840px recommended."
+        },
+        {
+          "type": "text",
+          "id": "image_2_label",
+          "label": "Caption"
+        },
+        {
+          "type": "url",
+          "id": "image_2_link",
+          "label": "Link"
         }
       ]
     },

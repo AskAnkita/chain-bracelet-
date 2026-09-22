@@ -1,0 +1,167 @@
+{%- doc -%}
+  Renders the full-width panel that drops below one category link in the header
+  (Necklaces, Bracelets, ...): links on the left, images on the right. Styled in
+  sections/header.liquid. Outputs nothing when there is nothing to show, so the header
+  can fall back to a plain link.
+
+  Without a block, the panel builds itself from the category's collection:
+  - links: the products' `Type:` and `Style:` tags, as one list in columns, each
+    linking to the collection filtered by that tag (e.g. Style:Halo goes to
+    /collections/necklaces/style-halo);
+  - images: the collection's own image, then `second_image` (the category's flat-lay).
+
+  A "Category mega menu" block overrides any of it: its menu replaces the tag links,
+  and its images, captions and links fill the two image slots.
+
+  @param {object} [block] - a `category_mega_menu` block from the header section
+  @param {object} [collection] - the category's collection
+  @param {object} [second_image] - default image for slot 2, captioned "Shop All ..."
+{%- enddoc -%}
+
+{%- liquid
+  assign menu_links = block.settings.menu.links
+-%}
+
+{%- capture links_content -%}
+  {%- if menu_links.size > 0 -%}
+    {%- assign rows = menu_links.size | at_most: block.settings.links_per_column -%}
+    <ul class="category-mega-menu__links unstyled-list" style="--category-mega-menu-rows: {{ rows }}" role="list">
+      {%- for link in menu_links -%}
+        <li>
+          <a href="{{ link.url }}" class="link-reverse" {% if link.current %}aria-current="page"{% endif %}>
+            {{- link.title -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- elsif collection -%}
+    {%- comment -%}
+      One list: the Type tags first, then Style, flowing into as few columns as fit
+      6 rows each, then evened out (13 links: 5 + 5 + 3, not 6 + 6 + 1). Add 'Shape'
+      back to tag_groups to list the stone shapes too. Type skips the tag that just
+      repeats the category (Type:Necklace under Necklaces), since it matches nearly
+      every product in it.
+    {%- endcomment -%}
+    {%- assign generic_type = collection.title | downcase | remove_last: 's' -%}
+    {%- assign tag_groups = 'Type,Style' | split: ',' -%}
+
+    {%- assign tag_count = 0 -%}
+    {%- capture tag_links -%}
+      {%- for group in tag_groups -%}
+        {%- assign prefix = group | append: ':' -%}
+
+        {%- for tag in collection.all_tags -%}
+          {%- assign tag_start = tag | slice: 0, prefix.size -%}
+          {%- if tag_start == prefix -%}
+            {%- assign value = tag | remove_first: prefix | strip -%}
+            {%- assign value_downcase = value | downcase -%}
+            {%- unless value_downcase == generic_type -%}
+              {%- assign tag_count = tag_count | plus: 1 -%}
+              <li>
+                <a href="{{ collection.url }}/{{ tag | handleize }}" class="link-reverse">{{ value }}</a>
+              </li>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if tag_count > 0 -%}
+      {%- liquid
+        assign tag_columns = tag_count | plus: 5 | divided_by: 6
+        assign tag_rows = tag_count | plus: tag_columns | minus: 1 | divided_by: tag_columns
+      -%}
+      <ul class="category-mega-menu__links unstyled-list" style="--category-mega-menu-rows: {{ tag_rows }}" role="list">{{ tag_links }}</ul>
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- comment -%}
+  Two image slots, like the reference. Each shows the block's image when one is set.
+  Otherwise slot 2 shows `second_image` as "Shop All ...", and slot 1 falls back to the
+  collection's own banner: captioned "Best Sellers" (the collection sorted by
+  best-selling) when slot 2 has an image beside it, or "Shop All ..." when it stands
+  alone. A block caption or link still overrides those.
+{%- endcomment -%}
+{%- liquid
+  assign slot_2_image = block.settings.image_2 | default: second_image
+
+  assign has_slot_1 = false
+  if block.settings.image_1 != blank or collection.image
+    assign has_slot_1 = true
+  endif
+
+  assign card_sizes = '(min-width: 1000px) 740px, 100vw'
+  if has_slot_1 and slot_2_image != blank
+    assign card_sizes = '(min-width: 1000px) 370px, 50vw'
+  endif
+-%}
+
+{%- capture promo_cards -%}
+  {%- for i in (1..2) -%}
+    {%- liquid
+      assign image_key = 'image_' | append: i
+      assign caption_key = 'image_' | append: i | append: '_label'
+      assign link_key = 'image_' | append: i | append: '_link'
+
+      assign image = block.settings[image_key]
+      assign default_caption = ''
+      assign default_link = ''
+      assign image_class = 'zoom-image group-hover:zoom'
+
+      if image == blank and i == 1 and collection.image
+        assign image = collection.image
+        assign image_class = 'zoom-image group-hover:zoom category-mega-menu__banner'
+
+        if slot_2_image != blank
+          assign default_caption = 'Best Sellers'
+          assign default_link = collection.url | append: '?sort_by=best-selling'
+        else
+          assign default_caption = 'Shop All ' | append: collection.title
+          assign default_link = collection.url
+        endif
+      endif
+
+      if image == blank and i == 2 and second_image != blank
+        assign image = second_image
+        assign default_caption = 'Shop All ' | append: collection.title
+        assign default_link = collection.url
+      endif
+
+      assign caption = block.settings[caption_key] | default: default_caption
+      assign card_link = block.settings[link_key] | default: default_link
+      assign image_alt = image.alt | default: caption
+    -%}
+
+    {%- if image != blank -%}
+      {%- capture card_content -%}
+        <div class="category-mega-menu__media">
+          {{- image | image_url: width: 1480 | image_tag: loading: 'lazy', sizes: card_sizes, widths: '370,560,740,1100,1480', alt: image_alt, class: image_class -}}
+        </div>
+
+        {%- if caption != blank -%}
+          <span class="category-mega-menu__caption">{{ caption }}</span>
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- if card_link != blank -%}
+        <a href="{{ card_link }}" class="category-mega-menu__card group">{{ card_content }}</a>
+      {%- else -%}
+        <div class="category-mega-menu__card group">{{ card_content }}</div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if promo_cards != blank -%}
+  {%- capture promo_content -%}
+    <div class="category-mega-menu__promo">{{ promo_cards }}</div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- if links_content != blank or promo_content != blank -%}
+  <div class="mega-menu category-mega-menu" {{ block.shopify_attributes }}>
+    {{- links_content -}}
+    {{- promo_content -}}
+  </div>
+{%- endif -%}

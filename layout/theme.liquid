@@ -94,8 +94,9 @@
                 pointer-events: none;
               }
 
-              /* the list is the real flex container */
-              #shopify-section-sections--23238268223731__header .header__primary-nav :is(ul, menu) {
+              /* the list is the real flex container (the bar's own list only: `>` keeps
+                 this off the link lists inside the category mega menu panels) */
+              #shopify-section-sections--23238268223731__header .header__primary-nav > :is(ul, menu) {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -112,7 +113,7 @@
               }
 
               /* THE HOLE — opens after the 2nd link, sized to the wordmark */
-              #shopify-section-sections--23238268223731__header .header__primary-nav :is(ul, menu) > li:nth-child(2) {
+              #shopify-section-sections--23238268223731__header .header__primary-nav > :is(ul, menu) > li:nth-child(2) {
                 margin-inline-end: clamp(19rem, 20vw, 24rem);
               }
 
