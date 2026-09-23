@@ -29,18 +29,36 @@
         {%- assign active_values_count = active_values_count | plus: 1 -%}
       {%- endif -%}
     {%- else -%}
+      {%- comment -%}
+        The tag filter is shown as a group per prefix (snippets/facet-tag-groups.liquid),
+        so its chips read "Round", under the group "Shape", rather than "Shape:Round".
+      {%- endcomment -%}
       {%- for active_value in filter.active_values -%}
+        {%- liquid
+          assign facet_group = filter.label
+          assign facet_label = active_value.label
+
+          if filter.param_name == 'filter.p.tag'
+            assign value_parts = active_value.value | split: ':'
+            if value_parts.size > 1
+              assign facet_group = value_parts[0]
+              assign tag_prefix = facet_group | append: ':'
+              assign facet_label = active_value.label | remove_first: tag_prefix | strip
+            endif
+          endif
+        -%}
+
         <div class="removable-facet">
           <facet-link>
-            <a href="{{ active_value.url_to_remove }}" class="tap-area link-faded" aria-label="{{ 'collection.faceting.remove_filter' | t: name: active_value.label }}" data-no-instant>
+            <a href="{{ active_value.url_to_remove }}" class="tap-area link-faded" aria-label="{{ 'collection.faceting.remove_filter' | t: name: facet_label }}" data-no-instant>
               {%- render 'icon' with 'close', width: 10 -%}
             </a>
           </facet-link>
 
           {%- if section.settings.show_filter_group_name or filter.type == 'boolean' -%}
-            <span class="text-subdued">{{- filter.label }}: {{ active_value.label -}}</span>
+            <span class="text-subdued">{{- facet_group }}: {{ facet_label -}}</span>
           {%- else -%}
-            <span class="text-subdued">{{- active_value.label -}}</span>
+            <span class="text-subdued">{{- facet_label -}}</span>
           {%- endif -%}
         </div>
 

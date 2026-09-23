@@ -110,14 +110,14 @@
   {%- comment -%}
     Category mega menu panel (snippets/category-mega-menu.liquid). theme.css's .mega-menu
     already drops it full width below the bar, caps its height and paints the scheme
-    background; this lays out the inside and keeps it short. The images get up to 46rem
-    against the right edge, under the header icons; the links are centred in whatever
-    is left, so a short list doesn't leave one big gap beside the images. On narrower
-    screens the links keep their full width and the images give way.
+    background; this lays out the inside and keeps it short. Shop by Type, Shape and
+    Style share the space on the left; the two featured images and the product take up
+    to 40rem against the right edge, under the header icons. The wide right-hand block
+    is what pulls the link columns together — left to themselves they drift apart.
   {%- endcomment -%}
   #shopify-section-{{ section.id }} .category-mega-menu {
     display: grid;
-    grid-template-columns: minmax(max-content, 1fr) minmax(0, 46rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
     align-items: start;
     column-gap: clamp(2.5rem, 5vw, 5rem);
     padding-block: 1.75rem 2rem;
@@ -134,8 +134,41 @@
   }
 
   {%- comment -%}
-    Links flow down each column, then across; the snippet sets the row count inline
-    (evened-out columns of up to 6 for tag links, `links_per_column` for a block's menu).
+    One column per tag group, spread across the space left of the featured column. Each
+    column is its own heading + list, so the groups stay legible however uneven they are
+    (Earrings has eight shapes and two types).
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__columns {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    justify-content: start;
+    column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
+    width: 100%;
+    max-width: 44rem;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__column {
+    display: grid;
+    align-content: start;
+    row-gap: 1.1rem;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__column-title {
+    font-size: .7rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    opacity: .5;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__column-links {
+    display: grid;
+    row-gap: .8rem;
+  }
+
+  {%- comment -%}
+    A block's own menu keeps the older single list: links flow down each column, then
+    across, with the row count set inline from `links_per_column`.
   {%- endcomment -%}
   #shopify-section-{{ section.id }} .category-mega-menu__links {
     justify-self: center;
@@ -161,6 +194,7 @@
   }
 
   {%- comment -%}The links themselves use the nav bar's typeface: heading font, capitals, wide tracking.{%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__column-links a,
   #shopify-section-{{ section.id }} .category-mega-menu__links a {
     font-family: var(--heading-font-family);
     font-weight: var(--heading-font-weight);
@@ -170,12 +204,25 @@
     text-transform: uppercase;
   }
 
+  {%- comment -%}
+    Two images side by side, with the product spanning both as a small thumbnail beside
+    its title and price — that keeps the panel about as tall as the link columns. With
+    only one image (a block that clears the other), the image takes the full width.
+  {%- endcomment -%}
   #shopify-section-{{ section.id }} .category-mega-menu__promo {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 1rem;
+    row-gap: 1.25rem;
     width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__promo--single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__product {
+    grid-column: 1 / -1;
   }
 
   {%- comment -%}Doubled class to outrank theme.liquid's nowrap on nav links, so captions can wrap.{%- endcomment -%}
@@ -184,6 +231,22 @@
     row-gap: .6rem;
     min-width: 0;
     white-space: normal;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu .category-mega-menu__product {
+    grid-template-columns: 5rem minmax(0, 1fr);
+    column-gap: .9rem;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__product-info {
+    display: grid;
+    row-gap: .25rem;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__product-title {
+    font-size: .9375rem;
+    line-height: 1.4;
   }
 
   {%- comment -%}
@@ -195,6 +258,10 @@
     height: 14rem;
     overflow: hidden;
     background: rgb(var(--text-color) / .05);
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__media--thumb {
+    height: 5rem;
   }
 
   #shopify-section-{{ section.id }} .category-mega-menu__media img {
@@ -829,10 +896,14 @@
               trigger, clicking the open item goes to the collection; on touch screens the
               first tap opens the panel and the second follows the link.
 
-              The third field on a category is the panel's second image: the same flat-lay
+              The third field on a category is the panel's featured image: the same flat-lay
               the home page's category tiles (media_grid_1 in templates/index.json) use, by
-              its filename in Content > Files. A block's Image 2 replaces it; if the file is
-              ever deleted, the panel just shows the one banner.
+              its filename in Content > Files. A block's Image 1 replaces it; if the file is
+              ever deleted, the panel falls back to the collection's own banner.
+
+              "Minimum products for a collection link" decides where each tag link goes: a
+              tag with that many products in its own collection links to it, a thinner one
+              links to this category filtered by the tag, so no link opens a near-empty page.
             {%- endcomment -%}
             {%- assign nav_items = "NECKLACES|/collections/necklaces|1683baf2-9f89-47cf-9d71-35ec8238b993.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: "," -%}
             {%- for item in nav_items -%}
@@ -864,7 +935,7 @@
                 assign category_menu = ''
                 if category_menu_block or category_collection
                   capture category_menu
-                    render 'category-mega-menu', block: category_menu_block, collection: category_collection, second_image: category_image
+                    render 'category-mega-menu', block: category_menu_block, collection: category_collection, second_image: category_image, min_products: section.settings.mega_menu_min_products
                   endcapture
                 endif
               -%}
@@ -1263,6 +1334,16 @@
       "default": "customer-account-main-menu"
     },
     {
+      "type": "range",
+      "id": "mega_menu_min_products",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "label": "Minimum products for a collection link",
+      "info": "In the category panels, a tag links to its own collection only when that collection has at least this many products. Thinner tags link to the category filtered by the tag instead, which needs tag filters turned on in Search & Discovery > Filters.",
+      "default": 3
+    },
+    {
       "type": "select",
       "id": "menu_open_trigger",
       "label": "t:sections.header.menu_open_trigger",
@@ -1576,9 +1657,15 @@
           "default": 7
         },
         {
+          "type": "product",
+          "id": "featured_product",
+          "label": "Featured product",
+          "info": "Shown under the two images in the last column. Defaults to the first product in the collection."
+        },
+        {
           "type": "header",
           "content": "Image 1",
-          "info": "Defaults to the collection's image, captioned Best Sellers next to Image 2, or Shop All on its own."
+          "info": "Left image in the last column, captioned Shop All. Defaults to the category's flat-lay."
         },
         {
           "type": "image_picker",
@@ -1598,7 +1685,8 @@
         },
         {
           "type": "header",
-          "content": "Image 2"
+          "content": "Image 2",
+          "info": "Right image in the last column, captioned Best Sellers. Defaults to the collection's own image."
         },
         {
           "type": "image_picker",

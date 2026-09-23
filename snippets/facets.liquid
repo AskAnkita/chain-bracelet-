@@ -50,6 +50,23 @@
 
       {%- if show_filters -%}
         {%- for filter in results.filters -%}
+          {%- comment -%}
+            The products are tagged `Shape:Round`, `Style:Halo`, `Type:Studs`, and Shopify
+            offers all of them as one flat "Product tag" filter. This renders it as a group
+            per prefix instead — a Shape filter, a Style filter, a Type filter — so the
+            panel reads like the mega menu it is reached from.
+          {%- endcomment -%}
+          {%- if filter.type == 'list' and filter.param_name == 'filter.p.tag' -%}
+            {%- render 'facet-tag-groups',
+              filter: filter,
+              id_prefix: id_prefix,
+              open: open_filters_by_default,
+              show_count: section.settings.show_filter_values_count,
+              section: section
+            -%}
+            {%- continue -%}
+          {%- endif -%}
+
           {%- capture filter_content -%}
             {%- if filter.type == 'boolean' or filter.param_name == 'filter.v.availability' -%}
               {%- if filter.param_name == 'filter.v.availability' -%}

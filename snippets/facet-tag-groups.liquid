@@ -1,0 +1,86 @@
+{%- doc -%}
+  Renders Shopify's single "Product tag" filter as one collapsible group per tag prefix.
+
+  The products are tagged `Shape:Round`, `Style:Halo`, `Type:Studs` (written by the
+  importer's --sync-facets), and Shopify offers all of them as one flat "Product tag"
+  filter whose values read "Shape:Round". This splits that one filter into a Shape
+  group, a Style group and a Type group, each listing its values without the prefix.
+  Tags with no prefix are left out on purpose: the only unprefixed tags on these products
+  are the internal item codes the importer matches on (AJPD411 and the like), and a filter
+  full of those helps nobody.
+
+  Only the presentation changes: every checkbox keeps the param name and value Shopify
+  gave it, so filtering, counts and the URLs the mega menu links to are untouched.
+
+  @param {object} filter - the `filter.p.tag` filter from a collection or search drop
+  @param {string} [id_prefix] - prefix for the input IDs, so repeated facet forms differ
+  @param {boolean} [open] - open every group by default
+  @param {boolean} [show_count] - append the product count to each value
+  @param {object} [section]
+{%- enddoc -%}
+
+{%- liquid
+  # Shape and Style first — the two shoppers filter by — then Type, then any prefix the
+  # shop has invented, in the order Shopify lists it.
+  assign known_groups = 'Shape,Style,Type' | split: ','
+  assign extra_groups = ''
+  assign seen_groups = ''
+
+  for filter_value in filter.values
+    assign value_parts = filter_value.value | split: ':'
+    if value_parts.size < 2
+      continue
+    endif
+
+    assign group = value_parts[0]
+    assign group_key = '|' | append: group | append: '|'
+    unless seen_groups contains group_key
+      assign seen_groups = seen_groups | append: group_key
+      unless known_groups contains group
+        assign extra_groups = extra_groups | append: ',' | append: group
+      endunless
+    endunless
+  endfor
+
+  assign all_groups = 'Shape,Style,Type' | append: extra_groups | split: ','
+-%}
+
+{%- for group in all_groups -%}
+  {%- assign prefix = group | append: ':' -%}
+
+  {%- capture group_content -%}
+    <div class="v-stack gap-2.5">
+      {%- for filter_value in filter.values -%}
+        {%- assign value_start = filter_value.value | slice: 0, prefix.size -%}
+        {%- if value_start != prefix -%}
+          {%- continue -%}
+        {%- endif -%}
+
+        {%- liquid
+          assign label = filter_value.label | remove_first: prefix | strip
+          if show_count
+            assign label = label | append: ' (' | append: filter_value.count | append: ')'
+          endif
+          assign value_id_prefix = id_prefix | append: '-' | append: group | append: '-' | append: forloop.index
+        -%}
+
+        {%- render 'checkbox',
+          hide_checkbox: true,
+          label: label,
+          name: filter_value.param_name,
+          value: filter_value.value,
+          checked: filter_value.active,
+          id_prefix: value_id_prefix,
+          section: section
+        -%}
+      {%- endfor -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- comment -%}An empty group means no product in these results carries that prefix.{%- endcomment -%}
+  {%- unless group_content contains 'checkbox-control' -%}
+    {%- continue -%}
+  {%- endunless -%}
+
+  {%- render 'accordion', title: group, content: group_content, open: open, show_arrow: true -%}
+{%- endfor -%}

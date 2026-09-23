@@ -1,29 +1,40 @@
 {%- doc -%}
   Renders the full-width panel that drops below one category link in the header
-  (Necklaces, Bracelets, ...): links on the left, images on the right. Styled in
-  sections/header.liquid. Outputs nothing when there is nothing to show, so the header
-  can fall back to a plain link.
+  (Necklaces, Bracelets, ...): Shop by Type, Shop by Shape and Shop by Style on the
+  left, two featured images and a product on the right. Styled in sections/header.liquid.
+  Outputs nothing when there is nothing to show, so the header can fall back to a plain
+  link.
 
   Without a block, the panel builds itself from the category's collection:
-  - links: the products' `Type:` and `Style:` tags (plus `Shape:` for Earrings and
-    Bracelets), as one list in columns, each linking to the collection filtered by
-    that tag (e.g. Style:Halo goes to /collections/necklaces/style-halo);
-  - images: the collection's own image, then `second_image` (the category's flat-lay).
+  - columns: the products' `Type:`, `Shape:` and `Style:` tags, one column per group;
+  - featured: the category's flat-lay (`second_image`) and the collection's own image,
+    plus the first product in the collection.
 
-  A "Category mega menu" block overrides any of it: its menu replaces the tag links,
-  and its images, captions and links fill the two image slots.
+  Where each link points (see `min_products`): a tag whose own collection exists and
+  carries enough products links straight to it (/collections/stud-earrings). A tag
+  whose collection is missing or nearly empty links to the parent collection filtered
+  by that tag instead (/collections/earrings?filter.p.tag=Shape%3APrincess), so the
+  menu stays full but no link lands on a page with one lonely product. The filtered
+  URLs need tag filters switched on in Shopify admin > Search & Discovery > Filters.
+
+  A "Category mega menu" block overrides any of it: its menu replaces the tag columns,
+  and its images, captions, links and featured product fill the right-hand column.
 
   @param {object} [block] - a `category_mega_menu` block from the header section
   @param {object} [collection] - the category's collection
-  @param {object} [second_image] - default image for slot 2, captioned "Shop All ..."
+  @param {object} [second_image] - default left featured image, captioned "Shop All ..."
+  @param {number} [min_products] - products a tag's own collection needs before the
+    link points at it rather than at the filtered parent (default 3)
 {%- enddoc -%}
 
 {%- liquid
   assign menu_links = block.settings.menu.links
+  assign min_products = min_products | default: 3
 -%}
 
 {%- capture links_content -%}
   {%- if menu_links.size > 0 -%}
+    {%- comment -%}A block's own menu replaces the columns: one list, flowing into columns of `links_per_column`.{%- endcomment -%}
     {%- assign rows = menu_links.size | at_most: block.settings.links_per_column -%}
     <ul class="category-mega-menu__links unstyled-list" style="--category-mega-menu-rows: {{ rows }}" role="list">
       {%- for link in menu_links -%}
@@ -36,138 +47,247 @@
     </ul>
   {%- elsif collection -%}
     {%- comment -%}
-      One list: the Type tags first, then Style, flowing into as few columns as fit
-      6 rows each, then evened out (13 links: 5 + 5 + 3, not 6 + 6 + 1). Earrings and
-      Bracelets have only a few of those, so they also list the stone shapes, as
-      "Heart Cut" etc. (the wording the product titles use; a bare "Emerald" would read
-      as the stone). Type skips the tag that just repeats the category (Type:Necklace
-      under Necklaces), since it matches nearly every product in it.
+      One column per tag group, in the order a shopper shops: what the piece is, then
+      the stone, then the setting. A tag that just repeats the category is dropped
+      (Type:Necklace, Type:Earrings), since it matches nearly every product in it, and
+      so is the category word inside a type — under NECKLACES, Type:Station Necklace
+      reads as "Station". Shapes read as "Heart Cut" etc., the wording the product
+      titles use; a bare "Emerald" would read as the stone.
     {%- endcomment -%}
     {%- liquid
-      assign generic_type = collection.title | downcase | remove_last: 's'
-      assign tag_groups = 'Type,Style' | split: ','
-
-      case collection.handle
-        when 'earrings', 'bracelets'
-          assign tag_groups = 'Type,Style,Shape' | split: ','
-      endcase
+      assign category_title_downcase = collection.title | downcase
+      assign generic_type = category_title_downcase
+      assign category_last = category_title_downcase | slice: -1, 1
+      if category_last == 's'
+        assign generic_size = category_title_downcase.size | minus: 1
+        assign generic_type = category_title_downcase | slice: 0, generic_size
+      endif
+      assign generic_suffix = ' ' | append: generic_type
+      assign tag_groups = 'Type,Shape,Style' | split: ','
+      assign seen_urls = ''
     -%}
 
-    {%- assign tag_count = 0 -%}
-    {%- capture tag_links -%}
+    {%- capture columns -%}
       {%- for group in tag_groups -%}
         {%- assign prefix = group | append: ':' -%}
+        {%- assign group_count = 0 -%}
 
-        {%- for tag in collection.all_tags -%}
-          {%- assign tag_start = tag | slice: 0, prefix.size -%}
-          {%- if tag_start == prefix -%}
-            {%- assign value = tag | remove_first: prefix | strip -%}
-            {%- assign value_downcase = value | downcase -%}
-            {%- unless value_downcase == generic_type -%}
-              {%- if group == 'Shape' -%}
-                {%- assign value = value | append: ' Cut' -%}
-              {%- endif -%}
-              {%- assign tag_count = tag_count | plus: 1 -%}
-              <li>
-                <a href="{{ collection.url }}/{{ tag | handleize }}" class="link-reverse">{{ value }}</a>
-              </li>
-            {%- endunless -%}
-          {%- endif -%}
-        {%- endfor -%}
+        {%- capture group_links -%}
+          {%- for tag in collection.all_tags -%}
+            {%- assign tag_start = tag | slice: 0, prefix.size -%}
+            {%- if tag_start != prefix -%}
+              {%- continue -%}
+            {%- endif -%}
+
+            {%- liquid
+              assign value = tag | remove_first: prefix | strip
+              assign value_downcase = value | downcase
+            -%}
+            {%- if value_downcase == generic_type or value_downcase == category_title_downcase -%}
+              {%- continue -%}
+            {%- endif -%}
+
+            {%- liquid
+              # The collection this tag has of its own, if the store has one. The titles
+              # follow the same rules the importer creates them by: "Princess" under
+              # Earrings is Princess Cut Earrings, "Tennis Necklace" is Tennis Necklaces,
+              # "Halo" under Rings is Halo Rings, "Studs" is Stud Earrings. Whichever of
+              # those handles exists, with enough products behind it, wins.
+              assign value_singular = value
+              assign value_last = value_downcase | slice: -1, 1
+              if value_last == 's'
+                assign value_singular_size = value.size | minus: 1
+                assign value_singular = value | slice: 0, value_singular_size
+              endif
+
+              if group == 'Shape'
+                assign value = value | append: ' Cut'
+                assign value_singular = value
+              endif
+
+              assign handle_plural = value | handleize | append: 's'
+              assign handle_paired = value | append: ' ' | append: collection.title | handleize
+              assign handle_paired_singular = value_singular | append: ' ' | append: collection.title | handleize
+              assign candidate_handles = handle_plural | append: ',' | append: handle_paired | append: ',' | append: handle_paired_singular | split: ','
+
+              # `products_count` on a handle the store has no collection for is not a
+              # number, and comparing that to the threshold raises, so it is coerced
+              # first: a missing collection counts as zero and falls through to the filter.
+              assign link_url = ''
+              for candidate_handle in candidate_handles
+                assign candidate_collection = collections[candidate_handle]
+                assign candidate_count = candidate_collection.products_count | plus: 0
+                if candidate_count >= min_products
+                  assign link_url = candidate_collection.url
+                  break
+                endif
+              endfor
+
+              # Too thin, or no collection at all: the category, filtered to this tag.
+              if link_url == blank
+                assign tag_param = tag | url_encode
+                assign link_url = collection.url | append: '?filter.p.tag=' | append: tag_param
+              endif
+            -%}
+
+            {%- liquid
+              # "Station Necklace" under NECKLACES is just "Station"; "Studs" stays "Studs".
+              assign label = value
+
+              if group == 'Type' and value.size > generic_suffix.size
+                assign tail_offset = 0 | minus: generic_suffix.size
+                assign value_tail = value_downcase | slice: tail_offset, generic_suffix.size
+
+                if value_tail == generic_suffix
+                  assign label_size = value.size | minus: generic_suffix.size
+                  assign label = value | slice: 0, label_size
+                endif
+              endif
+            -%}
+
+            {%- comment -%}
+              Two tags can describe the same thing — Type:Eternity Ring and Style:Eternity
+              under RINGS — so anything already listed higher up in the panel, by where it
+              goes or by what it reads as, is skipped rather than shown twice.
+            {%- endcomment -%}
+            {%- liquid
+              assign dedupe_key = '|' | append: link_url | append: '|'
+              assign label_key = '|' | append: label | downcase | append: '|'
+            -%}
+            {%- if seen_urls contains dedupe_key or seen_urls contains label_key -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- assign seen_urls = seen_urls | append: dedupe_key | append: label_key -%}
+
+            {%- assign group_count = group_count | plus: 1 -%}
+
+            <li><a href="{{ link_url }}" class="link-reverse">{{ label }}</a></li>
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%- if group_count > 0 -%}
+          <div class="category-mega-menu__column">
+            <span class="category-mega-menu__column-title">Shop by {{ group }}</span>
+            <ul class="category-mega-menu__column-links unstyled-list" role="list">{{ group_links }}</ul>
+          </div>
+        {%- endif -%}
       {%- endfor -%}
     {%- endcapture -%}
 
-    {%- if tag_count > 0 -%}
-      {%- liquid
-        assign tag_columns = tag_count | plus: 5 | divided_by: 6
-        assign tag_rows = tag_count | plus: tag_columns | minus: 1 | divided_by: tag_columns
-      -%}
-      <ul class="category-mega-menu__links unstyled-list" style="--category-mega-menu-rows: {{ tag_rows }}" role="list">{{ tag_links }}</ul>
+    {%- if columns != blank -%}
+      <div class="category-mega-menu__columns">{{ columns }}</div>
     {%- endif -%}
   {%- endif -%}
 {%- endcapture -%}
 
 {%- comment -%}
-  Two image slots, like the reference. Each shows the block's image when one is set.
-  Otherwise slot 2 shows `second_image` as "Shop All ...", and slot 1 falls back to the
-  collection's own banner: captioned "Best Sellers" (the collection sorted by
-  best-selling) when slot 2 has an image beside it, or "Shop All ..." when it stands
-  alone. A block caption or link still overrides those.
+  The last column: two images side by side, with one product under them. The first is
+  the block's Image 1, else the category's flat-lay (the same one the home page's
+  category tiles use), captioned "Shop All ..." — this panel's way back to the
+  unfiltered category. The second is the block's Image 2, else the collection's own
+  banner, captioned "Best Sellers". Under both, the block's featured product or the
+  first product in the collection.
 {%- endcomment -%}
 {%- liquid
-  assign slot_2_image = block.settings.image_2 | default: second_image
-
-  assign has_slot_1 = false
-  if block.settings.image_1 != blank or collection.image
-    assign has_slot_1 = true
+  assign shop_all_label = ''
+  assign best_sellers_url = ''
+  if collection
+    assign shop_all_label = 'Shop All ' | append: collection.title
+    assign best_sellers_url = collection.url | append: '?sort_by=best-selling'
   endif
 
-  assign card_sizes = '(min-width: 1000px) 740px, 100vw'
-  if has_slot_1 and slot_2_image != blank
-    assign card_sizes = '(min-width: 1000px) 370px, 50vw'
+  assign banner_class = 'zoom-image group-hover:zoom category-mega-menu__banner'
+  assign plain_class = 'zoom-image group-hover:zoom'
+
+  assign image_1 = block.settings.image_1 | default: second_image
+  assign image_1_class = plain_class
+  if image_1 == blank and collection.image
+    assign image_1 = collection.image
+    assign image_1_class = banner_class
+  endif
+  assign caption_1 = block.settings.image_1_label | default: shop_all_label
+  assign link_1 = block.settings.image_1_link | default: collection.url
+  assign alt_1 = image_1.alt | default: caption_1
+
+  # The collection's banner fills the second slot, unless slot 1 already took it.
+  assign image_2 = block.settings.image_2
+  assign image_2_class = plain_class
+  if image_2 == blank and image_1_class != banner_class and collection.image
+    assign image_2 = collection.image
+    assign image_2_class = banner_class
+  endif
+  assign caption_2 = block.settings.image_2_label | default: 'Best Sellers'
+  assign link_2 = block.settings.image_2_link | default: best_sellers_url
+  assign alt_2 = image_2.alt | default: caption_2
+
+  assign featured_product = block.settings.featured_product
+  if featured_product == blank
+    assign featured_product = collection.products.first
+  endif
+  assign featured_product_alt = featured_product.featured_media.alt | default: featured_product.title
+
+  # One image on its own takes the full width rather than sitting in half of it.
+  assign promo_class = 'category-mega-menu__promo'
+  if image_1 == blank or image_2 == blank
+    assign promo_class = 'category-mega-menu__promo category-mega-menu__promo--single'
   endif
 -%}
 
-{%- capture promo_cards -%}
-  {%- for i in (1..2) -%}
+{%- capture promo_content -%}
+  {%- for slot in (1..2) -%}
     {%- liquid
-      assign image_key = 'image_' | append: i
-      assign caption_key = 'image_' | append: i | append: '_label'
-      assign link_key = 'image_' | append: i | append: '_link'
-
-      assign image = block.settings[image_key]
-      assign default_caption = ''
-      assign default_link = ''
-      assign image_class = 'zoom-image group-hover:zoom'
-
-      if image == blank and i == 1 and collection.image
-        assign image = collection.image
-        assign image_class = 'zoom-image group-hover:zoom category-mega-menu__banner'
-
-        if slot_2_image != blank
-          assign default_caption = 'Best Sellers'
-          assign default_link = collection.url | append: '?sort_by=best-selling'
-        else
-          assign default_caption = 'Shop All ' | append: collection.title
-          assign default_link = collection.url
-        endif
+      if slot == 1
+        assign slot_image = image_1
+        assign slot_class = image_1_class
+        assign slot_caption = caption_1
+        assign slot_link = link_1
+        assign slot_alt = alt_1
+      else
+        assign slot_image = image_2
+        assign slot_class = image_2_class
+        assign slot_caption = caption_2
+        assign slot_link = link_2
+        assign slot_alt = alt_2
       endif
-
-      if image == blank and i == 2 and second_image != blank
-        assign image = second_image
-        assign default_caption = 'Shop All ' | append: collection.title
-        assign default_link = collection.url
-      endif
-
-      assign caption = block.settings[caption_key] | default: default_caption
-      assign card_link = block.settings[link_key] | default: default_link
-      assign image_alt = image.alt | default: caption
     -%}
 
-    {%- if image != blank -%}
-      {%- capture card_content -%}
+    {%- if slot_image != blank -%}
+      {%- capture slot_card -%}
         <div class="category-mega-menu__media">
-          {{- image | image_url: width: 1480 | image_tag: loading: 'lazy', sizes: card_sizes, widths: '370,560,740,1100,1480', alt: image_alt, class: image_class -}}
+          {{- slot_image | image_url: width: 840 | image_tag: loading: 'lazy', sizes: '(min-width: 1000px) 320px, 50vw', widths: '320,480,640,840', alt: slot_alt, class: slot_class -}}
         </div>
 
-        {%- if caption != blank -%}
-          <span class="category-mega-menu__caption">{{ caption }}</span>
+        {%- if slot_caption != blank -%}
+          <span class="category-mega-menu__caption">{{ slot_caption }}</span>
         {%- endif -%}
       {%- endcapture -%}
 
-      {%- if card_link != blank -%}
-        <a href="{{ card_link }}" class="category-mega-menu__card group">{{ card_content }}</a>
+      {%- if slot_link != blank -%}
+        <a href="{{ slot_link }}" class="category-mega-menu__card group">{{ slot_card }}</a>
       {%- else -%}
-        <div class="category-mega-menu__card group">{{ card_content }}</div>
+        <div class="category-mega-menu__card group">{{ slot_card }}</div>
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
+
+  {%- if featured_product != blank -%}
+    <a href="{{ featured_product.url }}" class="category-mega-menu__card category-mega-menu__product group">
+      <div class="category-mega-menu__media category-mega-menu__media--thumb">
+        {%- if featured_product.featured_media -%}
+          {{- featured_product.featured_media | image_url: width: 300 | image_tag: loading: 'lazy', sizes: '80px', widths: '150,300', alt: featured_product_alt, class: 'zoom-image group-hover:zoom' -}}
+        {%- endif -%}
+      </div>
+
+      <div class="category-mega-menu__product-info">
+        <span class="category-mega-menu__product-title">{{ featured_product.title }}</span>
+        {%- render 'price-list', product: featured_product, context: 'card', hide_unit_price: true -%}
+      </div>
+    </a>
+  {%- endif -%}
 {%- endcapture -%}
 
-{%- if promo_cards != blank -%}
-  {%- capture promo_content -%}
-    <div class="category-mega-menu__promo">{{ promo_cards }}</div>
-  {%- endcapture -%}
+{%- if promo_content != blank -%}
+  {%- capture promo_content -%}<div class="{{ promo_class }}">{{ promo_content }}</div>{%- endcapture -%}
 {%- endif -%}
 
 {%- if links_content != blank or promo_content != blank -%}
