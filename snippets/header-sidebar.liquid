@@ -2,11 +2,59 @@
   This snippet renders the navigation sidebar for the header. It is used for both the mobile menu and for the desktop menu when the merchant configures the drawer mode.
 
   @param {object} menu - the menu to render
+  @param {object} [nav_items] - the header's own nav list (TITLE|URL|image per entry, from
+    sections/header.liquid). Each category in it gets the same Shop by Type / Shape / Style
+    links the desktop mega menu shows, as a sub-panel; the flat pages become plain links.
+  @param {number} [min_products] - passed through to snippets/category-menu-groups.liquid
   @param {object} [color_scheme] - the color scheme to use for the sidebar
   @param {boolean} [show_dividers] - whether dividers are shown for the collapsible
   @param {boolean} [open_second_level_menus] - if true, second level dropdown are open by default
   @param {object} [section]
 {%- enddoc -%}
+
+{%- comment -%}
+  The four categories are not in the mobile menu setting — they are the header's own nav
+  list — so they are rendered here first, each opening a sub-panel with the same links as
+  its desktop mega menu panel. A category earns that sub-panel when its collection carries
+  the Type/Shape/Style tags the links are built from; without them it stays a plain link,
+  as Size Guide and About Us do.
+{%- endcomment -%}
+{%- liquid
+  assign category_panel_count = 0
+  assign heading_class = ''
+  if section.settings.sidebar_text_font == 'heading'
+    assign heading_class = 'h6'
+  endif
+
+  # The mobile menu setting usually repeats these same categories, which would list them
+  # twice, so every title and URL the header's own nav already covers is collected here
+  # and skipped below. Anything else in that menu still shows, under the categories.
+  assign nav_keys = ''
+
+  for item in nav_items
+    assign item_parts = item | split: '|'
+    assign item_url = item_parts[1]
+
+    assign nav_title_key = item_parts[0] | strip | downcase
+    assign nav_url_key = item_url | strip | downcase
+    assign nav_keys = nav_keys | append: '|' | append: nav_title_key | append: '|' | append: nav_url_key | append: '|'
+
+    unless item_url contains '/collections/'
+      continue
+    endunless
+
+    assign item_handle = item_url | remove_first: '/collections/'
+    assign item_collection = collections[item_handle]
+
+    for tag in item_collection.all_tags
+      assign tag_group = tag | split: ':' | first
+      if tag_group == 'Type' or tag_group == 'Shape' or tag_group == 'Style'
+        assign category_panel_count = category_panel_count | plus: 1
+        break
+      endif
+    endfor
+  endfor
+-%}
 
 {%- comment -%}
   IMPLEMENTATION NOTE: while being a drawer, the sidebar has a completely different structure for the content. We are
@@ -28,7 +76,7 @@
       <div part="panel-list">
         <slot name="main-panel"></slot>
 
-        {%- if menu.levels > 0 -%}
+        {%- if menu.levels > 0 or category_panel_count > 0 -%}
           <slot name="collapsible-panel"></slot>
         {%- endif -%}
       </div>
@@ -43,7 +91,68 @@
   <div class="header-sidebar__main-panel" slot="main-panel">
     <div class="header-sidebar__scroller">
       <ul class="header-sidebar__linklist {% if show_dividers %}divide-y{% endif %} unstyled-list" role="list">
+        {%- for item in nav_items -%}
+          {%- liquid
+            assign item_parts = item | split: '|'
+            assign item_title = item_parts[0]
+            assign item_url = item_parts[1]
+
+            assign item_collection = nil
+            if item_url contains '/collections/'
+              assign item_handle = item_url | remove_first: '/collections/'
+              assign item_collection = collections[item_handle]
+            endif
+
+          -%}
+
+          {%- comment -%}
+            Built here as well as in the panel below, so the button and its panel always
+            agree: a category whose tags produce no groups stays a plain link.
+          {%- endcomment -%}
+          {%- capture item_groups -%}
+            {%- if item_collection -%}
+              {%- render 'category-menu-groups',
+                collection: item_collection,
+                min_products: min_products,
+                layout: 'sidebar',
+                section: section
+              -%}
+            {%- endif -%}
+          {%- endcapture -%}
+
+          {%- assign item_has_panel = false -%}
+          {%- if item_groups != blank -%}
+            {%- assign item_has_panel = true -%}
+          {%- endif -%}
+
+          <li>
+            {%- if item_has_panel -%}
+              <button
+                type="button"
+                class="header-sidebar__linklist-button {{ heading_class }}"
+                aria-controls="header-panel-category-{{ forloop.index }}"
+                aria-expanded="false"
+              >
+                {{- item_title -}}
+                {%- render 'icon' with 'chevron-right', width: 12, direction_aware: true -%}
+              </button>
+            {%- else -%}
+              <a href="{{ item_url }}" class="header-sidebar__linklist-button {{ heading_class }}">
+                {{- item_title -}}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+
         {%- for link in menu.links -%}
+          {%- liquid
+            assign link_title_key = '|' | append: link.title | strip | downcase | append: '|'
+            assign link_url_key = '|' | append: link.url | strip | downcase | append: '|'
+            if nav_keys contains link_title_key or nav_keys contains link_url_key
+              continue
+            endif
+          -%}
+
           <li>
             {%- if link.links.size > 0 -%}
               <button
@@ -113,11 +222,68 @@
     {%- endif -%}
   </div>
 
-  {%- comment -%}Panel 2 holds all the second levels{%- endcomment -%}
-  {%- if menu.levels > 0 -%}
+  {%- comment -%}Panel 2 holds all the second levels, and the category panels{%- endcomment -%}
+  {%- if menu.levels > 0 or category_panel_count > 0 -%}
     <header-sidebar-collapsible-panel class="header-sidebar__collapsible-panel" slot="collapsible-panel">
       <div class="header-sidebar__scroller">
+        {%- for item in nav_items -%}
+          {%- liquid
+            assign item_parts = item | split: '|'
+            assign item_title = item_parts[0]
+            assign item_url = item_parts[1]
+
+            assign item_collection = nil
+            if item_url contains '/collections/'
+              assign item_handle = item_url | remove_first: '/collections/'
+              assign item_collection = collections[item_handle]
+            endif
+          -%}
+
+          {%- capture category_groups -%}
+            {%- if item_collection -%}
+              {%- render 'category-menu-groups',
+                collection: item_collection,
+                min_products: min_products,
+                layout: 'sidebar',
+                section: section
+              -%}
+            {%- endif -%}
+          {%- endcapture -%}
+
+          {%- if category_groups != blank -%}
+            <div id="header-panel-category-{{ forloop.index }}" class="header-sidebar__sub-panel" hidden>
+              <button
+                type="button"
+                class="header-sidebar__back-button link-faded {% if show_dividers %}is-divided{% endif %} text-with-icon {{ heading_class }} md:hidden"
+                data-action="close-panel"
+              >
+                {%- render 'icon' with 'chevron-left', width: 12, direction_aware: true -%}
+                {{- item_title -}}
+              </button>
+
+              <ul class="header-sidebar__linklist {% if show_dividers %}divide-y{% endif %} unstyled-list" role="list">
+                {%- comment -%}The way back to the whole category, which the groups themselves never link to.{%- endcomment -%}
+                <li>
+                  <a href="{{ item_url }}" class="header-sidebar__linklist-button {{ heading_class }}">
+                    {{- 'Shop All ' | append: item_collection.title -}}
+                  </a>
+                </li>
+
+                {{- category_groups -}}
+              </ul>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
         {%- for link in menu.links -%}
+          {%- liquid
+            assign link_title_key = '|' | append: link.title | strip | downcase | append: '|'
+            assign link_url_key = '|' | append: link.url | strip | downcase | append: '|'
+            if nav_keys contains link_title_key or nav_keys contains link_url_key
+              continue
+            endif
+          -%}
+
           {%- if link.links.size > 0 -%}
             <div id="header-panel-{{ forloop.index }}" class="header-sidebar__sub-panel" hidden>
               <button

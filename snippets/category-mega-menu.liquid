@@ -6,16 +6,9 @@
   link.
 
   Without a block, the panel builds itself from the category's collection:
-  - columns: the products' `Type:`, `Shape:` and `Style:` tags, one column per group;
+  - columns: snippets/category-menu-groups.liquid, from the products' tags;
   - featured: the category's flat-lay (`second_image`) and the collection's own image,
     plus the first product in the collection.
-
-  Where each link points (see `min_products`): a tag whose own collection exists and
-  carries enough products links straight to it (/collections/stud-earrings). A tag
-  whose collection is missing or nearly empty links to the parent collection filtered
-  by that tag instead (/collections/earrings?filter.p.tag=Shape%3APrincess), so the
-  menu stays full but no link lands on a page with one lonely product. The filtered
-  URLs need tag filters switched on in Shopify admin > Search & Discovery > Filters.
 
   A "Category mega menu" block overrides any of it: its menu replaces the tag columns,
   and its images, captions, links and featured product fill the right-hand column.
@@ -46,137 +39,11 @@
       {%- endfor -%}
     </ul>
   {%- elsif collection -%}
-    {%- comment -%}
-      One column per tag group, in the order a shopper shops: what the piece is, then
-      the stone, then the setting. A tag that just repeats the category is dropped
-      (Type:Necklace, Type:Earrings), since it matches nearly every product in it, and
-      so is the category word inside a type — under NECKLACES, Type:Station Necklace
-      reads as "Station". Shapes read as "Heart Cut" etc., the wording the product
-      titles use; a bare "Emerald" would read as the stone.
-    {%- endcomment -%}
-    {%- liquid
-      assign category_title_downcase = collection.title | downcase
-      assign generic_type = category_title_downcase
-      assign category_last = category_title_downcase | slice: -1, 1
-      if category_last == 's'
-        assign generic_size = category_title_downcase.size | minus: 1
-        assign generic_type = category_title_downcase | slice: 0, generic_size
-      endif
-      assign generic_suffix = ' ' | append: generic_type
-      assign tag_groups = 'Type,Shape,Style' | split: ','
-      assign seen_urls = ''
+    {%- render 'category-menu-groups',
+      collection: collection,
+      min_products: min_products,
+      layout: 'columns'
     -%}
-
-    {%- capture columns -%}
-      {%- for group in tag_groups -%}
-        {%- assign prefix = group | append: ':' -%}
-        {%- assign group_count = 0 -%}
-
-        {%- capture group_links -%}
-          {%- for tag in collection.all_tags -%}
-            {%- assign tag_start = tag | slice: 0, prefix.size -%}
-            {%- if tag_start != prefix -%}
-              {%- continue -%}
-            {%- endif -%}
-
-            {%- liquid
-              assign value = tag | remove_first: prefix | strip
-              assign value_downcase = value | downcase
-            -%}
-            {%- if value_downcase == generic_type or value_downcase == category_title_downcase -%}
-              {%- continue -%}
-            {%- endif -%}
-
-            {%- liquid
-              # The collection this tag has of its own, if the store has one. The titles
-              # follow the same rules the importer creates them by: "Princess" under
-              # Earrings is Princess Cut Earrings, "Tennis Necklace" is Tennis Necklaces,
-              # "Halo" under Rings is Halo Rings, "Studs" is Stud Earrings. Whichever of
-              # those handles exists, with enough products behind it, wins.
-              assign value_singular = value
-              assign value_last = value_downcase | slice: -1, 1
-              if value_last == 's'
-                assign value_singular_size = value.size | minus: 1
-                assign value_singular = value | slice: 0, value_singular_size
-              endif
-
-              if group == 'Shape'
-                assign value = value | append: ' Cut'
-                assign value_singular = value
-              endif
-
-              assign handle_plural = value | handleize | append: 's'
-              assign handle_paired = value | append: ' ' | append: collection.title | handleize
-              assign handle_paired_singular = value_singular | append: ' ' | append: collection.title | handleize
-              assign candidate_handles = handle_plural | append: ',' | append: handle_paired | append: ',' | append: handle_paired_singular | split: ','
-
-              # `products_count` on a handle the store has no collection for is not a
-              # number, and comparing that to the threshold raises, so it is coerced
-              # first: a missing collection counts as zero and falls through to the filter.
-              assign link_url = ''
-              for candidate_handle in candidate_handles
-                assign candidate_collection = collections[candidate_handle]
-                assign candidate_count = candidate_collection.products_count | plus: 0
-                if candidate_count >= min_products
-                  assign link_url = candidate_collection.url
-                  break
-                endif
-              endfor
-
-              # Too thin, or no collection at all: the category, filtered to this tag.
-              if link_url == blank
-                assign tag_param = tag | url_encode
-                assign link_url = collection.url | append: '?filter.p.tag=' | append: tag_param
-              endif
-            -%}
-
-            {%- liquid
-              # "Station Necklace" under NECKLACES is just "Station"; "Studs" stays "Studs".
-              assign label = value
-
-              if group == 'Type' and value.size > generic_suffix.size
-                assign tail_offset = 0 | minus: generic_suffix.size
-                assign value_tail = value_downcase | slice: tail_offset, generic_suffix.size
-
-                if value_tail == generic_suffix
-                  assign label_size = value.size | minus: generic_suffix.size
-                  assign label = value | slice: 0, label_size
-                endif
-              endif
-            -%}
-
-            {%- comment -%}
-              Two tags can describe the same thing — Type:Eternity Ring and Style:Eternity
-              under RINGS — so anything already listed higher up in the panel, by where it
-              goes or by what it reads as, is skipped rather than shown twice.
-            {%- endcomment -%}
-            {%- liquid
-              assign dedupe_key = '|' | append: link_url | append: '|'
-              assign label_key = '|' | append: label | downcase | append: '|'
-            -%}
-            {%- if seen_urls contains dedupe_key or seen_urls contains label_key -%}
-              {%- continue -%}
-            {%- endif -%}
-            {%- assign seen_urls = seen_urls | append: dedupe_key | append: label_key -%}
-
-            {%- assign group_count = group_count | plus: 1 -%}
-
-            <li><a href="{{ link_url }}" class="link-reverse">{{ label }}</a></li>
-          {%- endfor -%}
-        {%- endcapture -%}
-
-        {%- if group_count > 0 -%}
-          <div class="category-mega-menu__column">
-            <span class="category-mega-menu__column-title">Shop by {{ group }}</span>
-            <ul class="category-mega-menu__column-links unstyled-list" role="list">{{ group_links }}</ul>
-          </div>
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endcapture -%}
-
-    {%- if columns != blank -%}
-      <div class="category-mega-menu__columns">{{ columns }}</div>
-    {%- endif -%}
   {%- endif -%}
 {%- endcapture -%}
 

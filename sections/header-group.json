@@ -138,6 +138,22 @@
             "button_border_radius": 0
           }
         },
+        "necklaces_category_menu": {
+          "type": "category_mega_menu",
+          "name": "Necklaces",
+          "settings": {
+            "menu_item": "necklaces",
+            "menu": "",
+            "links_per_column": 7,
+            "featured_product": "",
+            "image_1": "shopify://shop_images/f7a8ab48-3b7f-412e-ab3c-3036603e1a80.png",
+            "image_1_label": "",
+            "image_1_link": "",
+            "image_2": "shopify://shop_images/c18d0ae0-ade8-4dce-aca4-cb6eadb28292.png",
+            "image_2_label": "",
+            "image_2_link": ""
+          }
+        },
         "bracelet_mega_menu": {
           "type": "luxury_mega_menu",
           "settings": {
@@ -401,13 +417,58 @@
             "button_border_width": 1,
             "button_border_radius": 0
           }
+        },
+        "bracelets_category_menu": {
+          "type": "category_mega_menu",
+          "name": "Bracelets",
+          "settings": {
+            "menu_item": "bracelets",
+            "menu": "",
+            "links_per_column": 7,
+            "featured_product": "",
+            "image_1": "shopify://shop_images/59054cde-09fc-4fca-a137-045a98873a66.png",
+            "image_1_label": "",
+            "image_1_link": "",
+            "image_2_label": "",
+            "image_2_link": ""
+          }
+        },
+        "rings_category_menu": {
+          "type": "category_mega_menu",
+          "settings": {
+            "menu_item": "rings",
+            "menu": "",
+            "links_per_column": 7,
+            "featured_product": "",
+            "image_1_label": "",
+            "image_1_link": "",
+            "image_2_label": "",
+            "image_2_link": ""
+          }
+        },
+        "earrings_category_menu": {
+          "type": "category_mega_menu",
+          "settings": {
+            "menu_item": "earrings",
+            "menu": "",
+            "links_per_column": 7,
+            "featured_product": "",
+            "image_1_label": "",
+            "image_1_link": "",
+            "image_2_label": "",
+            "image_2_link": ""
+          }
         }
       },
       "block_order": [
         "chains_mega_menu",
+        "necklaces_category_menu",
         "bracelet_mega_menu",
         "ring_mega_menu",
-        "earring_mega_menu"
+        "earring_mega_menu",
+        "bracelets_category_menu",
+        "rings_category_menu",
+        "earrings_category_menu"
       ],
       "custom_css": [],
       "settings": {
@@ -422,8 +483,8 @@
         "logo_mobile_max_width": 160,
         "about_label": "About C&B",
         "about_url": "shopify://pages/about-us",
-        "center_icon": "shopify://shop_images/26300b3c-29ef-4689-a0b9-a95e9359f44f.png",
-        "transparent_center_icon": "shopify://shop_images/26300b3c-29ef-4689-a0b9-a95e9359f44f.png",
+        "center_icon": "shopify://shop_images/logo-03_93413ef0-6eca-4f46-ac3a-d9fc8a909f45.png",
+        "transparent_center_icon": "shopify://shop_images/logo-03_93413ef0-6eca-4f46-ac3a-d9fc8a909f45.png",
         "center_icon_width": 32,
         "utility_icon_size": 22,
         "utility_text_size": 0.8,
@@ -436,6 +497,7 @@
         "menu": "customer-account-main-menu",
         "sidebar_menu": "customer-account-main-menu",
         "customer_account_menu": "customer-account-main-menu",
+        "mega_menu_min_products": 3,
         "menu_open_trigger": "hover",
         "menu_text_font": "heading",
         "enable_search": true,

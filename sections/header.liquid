@@ -7,6 +7,11 @@
 {%- endcomment -%}
 {%- liquid
   assign compact_header = true
+
+  # The header's nav is this list rather than a Shopify menu, and the desktop bar and the
+  # mobile drawer both build from it. Each entry is TITLE|URL; a category adds the filename
+  # of its flat-lay in Content > Files, which the mega menu uses as its first image.
+  assign nav_items = "NECKLACES|/collections/necklaces|f7a8ab48-3b7f-412e-ab3c-3036603e1a80.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: ","
 -%}
 
 <style>
@@ -394,6 +399,12 @@
     letter-spacing: 0;
     line-height: 1.05rem;
     text-align: center;
+  }
+
+  @media screen and (max-width: 699px) {
+    #shopify-section-{{ section.id }} .header__cart-link .header__utility-badge {
+      inset-inline-end: 0;
+    }
   }
 
   {%- comment -%}
@@ -905,7 +916,6 @@
               tag with that many products in its own collection links to it, a thinner one
               links to this category filtered by the tag, so no link opens a near-empty page.
             {%- endcomment -%}
-            {%- assign nav_items = "NECKLACES|/collections/necklaces|1683baf2-9f89-47cf-9d71-35ec8238b993.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: "," -%}
             {%- for item in nav_items -%}
               {%- liquid
                 assign item_parts = item | split: "|"
@@ -974,12 +984,15 @@
 
     {%- assign sidebar_menu = section.settings.sidebar_menu | default: section.settings.menu -%}
 
-    {%- if sidebar_menu.links.size > 0 -%}
+    {%- if sidebar_menu.links.size > 0 or nav_items.size > 0 -%}
       {%- render 'header-sidebar',
         menu: sidebar_menu,
+        nav_items: nav_items,
         color_scheme: section.settings.sidebar_color_scheme,
         show_dividers: section.settings.sidebar_show_dividers,
-        open_second_level_menus: section.settings.sidebar_open_second_level_menus
+        open_second_level_menus: section.settings.sidebar_open_second_level_menus,
+        min_products: section.settings.mega_menu_min_products,
+        section: section
       -%}
     {%- endif -%}
   </x-header>
