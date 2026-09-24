@@ -102,16 +102,20 @@
       {%- comment -%}
         Title and second line: a condensed high-contrast display serif at hero size, whatever
         heading style is picked, with its thickness from the slide's "Heading thickness"
-        setting. max-width breaks a three-word title over two lines.
+        setting. max-width breaks a three-word title over two lines: 10em keeps "Modern
+        handmade" together on the first line with "jewellery" below, in capitals (8.4em /
+        13.1em for the whole title) or lower case (7.1em / 10.7em). The size is a bit over
+        40% below the original clamp(3rem, 5.2vw, 6.25rem), which filled too much of the
+        hero now that the header sits above it instead of over it.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
-        max-width: 8em;
+        max-width: 10em;
         margin-block-start: .1rem;
         font-family: 'Noto Serif Display', 'Times New Roman', serif;
         font-weight: var(--elegant-title-weight, 350);
         font-stretch: 72%;
         font-style: normal;
-        font-size: clamp(3rem, 5.2vw, 6.25rem);
+        font-size: clamp(2rem, 3vw, 3.6rem);
         line-height: .95;
         letter-spacing: -.01em;
         text-transform: none;
@@ -240,7 +244,7 @@
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
-          font-size: clamp(2.5rem, 11vw, 4.5rem);
+          font-size: clamp(1.75rem, 7.5vw, 3rem);
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {

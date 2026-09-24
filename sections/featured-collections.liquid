@@ -11,6 +11,15 @@
         --product-list-items-per-row: {{ section.settings.products_per_row_desktop }};
       }
     }
+
+    {%- comment -%}
+      The collection tabs (shown when the section has more than one collection) use the
+      header's gold (--header-gold in sections/header.liquid). The selected tab's
+      underline is drawn in currentColor, so it turns gold with them.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .featured-collections-navigation > button {
+      color: rgb(173 125 49);
+    }
   </style>
 
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}

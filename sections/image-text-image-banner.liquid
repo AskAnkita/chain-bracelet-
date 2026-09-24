@@ -200,12 +200,14 @@
       }
 
       {%- comment -%}
-        Fixed, meaningfully smaller sizes (not the theme's normal .h1/.h6/logo_width) --
-        this panel is a third of a short banner, not a page heading, so it reads at its
-        own compact scale regardless of viewport height.
+        Fixed, meaningfully smaller sizes (not the theme's normal .h1/.h6) -- this panel
+        is a third of a short banner, not a page heading, so it reads at its own compact
+        scale regardless of viewport height. The logo is the exception: on desktop it
+        follows the "Logo mark width" setting exactly. It used to be capped at 72px here
+        too, which made that slider do nothing above 72.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .triptych-banner__logo {
-        width: min({{ section.settings.logo_width }}px, 72px);
+        width: {{ section.settings.logo_width }}px;
       }
 
       #shopify-section-{{ section.id }} :is(.triptych-banner__kicker, .triptych-banner__heading) {
@@ -700,7 +702,7 @@
       "type": "range",
       "id": "logo_width",
       "min": 20,
-      "max": 120,
+      "max": 200,
       "step": 2,
       "unit": "px",
       "label": "Logo mark width",

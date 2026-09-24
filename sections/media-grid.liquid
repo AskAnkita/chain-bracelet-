@@ -32,6 +32,27 @@
         --media-grid-gap: {% if section.settings.spacing == 'xs' %}0.75rem{% elsif section.settings.spacing == 'sm' %}1.25rem{% elsif section.settings.spacing == 'md' %}1.875rem{% elsif section.settings.spacing == 'lg' %}2.5rem{% else %}0rem{% endif %};
       }
     }
+
+    {%- comment -%}
+      Tile titles are the header's gold (--header-gold in sections/header.liquid). On
+      narrow tiles (17% and 25% widths, e.g. six across) the title stays on one line:
+      smaller type and a 1rem inset instead of the theme's 2-3rem, which wrapped
+      NECKLACES and BRACELETS onto two lines in a 238px tile.
+    {%- endcomment -%}
+    #shopify-section-{{ section.id }} .media-grid__item .prose > p:first-child {
+      color: rgb(173 125 49);
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} .media-grid__item--narrow .content-over-media {
+        --content-over-media-gap: 1rem;
+      }
+
+      #shopify-section-{{ section.id }} .media-grid__item--narrow .prose > p:first-child {
+        font-size: clamp(.8125rem, 1.15vw, 1.125rem);
+        white-space: nowrap;
+      }
+    }
   </style>
 
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
@@ -99,7 +120,7 @@
             {%- if block.settings.link_url -%}
               <a
                 href="{{ block.settings.link_url }}"
-                class="media-grid__item {% if block.settings.add_padding %}media-grid__item--padded{% endif %}"
+                class="media-grid__item {% if block.settings.add_padding %}media-grid__item--padded{% endif %} {% if block.settings.column_count == '2' or block.settings.column_count == '3' %}media-grid__item--narrow{% endif %}"
                 style="--media-grid-item-column-span: {{ block.settings.column_count }}; --media-grid-item-row-span: {{ block.settings.row_count }}"
                 {{ block.shopify_attributes }}
               >
@@ -107,7 +128,7 @@
               </a>
             {%- else -%}
               <div
-                class="media-grid__item {% if block.settings.add_padding %}media-grid__item--padded{% endif %}"
+                class="media-grid__item {% if block.settings.add_padding %}media-grid__item--padded{% endif %} {% if block.settings.column_count == '2' or block.settings.column_count == '3' %}media-grid__item--narrow{% endif %}"
                 style="--media-grid-item-column-span: {{ block.settings.column_count }}; --media-grid-item-row-span: {{ block.settings.row_count }}"
                 {{ block.shopify_attributes }}
               >
@@ -294,6 +315,10 @@
           "label": "t:sections.media_grid.blocks.image.column_width",
           "info": "t:sections.media_grid.blocks.image.column_width_info",
           "options": [
+            {
+              "value": "2",
+              "label": "17%"
+            },
             {
               "value": "3",
               "label": "25%"
@@ -508,6 +533,10 @@
           "label": "t:sections.media_grid.blocks.image.column_width",
           "info": "t:sections.media_grid.blocks.image.column_width_info",
           "options": [
+            {
+              "value": "2",
+              "label": "17%"
+            },
             {
               "value": "3",
               "label": "25%"

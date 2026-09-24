@@ -1,9 +1,10 @@
 {%- comment -%}
-  Every page, including the home page, gets the compact single-row bar: logo hard
-  left, menu centred, icons hard right, transparent over a hero and solid white on
-  hover/scroll. Previously the home page kept a separate tall three-row masthead
-  (about + icons, rule + mark, then wordmark + menu); that's now unused in favor of
-  one consistent bar everywhere.
+  Every page, including the home page, gets the compact single-row bar: the shop's
+  categories on the left, the logo in the centre, and Size Guide / About Us plus the
+  icons on the right. It's always solid white, with the page starting below it.
+  Previously the home page kept a separate tall three-row masthead (about + icons,
+  rule + mark, then wordmark + menu); that's now unused in favor of one consistent
+  bar everywhere.
 {%- endcomment -%}
 {%- liquid
   assign compact_header = true
@@ -11,6 +12,7 @@
   # The header's nav is this list rather than a Shopify menu, and the desktop bar and the
   # mobile drawer both build from it. Each entry is TITLE|URL; a category adds the filename
   # of its flat-lay in Content > Files, which the mega menu uses as its first image.
+  # On desktop, /collections/ links sit left of the logo and the rest sit right of it.
   assign nav_items = "NECKLACES|/collections/necklaces|f7a8ab48-3b7f-412e-ab3c-3036603e1a80.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: ","
 -%}
 
@@ -40,6 +42,7 @@
     {%- endcomment -%}
     --header-grid: "primary-nav logo secondary-nav" / minmax(min-content, 1fr) auto minmax(min-content, 1fr);
     --header-padding-block: 1rem;
+    --header-gold: 173 125 49;
     --header-transparent-header-text-color: {{ section.settings.transparent_header_text_color.rgb }};
     {%- comment -%}
       Scrim painted behind the header while it sits over a hero image, so the links
@@ -107,9 +110,43 @@
     transition: background .2s, color .2s;
   }
 
+  {%- comment -%}
+    Letter spacing overrides the .18em theme.liquid sets on `.header__primary-nav a`,
+    which spread the capitals too far once the logo moved in between them.
+  {%- endcomment -%}
   #shopify-section-{{ section.id }} .header__primary-nav-item > a,
   #shopify-section-{{ section.id }} .header__primary-nav-item summary {
     font-size: {{ section.settings.menu_text_size }}rem;
+    letter-spacing: .14em;
+    white-space: nowrap;
+  }
+
+  {%- comment -%}
+    Everything in the bar is gold: the logo's own gold (#c58f38 is its median) taken
+    a shade deeper so the thin capitals and icon strokes still read on the white bar.
+    The text links get it as --text-color on the link itself so the hover underline
+    follows; putting it on the category <li> would also tint the mega menu panel that
+    opens inside it. The icons are drawn in currentColor, so `color` on the icon nav
+    and the mobile menu button is enough. The count badges keep their own colors.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .header__primary-nav-item > a,
+  #shopify-section-{{ section.id }} .header__primary-nav-item summary {
+    --text-color: var(--header-gold);
+    color: rgb(var(--text-color));
+  }
+
+  #shopify-section-{{ section.id }} .header__primary-nav > button,
+  #shopify-section-{{ section.id }} .header__secondary-nav {
+    color: rgb(var(--header-gold));
+  }
+
+  {%- comment -%}
+    The search / account / wishlist / cart icons are drawn a little heavier than the
+    theme's global "Icon stroke width" (1), which looked faint in gold. CSS outranks
+    the stroke-width attribute snippets/icon.liquid writes, and only these four change.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .header__secondary-nav .header__nav-icon :is(path, circle) {
+    stroke-width: 1.5;
   }
 
   {%- comment -%}
@@ -427,22 +464,6 @@
   }
 
   {%- comment -%}
-    x-header adds .is-solid once #header-scroll-tracker leaves the viewport, and
-    theme.css drops transparency for that class — which makes the bar flash white
-    as it scrolls away. The header is not sticky, so that solid state serves no
-    purpose here. This keeps every row transparent while scrolling, and still lets
-    an open dropdown or the search drawer force solid (kept from the theme's rule).
-  {%- endcomment -%}
-  :has(.shopify-section:first-child [allow-transparent-header]):not(:has(.shopify-section--header ~ .shopify-section-group-header-group)) #shopify-section-{{ section.id }}:not(:hover) .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
-    --header-show-transparent-logo: 1;
-    --header-separation-border-color: 0 0 0 / 0;
-    --background: var(--header-overlay);
-    --background-gradient: 0 0 0 / 0;
-    --border-color: 0 0 0 / 0;
-    --text-color: var(--header-transparent-header-text-color);
-  }
-
-  {%- comment -%}
     The other half of the same problem: theme.css keeps .header transparent whenever
     .header itself is not hovered, so hovering the utility rows left the menu row
     see-through. This restores the scheme's solid colors on .header the moment any
@@ -490,56 +511,26 @@
     }
 
     {%- comment -%}
-      Inner pages have no hero to gate transparency behind, and the bar IS the site's
-      only nav on these pages, so it starts transparent unconditionally rather than
-      waiting for a [allow-transparent-header] section like the home masthead does.
-      Same open-menu/open-search exclusion as that rule, so an open dropdown still
-      forces solid and stays readable.
+      The bar is solid white on every page and in every state (top of page, scrolled,
+      hovered), and the page starts below it instead of sliding under it. Over photos
+      the gold logo washed out, so the transparent header is off for good.
 
-      Policy pages (refund, privacy, terms, shipping) are excluded: they're plain text
-      on a flat background with no hero to sit over, so a transparent bar just meant
-      unreadable text at the same color as the page behind it. They get the solid bar
-      unconditionally instead. The About page is excluded for the same reason -- it
-      opens with plain text, not a hero image. Matched by handle rather than only
-      template_suffix so it still applies before the page is switched to the
-      page.about template. The wishlist page is excluded too: its product grid starts
-      right under the bar on the plain background. Matched by template (which also
-      covers previewing it on any page with ?view=wishlist) or by the page's handle.
-      The 404 page is plain text on the flat background as well, and it's also what
-      serves the wishlist at /pages/wishlist while the store has no such page. So do
-      the search results and cart pages, which open with their title on the plain
-      background.
+      theme.css makes the header transparent and pulls it up over the first section
+      whenever that section has "Allow transparent header" ticked (the home slideshow,
+      the collection banner and the product page all do). The !importants beat that
+      and the hover rule above; margin-block-end: 0 undoes the pull-up.
     {%- endcomment -%}
-    {%- if request.page_type != 'policy' and request.page_type != '404' and request.page_type != 'search' and request.page_type != 'cart' and page.template_suffix != 'about' and page.handle != 'about-us' and template.suffix != 'wishlist' and page.handle != 'wishlist' -%}
-      #shopify-section-{{ section.id }}:not(:hover) .header-compact .header:not(:has(.header__primary-nav [open], .header__secondary-nav [open], .header-search[open])) {
-        --header-show-transparent-logo: 1;
-        --header-separation-border-color: 0 0 0 / 0;
-        --background: 0 0 0 / 0;
-        --background-gradient: 0 0 0 / 0;
-        --border-color: 0 0 0 / 0;
-        --text-color: var(--header-transparent-header-text-color);
-      }
-    {%- endif -%}
-
-    {%- comment -%}
-      x-header adds .is-solid once #header-scroll-tracker leaves the viewport. On the
-      home page that state is suppressed further down (the masthead is not pinned, so
-      it only caused a flash on the way out). Here the bar IS pinned, so the scrolled
-      state is the point: it drops the transparency for a white background once the
-      page moves under it. Beats the transparent rule above, which does not exclude
-      .is-solid, and also restores the scheme's normal text color -- that rule sets
-      --text-color to the transparent (white) value and nothing else in this state
-      was resetting it back.
-    {%- endcomment -%}
-    #shopify-section-{{ section.id }} .header-compact .header.is-solid {
+    #shopify-section-{{ section.id }} .header-compact .header {
       --header-show-transparent-logo: 0 !important;
-      --header-separation-border-color: {% if section.settings.show_separation_border %}{{ section.settings.color_scheme.settings.text_color.rgb }} / 0.15{% else %}0 0 0 / 0{% endif %} !important;
+      --header-separation-border-color: {% if section.settings.show_separation_border %}{{ header_scheme.settings.text_color.rgb }} / 0.15{% else %}0 0 0 / 0{% endif %} !important;
       --background: 255 255 255 !important;
       --background-gradient: 0 0 0 / 0 !important;
+      --border-color: {{ header_scheme.settings.text_color.rgb }} / 0.15 !important;
       --text-color: {{ header_scheme.settings.text_color.rgb }} !important;
 
       background: rgb(255 255 255) !important;
       color: rgb(var(--text-color)) !important;
+      margin-block-end: 0 !important;
     }
 
     {%- comment -%}The mark and icons sit in the menu row's own grid areas.{%- endcomment -%}
@@ -582,16 +573,6 @@
       display: block;
     }
 
-    @media screen and (min-width: 1000px) {
-      {%- assign compact_mark_height_desktop = section.settings.center_icon_width | times: 1.35 | round -%}
-      {%- assign compact_mark_visual_height_desktop = compact_mark_height_desktop | times: 3.4 | round -%}
-      {%- assign compact_mark_overhang_desktop = compact_mark_visual_height_desktop | minus: compact_mark_height_desktop | divided_by: 2 -%}
-      #shopify-section-{{ section.id }} .header-compact .header__compact-mark :is(img, svg) {
-        height: {{ compact_mark_visual_height_desktop }}px;
-        margin-block: -{{ compact_mark_overhang_desktop }}px;
-      }
-    }
-
     #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
       grid-row: 1;
       align-self: center;
@@ -604,39 +585,132 @@
       height: auto;
     }
 
+    {%- comment -%}
+      Desktop (1000px and up) is a two-row bar:
+
+                                   [C+B]                search account wishlist bag
+        NECKLACES BRACELETS RINGS EARRINGS   CHAIN AND BRACELET   SIZE GUIDE ABOUT US
+                                          MODERN HANDMADE JEWELRY
+
+      The side tracks are both 1fr so the monogram and wordmark sit on the page's true
+      centre. Everything else hugs the page edges: icons top right, categories bottom
+      left, and Size Guide / About Us bottom right, under the icons. The primary nav is
+      display: contents here so its two lists can take their own grid cells; the
+      single-row logo (.header__compact-mark) is phone and tablet only.
+    {%- endcomment -%}
     @media screen and (min-width: 1000px) {
       #shopify-section-{{ section.id }} .header-compact x-header {
-        --header-grid: "logo primary-nav secondary-nav" / auto minmax(0, 1fr) auto !important;
+        --header-grid: ". monogram icons" "nav-start wordmark nav-end" / minmax(0, 1fr) auto minmax(0, 1fr) !important;
         align-items: center !important;
+        column-gap: 1.75rem;
+        row-gap: .5rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__compact-mark {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__monogram {
+        grid-area: monogram;
+        justify-self: center;
+        display: block;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__monogram img {
+        display: block;
+        width: 56px;
+        height: 56px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__wordmark {
+        grid-area: wordmark;
+        justify-self: center;
+        display: block;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__wordmark img {
+        display: block;
+        width: clamp(220px, 20vw, 300px);
+        height: auto;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__info-nav {
+        grid-area: nav-end;
+        justify-self: end;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__info-nav > ul {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
       }
 
       #shopify-section-{{ section.id }} .header-compact .header__primary-nav {
-        grid-area: primary-nav !important;
-        grid-column: primary-nav !important;
-        grid-row: 1 !important;
-        align-self: center !important;
-        padding-block: 0 !important;
-        pointer-events: auto !important;
+        display: contents !important;
       }
 
       {%- comment -%}
-        `>` scopes this and the rule below to the bar's own list; without it they also
+        `>` scopes this and the rule below to the bar's own lists; without it they also
         reached the link list inside each category mega menu panel.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .header-compact .header__primary-nav > :is(ul, menu) {
+        display: flex !important;
+        align-items: center;
         gap: 2rem !important;
+        width: auto !important;
         max-width: none !important;
+        margin: 0 !important;
         flex-wrap: nowrap;
+        pointer-events: auto;
       }
 
-      {%- comment -%}
-        No centred wordmark to make room for, so close the gap theme.liquid opens
-        after the second link.
-      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav-list--start {
+        grid-area: nav-start;
+        justify-self: start;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav-list--end {
+        grid-area: nav-end;
+        justify-self: start;
+      }
+
+      {%- comment -%}Close the gap theme.liquid opens after the second link for its old wordmark.{%- endcomment -%}
       #shopify-section-{{ section.id }} .header-compact .header__primary-nav > :is(ul, menu) > li:nth-child(2) {
         margin-inline-end: 0 !important;
       }
+
+      #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
+        grid-area: icons;
+        justify-self: end;
+        column-gap: 1.5rem;
+      }
     }
+
+    {%- comment -%}
+      All four categories share the left of the wordmark, so on smaller laptops the
+      bottom row steps down (tighter type and gaps) to keep them on one line.
+    {%- endcomment -%}
+    @media screen and (min-width: 1000px) and (max-width: 1439px) {
+      #shopify-section-{{ section.id }} .header-compact x-header {
+        column-gap: 1.25rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav-item > a,
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav-item summary {
+        font-size: min({{ section.settings.menu_text_size }}rem, clamp(.7rem, 1.2vw, .8rem));
+        letter-spacing: .1em;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav > :is(ul, menu),
+      #shopify-section-{{ section.id }} .header-compact .header__info-nav > ul {
+        gap: clamp(.75rem, 2vw - .5rem, 1.5rem) !important;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__wordmark img {
+        width: clamp(180px, 18vw, 260px);
+      }
+    }
+
   {%- endif -%}
 
   {%- if section.settings.logo != blank -%}
@@ -675,6 +749,24 @@
       assign show_locale_selector = true
     endif
   -%}
+
+  {%- comment -%}
+    The non-category links (Size Guide, About Us) sit right of the wordmark on desktop,
+    in their own nav (rendered inside x-header below). Desktop only: below 1000px they're in the
+    drawer with everything else.
+  {%- endcomment -%}
+  {%- capture info_links -%}
+    {%- for item in nav_items -%}
+      {%- assign item_parts = item | split: "|" -%}
+      {%- unless item_parts[1] contains '/collections/' -%}
+        <li class="header__primary-nav-item header__info-link md-max:hidden">
+          <a href="{{ item_parts[1] }}" data-title="{{ item_parts[0] | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">
+            {{- item_parts[0] -}}
+          </a>
+        </li>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
 
   {%- capture secondary_nav -%}
       <nav class="header__secondary-nav" aria-label="{{ 'header.general.secondary_navigation' | t | escape }}">
@@ -844,6 +936,28 @@
           {%- render 'icon' with 'gem' -%}
         {%- endif -%}
       </a>
+
+      {%- comment -%}
+        Desktop's two-row bar splits the logo in two: the C+B monogram centred in the top
+        row and the CHAIN AND BRACELET / MODERN HANDMADE JEWELRY wordmark centred in the
+        bottom row, between the categories. Both are cut from the owner's logo-03 lockup
+        and ship with the theme (assets/cb-monogram.png, assets/cb-wordmark.png), since
+        the logo setting holds the whole lockup. The monogram link is hidden from screen
+        readers and the keyboard; the wordmark link names the shop.
+      {%- endcomment -%}
+      <a href="{{ routes.root_url }}" class="header__monogram md-max:hidden" aria-hidden="true" tabindex="-1">
+        <img src="{{ 'cb-monogram.png' | asset_url }}" alt="" width="240" height="240">
+      </a>
+
+      <a href="{{ routes.root_url }}" class="header__wordmark md-max:hidden">
+        <img src="{{ 'cb-wordmark.png' | asset_url }}" alt="{{ shop.name | escape }}" width="1200" height="129">
+      </a>
+
+      <nav class="header__info-nav md-max:hidden" aria-label="{{ shop.name | escape }}">
+        <ul class="unstyled-list">
+          {{- info_links -}}
+        </ul>
+      </nav>
     {%- else -%}
       <h1 class="header__logo">
         <a href="{{ routes.root_url }}">{{ logo_content }}</a>
@@ -862,12 +976,12 @@
     {%- comment -%}
       header__primary-nav--center used to be conditional on section.settings.layout being
       one of two legacy values, from before this theme's header was rebuilt to always be
-      the compact bar (see the file's top comment: "logo hard left, menu centred, icons
-      hard right" -- unconditionally, on every page). That left the menu's centering
-      silently dependent on whatever the old layout setting happened to be saved as, so two
-      stores/themes with identical code render differently just because they saved a
-      different pre-redesign layout value. Since compact_header is always true now,
-      centering should be too.
+      the compact bar (see the file's top comment -- unconditionally, on every page). That
+      left the menu's centering silently dependent on whatever the old layout setting
+      happened to be saved as, so two stores/themes with identical code render differently
+      just because they saved a different pre-redesign layout value. Since compact_header
+      is always true now, the class is too. (With the logo centred, the desktop list lines
+      up from the left edge instead: see justify-content on the list in the compact styles.)
     {%- endcomment -%}
     {%- if menu.links.size > 0 or sidebar_menu.links.size > 0 -%}
       <nav
@@ -886,7 +1000,21 @@
         </button>
 
         {%- if section.settings.layout != 'drawer' -%}
-          <ul class="contents unstyled-list md-max:hidden">
+          {%- liquid
+            # Desktop puts every category left of the wordmark, with Size Guide / About Us
+            # on its right (see the two-row styles). nav_category_split is how many go in
+            # the first list; any beyond it land in the second.
+            assign nav_category_total = 0
+            for item in nav_items
+              if item contains '|/collections/'
+                assign nav_category_total = nav_category_total | plus: 1
+              endif
+            endfor
+            assign nav_category_split = nav_category_total
+            assign nav_category_index = 0
+            assign nav_category_end_items = ''
+          -%}
+          <ul class="contents unstyled-list md-max:hidden header__primary-nav-list header__primary-nav-list--start">
             {%- comment -%}Render luxury mega menu blocks that don't have a menu_item set (standalone){%- endcomment -%}
             {%- for block in section.blocks -%}
               {%- if block.type == 'luxury_mega_menu' and block.settings.menu_item == blank -%}
@@ -901,7 +1029,8 @@
               filled from that collection's product tags and image unless a "Category mega
               menu" block attached to it (its `menu_item` is the category's lowercased title)
               overrides them. When the snippet has nothing to show, the item stays a plain
-              link, which is also what Size Guide and About Us get.
+              link. Only /collections/ links are listed here; Size Guide and About Us are
+              plain links on the other side of the logo (info_links, above).
 
               The summary keeps the category's URL in data-follow-link: with the hover
               trigger, clicking the open item goes to the collection; on touch screens the
@@ -921,6 +1050,10 @@
                 assign item_parts = item | split: "|"
                 assign link_title = item_parts[0]
                 assign link_url = item_parts[1]
+                unless link_url contains '/collections/'
+                  continue
+                endunless
+                assign nav_category_index = nav_category_index | plus: 1
                 assign link_title_downcase = link_title | strip | downcase
 
                 assign category_image = nil
@@ -949,6 +1082,7 @@
                   endcapture
                 endif
               -%}
+              {%- capture nav_category_item -%}
               <li class="header__primary-nav-item">
                 {%- if category_menu != blank -%}
                   <mega-menu-disclosure follow-summary-link trigger="{{ section.settings.menu_open_trigger }}" class="contents">
@@ -964,8 +1098,21 @@
                   <a href="{{ link_url }}" data-title="{{ link_title | escape }}" class="block {% if section.settings.menu_text_font == 'heading' %}h6{% endif %}">{{- link_title -}}</a>
                 {%- endif -%}
               </li>
+              {%- endcapture -%}
+
+              {%- if nav_category_index <= nav_category_split -%}
+                {{- nav_category_item -}}
+              {%- else -%}
+                {%- assign nav_category_end_items = nav_category_end_items | append: nav_category_item -%}
+              {%- endif -%}
             {%- endfor -%}
           </ul>
+
+          {%- if nav_category_end_items != blank -%}
+            <ul class="contents unstyled-list md-max:hidden header__primary-nav-list header__primary-nav-list--end">
+              {{- nav_category_end_items -}}
+            </ul>
+          {%- endif -%}
         {%- endif -%}
       </nav>
     {%- endif -%}
