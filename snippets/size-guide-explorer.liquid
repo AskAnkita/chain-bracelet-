@@ -4,13 +4,27 @@
   switches chips; everything sharing a data-index toggles .is-active together.
 
   @param {object} section - the size-guide-tabs section (for the "Most loved" label)
-  @param {array} blocks - option blocks with size, title, text and popular settings
+  @param {object} blocks - option blocks with size, title, text and popular settings
   @param {number} active - index shown first
   @param {string} art - built-in drawing: 'necklace', 'wrist', 'pendant' or 'earring'
   @param {string} label - accessible name for the chip row
   @param {object} [image] - photo that replaces the drawing
   @param {string} [aside] - rich text shown under the detail card
 {%- enddoc -%}
+
+{%- liquid
+  assign fallback_image = blank
+  case art
+    when 'necklace'
+      assign fallback_image = 'size-guide-necklaces.png'
+    when 'wrist'
+      assign fallback_image = 'size-guide-bracelets.png'
+    when 'pendant'
+      assign fallback_image = 'size-guide-pendants.png'
+    when 'earring'
+      assign fallback_image = 'size-guide-earrings.png'
+  endcase
+-%}
 
 <div class="sg-lg__explorer" data-sg-explorer>
   <div class="sg-lg__chips" role="tablist" aria-label="{{ label | escape }}">
@@ -25,6 +39,17 @@
     <div class="sg-lg__media">
       {%- if image != blank -%}
         {{- image | image_url: width: 1200 | image_tag: widths: '400,600,800,1000,1200', loading: 'lazy', sizes: '(max-width: 699px) 92vw, 420px', alt: image.alt -}}
+      {%- elsif fallback_image != blank -%}
+        <img
+          src="{{ fallback_image | asset_img_url: '800x' }}"
+          srcset="{{ fallback_image | asset_img_url: '480x' }} 480w, {{ fallback_image | asset_img_url: '800x' }} 800w, {{ fallback_image | asset_img_url: '1200x' }} 1200w"
+          sizes="(max-width: 699px) 92vw, 420px"
+          width="1254"
+          height="1254"
+          loading="lazy"
+          decoding="async"
+          alt="{{ label | escape }}"
+        >
       {%- else -%}
         <svg viewBox="0 0 400 400" role="img" aria-label="{{ label | escape }}">
           <rect width="400" height="400" fill="#f3ece3"/>

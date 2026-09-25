@@ -150,6 +150,30 @@
   }
 
   {%- comment -%}
+    The menu drawer (phones and tablets) follows the same gold: every link on the first
+    panel (the categories, Size Guide, About Us) with its chevron, and on a category's
+    panel the back button, "Shop All", and the Type / Shape / Style headings with their
+    plus signs. The tag links inside those groups keep the drawer's own text colour, so
+    the gold marks the level you tap to navigate and the long lists stay easy to read.
+    The close button lives in the drawer's shadow DOM, so it's reached through ::part.
+
+    The drawer is moved to <body> when it opens (theme.js appends dialogs there), so
+    these rules can't be scoped under this section or use its --header-gold: they key
+    off the drawer's own id and spell the gold out.
+  {%- endcomment -%}
+  #sidebar-menu :is(.header-sidebar__linklist-button, .header-sidebar__back-button) {
+    color: rgb(173 125 49);
+  }
+
+  #sidebar-menu .header-sidebar__nested-linklist {
+    color: rgb(var(--text-color));
+  }
+
+  #sidebar-menu::part(close-button) {
+    color: rgb(173 125 49);
+  }
+
+  {%- comment -%}
     Category mega menu panel (snippets/category-mega-menu.liquid). theme.css's .mega-menu
     already drops it full width below the bar, caps its height and paints the scheme
     background; this lays out the inside and keeps it short. Shop by Type, Shape and
@@ -246,6 +270,25 @@
     text-transform: uppercase;
   }
 
+  #shopify-section-{{ section.id }} .category-mega-menu__column-links a,
+  #shopify-section-{{ section.id }} .category-mega-menu__links a {
+    transition: color .2s ease, background-size .3s ease-in-out;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__caption,
+  #shopify-section-{{ section.id }} .category-mega-menu__product-title {
+    transition: color .2s ease;
+  }
+
+  @media screen and (pointer: fine) {
+    #shopify-section-{{ section.id }} .category-mega-menu__column-links a:hover,
+    #shopify-section-{{ section.id }} .category-mega-menu__links a:hover,
+    #shopify-section-{{ section.id }} .category-mega-menu__card:hover .category-mega-menu__caption,
+    #shopify-section-{{ section.id }} .category-mega-menu__product:hover .category-mega-menu__product-title {
+      color: rgb(var(--header-gold));
+    }
+  }
+
   {%- comment -%}
     Two images side by side, with the product spanning both as a small thumbnail beside
     its title and price — that keeps the panel about as tall as the link columns. With
@@ -287,8 +330,13 @@
   }
 
   #shopify-section-{{ section.id }} .category-mega-menu__product-title {
-    font-size: .9375rem;
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-style: var(--heading-font-style);
+    font-size: .8rem;
     line-height: 1.4;
+    letter-spacing: .18em;
+    text-transform: uppercase;
   }
 
   {%- comment -%}
@@ -323,7 +371,12 @@
   }
 
   #shopify-section-{{ section.id }} .category-mega-menu__caption {
-    font-size: 1rem;
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-style: var(--heading-font-style);
+    font-size: .8rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
   }
 
   {%- comment -%}Keep the category's hover underline showing while its panel is open.{%- endcomment -%}
@@ -544,6 +597,10 @@
       position: relative;
     }
 
+    #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup {
+      display: none;
+    }
+
     {%- comment -%}
       The mark is a lone brand cue in a single-row bar here, not the centrepiece of a
       three-row masthead, so it's sized to fill the bar's height rather than pinned to
@@ -583,6 +640,119 @@
     #shopify-section-{{ section.id }} .header-compact .header__nav-icon {
       width: {{ section.settings.utility_icon_size }}px;
       height: auto;
+    }
+
+    {%- comment -%}
+      Phone header: keep the complete lockup readable without letting it dictate the
+      row height. Account access already exists in the drawer, so the visible action
+      row can stay focused on search, wishlist and cart.
+    {%- endcomment -%}
+    @media screen and (max-width: 699px) {
+      #shopify-section-{{ section.id }} {
+        --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) minmax(96px, 120px) minmax(0, 1fr);
+        --header-padding-block: .375rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header {
+        min-height: 64px;
+        padding-inline: 1rem;
+        column-gap: .5rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__compact-mark {
+        justify-self: center;
+        min-width: 0;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__compact-mark > :is(.header__mark-image, svg) {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup {
+        width: 120px;
+        height: 56px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup img {
+        display: block;
+        width: auto;
+        max-width: none;
+        height: auto;
+        margin: 0;
+        object-fit: contain;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-monogram {
+        width: 32px;
+        height: 32px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-wordmark {
+        display: block;
+        width: 112px;
+        height: auto;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav {
+        width: 100%;
+        min-width: 0;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__primary-nav > button {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        margin-inline-start: -.375rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
+        width: 100%;
+        min-width: 0;
+        gap: .25rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__secondary-nav li {
+        flex: none;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__secondary-nav a {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact :is(.header__account-link, .header__wishlist-link) {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__nav-icon {
+        width: 20px;
+        height: 20px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__utility-badge {
+        inset-block-start: -.1rem;
+        inset-inline-end: -.1rem;
+        min-width: .95rem;
+        height: .95rem;
+        line-height: .95rem;
+        font-size: .5rem;
+      }
+    }
+
+    @media screen and (max-width: 359px) {
+      #shopify-section-{{ section.id }} .header-compact .header {
+        padding-inline: .75rem;
+      }
     }
 
     {%- comment -%}
@@ -926,6 +1096,11 @@
         the merchant's center_icon when they have set one, the theme's gem otherwise.
       {%- endcomment -%}
       <a href="{{ routes.root_url }}" class="header__compact-mark" aria-label="{{ shop.name }}">
+        <span class="header__mobile-lockup" aria-hidden="true">
+          <img class="header__mobile-monogram" src="{{ 'cb-monogram.png' | asset_url }}" alt="" width="240" height="240">
+          <img class="header__mobile-wordmark" src="{{ 'cb-wordmark.png' | asset_url }}" alt="" width="1200" height="129">
+        </span>
+
         {%- if section.settings.center_icon -%}
           {{- section.settings.center_icon | image_url: width: 1440 | image_tag: widths: '480,960,1440', alt: shop.name, loading: 'lazy', class: 'header__mark-image' -}}
 
@@ -1284,7 +1459,9 @@
         }
 
         update() {
-          this.textContent = window.Wishlist.get().length;
+          const count = window.Wishlist.get().length;
+          this.textContent = count;
+          this.hidden = count === 0;
         }
       }
 

@@ -20,6 +20,7 @@
 
   {%- if uses_elegant_heading -%}
     <link rel="preload" href="{{ 'noto-serif-display.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ 'tenor-sans.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin>
 
     <style>
       @font-face {
@@ -38,6 +39,20 @@
         font-stretch: 62.5% 100%;
         font-display: swap;
         src: url('{{ 'noto-serif-display-italic.woff2' | asset_url }}') format('woff2');
+      }
+
+      {%- comment -%}
+        Tenor Sans (Google Fonts, OFL, latin subset) is the closest match to the
+        lettering in the owner's CHAIN AND BRACELET logo: of 26 candidate faces it fits
+        the logo's letter shapes best and has the same overall width. The hero title
+        and tagline use it so the headline matches the brand mark.
+      {%- endcomment -%}
+      @font-face {
+        font-family: 'Tenor Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('{{ 'tenor-sans.woff2' | asset_url }}') format('woff2');
       }
 
       #shopify-section-{{ section.id }} .content-over-media > .slideshow__slide-content--elegant {
@@ -111,15 +126,33 @@
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
         max-width: 10em;
         margin-block-start: .1rem;
-        font-family: 'Noto Serif Display', 'Times New Roman', serif;
-        font-weight: var(--elegant-title-weight, 350);
-        font-stretch: 72%;
+        font-family: 'Tenor Sans', 'Noto Serif Display', sans-serif;
+        font-weight: 400;
         font-style: normal;
-        font-size: clamp(2rem, 3vw, 3.6rem);
-        line-height: .95;
-        letter-spacing: -.01em;
+        font-size: clamp(1.75rem, 2.6vw, 3.1rem);
+        line-height: 1.1;
+        letter-spacing: .04em;
         text-transform: none;
         overflow-wrap: normal;
+        text-shadow: 0 2px 18px rgb(0 0 0 / .2);
+      }
+
+      {%- comment -%}
+        A short gold hairline under the title, in the lighter gold of the owner's logo
+        (#d6a542) so it still reads on the warm, mid-tone hero photos. It follows the
+        heading's alignment.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant::after {
+        content: '';
+        display: block;
+        width: 4.5rem;
+        height: 1px;
+        margin-block-start: 1.25rem;
+        background: rgb(214 165 66);
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--centered .slideshow-elegant::after {
+        margin-inline: auto;
       }
 
       #shopify-section-{{ section.id }} .slideshow-elegant__title :is(em, i) {
@@ -137,9 +170,29 @@
         word-spacing: -.04em;
       }
 
+      {%- comment -%}
+        Buttons on an elegant slide match the header: white with gold (#ad7d31) text and
+        a gold border, whatever the slide's button colour settings say (the !importants
+        beat the custom properties those settings write inline). On hover the theme's
+        own wipe animation runs, but sweeps in gold (--hover-gradient) instead of
+        transparent, and the text turns white. Only the gradient variable and border
+        colour are changed on hover: setting `background` itself would replace the
+        animated background-image and kill the wipe.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {
+        --button-background: 255 255 255 !important;
+        --button-text-color: 173 125 49 !important;
+        --button-outline-color: 173 125 49 !important;
+        --hover-gradient: linear-gradient(rgb(173 125 49), rgb(173 125 49));
+
         margin-block-start: clamp(1.15rem, 1.9vw, 1.65rem);
-        padding: .85rem 2rem;
+        padding: 1rem 2.5rem;
+        font-size: .75rem;
+        letter-spacing: .22em;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button:hover {
+        border-color: rgb(173 125 49) !important;
       }
 
       {%- comment -%}
@@ -219,13 +272,20 @@
         inset-inline-end: -2px;
       }
 
+      {%- comment -%}
+        The tagline reads as the title's second line ("Modern brilliance, / Bound by
+        timeless design"), so it's set in the title's own face, size and tracking
+        rather than as a small caption.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .prose .slideshow-elegant__tagline {
-        margin-block-start: clamp(.75rem, 1.2vw, 1rem);
-        font-family: var(--heading-font-family);
+        margin-block-start: .15em;
+        font-family: 'Tenor Sans', 'Noto Serif Display', sans-serif;
         font-style: normal;
-        font-size: clamp(1.05rem, .85rem + .55vw, 1.35rem);
         font-weight: 400;
-        letter-spacing: .08em;
+        font-size: clamp(1.75rem, 2.6vw, 3.1rem);
+        line-height: 1.1;
+        letter-spacing: .04em;
+        text-shadow: 0 2px 18px rgb(0 0 0 / .2);
       }
 
       @media screen and (min-width: 700px) {
@@ -243,8 +303,8 @@
           text-shadow: 0 2px 10px rgb(0 0 0 / .32);
         }
 
-        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant__title {
-          font-size: clamp(1.75rem, 7.5vw, 3rem);
+        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
+          font-size: clamp(1.5rem, 6.5vw, 2.5rem);
         }
 
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .button {

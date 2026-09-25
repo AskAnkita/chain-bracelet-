@@ -1341,6 +1341,7 @@ var CartCount = class extends HTMLElement {
   }
   connectedCallback() {
     __privateSet(this, _abortController2, new AbortController());
+    this.itemCount = Number(this.textContent) || 0;
     document.addEventListener("cart:change", (event) => this.itemCount = event.detail["cart"]["item_count"], { signal: __privateGet(this, _abortController2).signal });
     document.addEventListener("cart:refresh", __privateMethod(this, _CartCount_instances, updateFromServer_fn).bind(this), { signal: __privateGet(this, _abortController2).signal });
     window.addEventListener("pageshow", __privateMethod(this, _CartCount_instances, updateFromServer_fn).bind(this), { signal: __privateGet(this, _abortController2).signal });
@@ -1350,6 +1351,7 @@ var CartCount = class extends HTMLElement {
   }
   set itemCount(count) {
     this.innerText = count;
+    this.hidden = Number(count) === 0;
   }
 };
 _abortController2 = new WeakMap();

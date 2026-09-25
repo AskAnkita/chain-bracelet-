@@ -15,7 +15,225 @@
         "color_scheme": "scheme-1",
         "show_title": true,
         "page_width": "md"
-      }
+      },
+      "blocks": {
+        "necklace_16": {
+          "type": "necklace_length",
+          "settings": {
+            "size": "16\"",
+            "title": "Collarbone",
+            "popular": false,
+            "text": "<p>Sits at the base of the neck and works well with open necklines.</p>"
+          }
+        },
+        "necklace_18": {
+          "type": "necklace_length",
+          "settings": {
+            "size": "18\"",
+            "title": "Everyday length",
+            "popular": true,
+            "text": "<p>Falls just below the collarbone. Our most versatile length for pendants and gifting.</p>"
+          }
+        },
+        "necklace_20": {
+          "type": "necklace_length",
+          "settings": {
+            "size": "20\"",
+            "title": "Upper chest",
+            "popular": false,
+            "text": "<p>Sits on the upper chest and layers cleanly below a 16 or 18 inch chain.</p>"
+          }
+        },
+        "necklace_22": {
+          "type": "necklace_length",
+          "settings": {
+            "size": "22\"",
+            "title": "Mid chest",
+            "popular": false,
+            "text": "<p>A relaxed length that suits larger pendants and higher necklines.</p>"
+          }
+        },
+        "necklace_24": {
+          "type": "necklace_length",
+          "settings": {
+            "size": "24\"",
+            "title": "Long length",
+            "popular": false,
+            "text": "<p>Falls lower on the chest for a more dramatic single chain or layered look.</p>"
+          }
+        },
+        "pendant_petite": {
+          "type": "pendant_size",
+          "settings": {
+            "size": "Petite",
+            "title": "Up to 10 mm",
+            "popular": false,
+            "text": "<p>A subtle sparkle that looks best on a fine 16 to 18 inch chain.</p>"
+          }
+        },
+        "pendant_classic": {
+          "type": "pendant_size",
+          "settings": {
+            "size": "Classic",
+            "title": "12 to 18 mm",
+            "popular": true,
+            "text": "<p>Noticeable without feeling heavy. A balanced everyday pendant size.</p>"
+          }
+        },
+        "pendant_statement": {
+          "type": "pendant_size",
+          "settings": {
+            "size": "Statement",
+            "title": "20 mm and over",
+            "popular": false,
+            "text": "<p>A bold focal point that pairs best with a stronger 20 to 22 inch chain.</p>"
+          }
+        },
+        "bracelet_65": {
+          "type": "bracelet_length",
+          "settings": {
+            "size": "6.5\"",
+            "title": "Petite fit",
+            "popular": false,
+            "text": "<p>Best for wrists up to 6 inches, with enough room for comfortable movement.</p>"
+          }
+        },
+        "bracelet_70": {
+          "type": "bracelet_length",
+          "settings": {
+            "size": "7\"",
+            "title": "Everyday fit",
+            "popular": true,
+            "text": "<p>Our most popular bracelet length and the safest choice when buying a gift.</p>"
+          }
+        },
+        "bracelet_75": {
+          "type": "bracelet_length",
+          "settings": {
+            "size": "7.5\"",
+            "title": "Relaxed fit",
+            "popular": false,
+            "text": "<p>Offers extra movement or a comfortable fit on a wrist around 7 inches.</p>"
+          }
+        },
+        "earring_stud": {
+          "type": "earring_option",
+          "settings": {
+            "size": "Stud",
+            "title": "3 to 6 mm",
+            "popular": false,
+            "text": "<p>Sits flush on the lobe for a minimal look and effortless all-day wear.</p>"
+          }
+        },
+        "earring_huggie": {
+          "type": "earring_option",
+          "settings": {
+            "size": "Huggie",
+            "title": "8 to 12 mm",
+            "popular": true,
+            "text": "<p>A close-fitting hoop that hugs the lobe and layers easily with studs.</p>"
+          }
+        },
+        "earring_hoop": {
+          "type": "earring_option",
+          "settings": {
+            "size": "Hoop",
+            "title": "12 to 25 mm",
+            "popular": false,
+            "text": "<p>A classic everyday hoop that finishes just below the earlobe.</p>"
+          }
+        },
+        "earring_drop": {
+          "type": "earring_option",
+          "settings": {
+            "size": "Drop",
+            "title": "25 to 50 mm",
+            "popular": false,
+            "text": "<p>Creates visible movement and can fall from below the lobe to the jawline.</p>"
+          }
+        },
+        "ring_faq_between": {
+          "type": "ring_faq",
+          "settings": {
+            "question": "What if I am between ring sizes?",
+            "answer": "<p>Choose the larger size. For bands wider than 6 mm, consider going up another half size.</p>"
+          }
+        },
+        "ring_faq_when": {
+          "type": "ring_faq",
+          "settings": {
+            "question": "When should I measure my finger?",
+            "answer": "<p>Measure at the end of the day at room temperature, then repeat two or three times for a reliable result.</p>"
+          }
+        },
+        "bracelet_faq_fit": {
+          "type": "bracelet_faq",
+          "settings": {
+            "question": "How much room should a bracelet have?",
+            "answer": "<p>Add about 0.25 inches for a snug fit, 0.5 inches for a classic fit, or up to 1 inch for a relaxed fit.</p>"
+          }
+        },
+        "bracelet_faq_gift": {
+          "type": "bracelet_faq",
+          "settings": {
+            "question": "Which bracelet size is best for a gift?",
+            "answer": "<p>A 7 inch bracelet fits many adult wrists. An adjustable style is the safest option when the wrist measurement is unknown.</p>"
+          }
+        },
+        "necklace_faq_popular": {
+          "type": "necklace_faq",
+          "settings": {
+            "question": "What is the most popular necklace length?",
+            "answer": "<p>18 inches is the most versatile choice. It usually sits just below the collarbone and works with most necklines.</p>"
+          }
+        },
+        "necklace_faq_layer": {
+          "type": "necklace_faq",
+          "settings": {
+            "question": "How far apart should layered necklaces be?",
+            "answer": "<p>Leave about 2 inches between each chain so every layer stays visible and tangling is reduced.</p>"
+          }
+        },
+        "earring_faq_hoop": {
+          "type": "earring_faq",
+          "settings": {
+            "question": "Which hoop size is easiest for everyday wear?",
+            "answer": "<p>An 8 to 12 mm huggie stays close to the lobe. A 12 to 20 mm hoop gives a little more presence while remaining practical.</p>"
+          }
+        },
+        "earring_faq_drop": {
+          "type": "earring_faq",
+          "settings": {
+            "question": "How is earring drop measured?",
+            "answer": "<p>Measure from the point where the earring meets the ear to the lowest point of the design.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "necklace_16",
+        "necklace_18",
+        "necklace_20",
+        "necklace_22",
+        "necklace_24",
+        "pendant_petite",
+        "pendant_classic",
+        "pendant_statement",
+        "bracelet_65",
+        "bracelet_70",
+        "bracelet_75",
+        "earring_stud",
+        "earring_huggie",
+        "earring_hoop",
+        "earring_drop",
+        "ring_faq_between",
+        "ring_faq_when",
+        "bracelet_faq_fit",
+        "bracelet_faq_gift",
+        "necklace_faq_popular",
+        "necklace_faq_layer",
+        "earring_faq_hoop",
+        "earring_faq_drop"
+      ]
     }
   },
   "order": ["size_guide_tabs"]

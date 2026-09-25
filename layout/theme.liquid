@@ -266,6 +266,50 @@
         {%- sections 'footer-group' -%}
       {%- endif -%}
     </main>
+
+    {%- if request.page_type == 'policy' and request.path contains 'privacy-policy' -%}
+      <script>
+        (() => {
+          const oldEmail = 'sanjayp@chainandbracelet.com';
+          const newEmail = 'info@chainandbracelet.com';
+          const policyBody = document.querySelector('.shopify-policy__body');
+
+          if (!policyBody) return;
+
+          policyBody.querySelectorAll(`a[href="mailto:${oldEmail}"]`).forEach((link) => {
+            link.href = `mailto:${newEmail}`;
+            link.textContent = newEmail;
+          });
+
+          const walker = document.createTreeWalker(policyBody, NodeFilter.SHOW_TEXT);
+          const textNodes = [];
+
+          while (walker.nextNode()) {
+            if (walker.currentNode.nodeValue.includes(oldEmail) && walker.currentNode.parentElement?.tagName !== 'A') {
+              textNodes.push(walker.currentNode);
+            }
+          }
+
+          textNodes.forEach((textNode) => {
+            const parts = textNode.nodeValue.split(oldEmail);
+            const fragment = document.createDocumentFragment();
+
+            parts.forEach((part, index) => {
+              fragment.append(part);
+
+              if (index < parts.length - 1) {
+                const link = document.createElement('a');
+                link.href = `mailto:${newEmail}`;
+                link.textContent = newEmail;
+                fragment.append(link);
+              }
+            });
+
+            textNode.replaceWith(fragment);
+          });
+        })();
+      </script>
+    {%- endif -%}
   
   </body>
 </html>

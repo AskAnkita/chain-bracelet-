@@ -85,20 +85,23 @@
         "enable_video_looping": true
       }
     },
-    "category-cross-sell": {
-      "type": "category-cross-sell",
-      "settings": {}
-    },
     "related-products": {
       "type": "related-products",
       "settings": {
         "title": "You may also like"
       }
+    },
+    "recently_viewed": {
+      "type": "recently-viewed-products",
+      "settings": {
+        "products_count": 4,
+        "title": "Recently viewed"
+      }
     }
   },
   "order": [
     "main",
-    "category-cross-sell",
-    "related-products"
+    "related-products",
+    "recently_viewed"
   ]
 }

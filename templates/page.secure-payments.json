@@ -1,0 +1,147 @@
+{
+  "sections": {
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Secure Payments",
+            "heading_tag": "h1"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Your security matters at every step of your purchase. Our checkout uses an encrypted connection, and payments are processed by Shopify and authorized payment providers. Chain &amp; Bracelet does not receive or store your complete card details.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "content_width": "md",
+        "text_position": "center",
+        "separate_section_with_border": false
+      }
+    },
+    "protection": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "How Your Payment Is Protected",
+            "heading_tag": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p><strong>Encrypted checkout:</strong> Information submitted during checkout is securely transmitted to the payment provider.</p><p><strong>Protected card details:</strong> Your complete card number and security code are handled by the payment provider, not stored by Chain &amp; Bracelet.</p><p><strong>Order verification:</strong> Some transactions may require additional verification or review to protect customers from unauthorized purchases.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "color_scheme": "scheme-3",
+        "content_width": "md",
+        "text_position": "start",
+        "separate_section_with_border": true
+      }
+    },
+    "payment_methods": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Payment Methods & Charges",
+            "heading_tag": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>The payment methods available for your order are displayed at checkout and may vary by country, currency, or device. Your order is charged in the currency shown at checkout. Your bank or card provider may apply currency-conversion or international transaction fees.</p><p>A pending authorization may appear after a payment attempt, even if the order is not completed. The timing for releasing a pending charge is determined by your bank or payment provider.</p><p>For your protection, we will never ask you to send complete card details by email, text message, or social media.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "content_width": "md",
+        "text_position": "start",
+        "separate_section_with_border": false
+      }
+    },
+    "refunds": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Refunds",
+            "heading_tag": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Approved refunds are returned to the original payment method. Processing times vary by bank or payment provider. For eligibility and return instructions, please review our <a href=\"/policies/refund-policy\">Refund Policy</a>.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "content_width": "md",
+        "text_position": "start",
+        "separate_section_with_border": true
+      }
+    },
+    "help": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "text": "Having Trouble With Payment?",
+            "heading_tag": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "richtext",
+          "settings": {
+            "content": "<p>Confirm that your billing information matches the details held by your bank, then try the payment again or select another available method. If the issue continues, contact your bank first, as it may need to approve the transaction.</p><p>You can also <a href=\"/pages/contact\">contact us</a> with your name, order number if available, and the approximate time of the payment attempt. Please do not include your complete card number or security code.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph"
+      ],
+      "settings": {
+        "content_width": "md",
+        "text_position": "start",
+        "separate_section_with_border": false
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "protection",
+    "payment_methods",
+    "refunds",
+    "help"
+  ]
+}

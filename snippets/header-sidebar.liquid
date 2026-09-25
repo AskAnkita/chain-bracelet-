@@ -184,7 +184,7 @@
       endif
     -%}
 
-    {%- if shop.customer_accounts_enabled or show_country_selector or show_locale_selector -%}
+    {%- if shop.customer_accounts_enabled or section.settings.show_wishlist or show_country_selector or show_locale_selector -%}
       <div class="header-sidebar__footer">
         {%- if shop.customer_accounts_enabled -%}
           <shopify-account menu="{{ section.settings.customer_account_menu }}">
@@ -195,6 +195,13 @@
               </div>
             </div>
           </shopify-account>
+        {%- endif -%}
+
+        {%- if section.settings.show_wishlist -%}
+          <a href="{{ section.settings.wishlist_url | default: '#' }}" class="text-with-icon smallcaps">
+            {%- render 'icon' with 'wishlist', width: 20 -%}
+            {{- section.settings.wishlist_label | default: 'Wishlist' -}}
+          </a>
         {%- endif -%}
 
         {%- if show_country_selector or show_locale_selector -%}

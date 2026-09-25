@@ -1,6 +1,83 @@
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+{%- assign is_about_page = false -%}
+{%- if page.handle == 'about-us' -%}
+  {%- assign is_about_page = true -%}
+{%- endif -%}
 
-<div class="section-spacing section-spacing--tight{% if request.page_type == 'policy' %} policy-page{% endif %} color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}">
+{%- if is_about_page -%}
+  <style>
+    #shopify-section-{{ section.id }} .about-page {
+      position: relative;
+      min-height: clamp(38rem, 62vw, 52rem);
+      overflow: hidden;
+      display: grid;
+      align-items: center;
+      isolation: isolate;
+    }
+
+    #shopify-section-{{ section.id }} .about-page > .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    #shopify-section-{{ section.id }} .about-page__jewel {
+      position: absolute;
+      z-index: 1;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #shopify-section-{{ section.id }} .about-page__jewel--necklace {
+      width: clamp(18rem, 30vw, 31rem);
+      inset-block-start: -7rem;
+      inset-inline-start: clamp(-12rem, -8vw, -6rem);
+      transform: rotate(-7deg);
+    }
+
+    #shopify-section-{{ section.id }} .about-page__jewel--ring {
+      width: clamp(18rem, 29vw, 31rem);
+      inset-inline-end: clamp(-11rem, -7vw, -5rem);
+      inset-block-end: -8rem;
+      transform: rotate(8deg);
+    }
+
+    @media screen and (max-width: 699px) {
+      #shopify-section-{{ section.id }} .about-page {
+        min-height: auto;
+        padding-block: 3rem;
+      }
+
+      #shopify-section-{{ section.id }} .about-page__jewel--necklace {
+        width: 12rem;
+        inset-block-start: -4rem;
+        inset-inline-start: -6.75rem;
+        opacity: .65;
+      }
+
+      #shopify-section-{{ section.id }} .about-page__jewel--ring {
+        width: 12rem;
+        inset-inline-end: -5.75rem;
+        inset-block-end: -4.5rem;
+        opacity: .68;
+      }
+    }
+  </style>
+{%- endif -%}
+
+<div class="section-spacing section-spacing--tight{% if request.page_type == 'policy' %} policy-page{% endif %}{% if is_about_page %} about-page{% endif %} color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }}">
+  {%- if is_about_page -%}
+    <img
+      class="about-page__jewel about-page__jewel--necklace"
+      src="{{ 'about-station-necklace.png' | asset_url }}"
+      alt=""
+      width="1024"
+      height="1536"
+      loading="eager"
+      aria-hidden="true"
+    >
+  {%- endif -%}
+
   <div class="container container--{{ section.settings.page_width }}">
     <div class="section-stack">
       {%- if section.settings.show_title and request.page_type != 'policy' -%}
@@ -16,6 +93,18 @@
       {%- endif -%}
     </div>
   </div>
+
+  {%- if is_about_page -%}
+    <img
+      class="about-page__jewel about-page__jewel--ring"
+      src="{{ 'about-diamond-ring.png' | asset_url }}"
+      alt=""
+      width="1254"
+      height="1254"
+      loading="eager"
+      aria-hidden="true"
+    >
+  {%- endif -%}
 </div>
 {% schema %}
 {

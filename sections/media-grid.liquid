@@ -43,6 +43,26 @@
       color: rgb(173 125 49);
     }
 
+    {%- comment -%}
+      On phones the theme stacks every tile full width, one per row. Narrow tiles go two
+      per row instead, with a tighter inset and smaller one-line titles so the names
+      still fit a half-width tile.
+    {%- endcomment -%}
+    @media screen and (max-width: 699px) {
+      #shopify-section-{{ section.id }} .media-grid__item--narrow {
+        grid-area: span 1 / span 1;
+      }
+
+      #shopify-section-{{ section.id }} .media-grid__item--narrow .content-over-media {
+        --content-over-media-gap: .75rem;
+      }
+
+      #shopify-section-{{ section.id }} .media-grid__item--narrow .prose > p:first-child {
+        font-size: clamp(.75rem, 3.4vw, 1rem);
+        white-space: nowrap;
+      }
+    }
+
     @media screen and (min-width: 700px) {
       #shopify-section-{{ section.id }} .media-grid__item--narrow .content-over-media {
         --content-over-media-gap: 1rem;

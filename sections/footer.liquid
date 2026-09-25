@@ -2,6 +2,22 @@
   #shopify-section-{{ section.id }} {
     --footer-content-justify-items: {% if section.settings.blocks.size <= 2 %}start{% else %}space-between{% endif %};
   }
+
+  #shopify-section-{{ section.id }} .footer__block--customer-care {
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 700px) {
+    #shopify-section-{{ section.id }} .footer__block--customer-care {
+      flex: 0 0 auto;
+      margin-inline-start: auto;
+      text-align: end;
+    }
+
+    #shopify-section-{{ section.id }} .footer__block--customer-care .v-stack {
+      justify-items: end;
+    }
+  }
 </style>
 
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
@@ -64,7 +80,24 @@
                 {%- when 'links' -%}
                   {%- assign menu = block.settings.menu -%}
 
-                  {%- if menu != blank and menu.links.size > 0 -%}
+                  {%- if menu == blank and block.settings.menu_title == 'Customer Care' -%}
+                    {%- liquid
+                      assign shipping_url = shop.shipping_policy.url | default: '/policies/shipping-policy'
+                      assign refund_url = shop.refund_policy.url | default: '/policies/refund-policy'
+                    -%}
+
+                    <div class="v-stack gap-4 sm:gap-5">
+                      <p class="h6">{{ block.settings.menu_title }}</p>
+
+                      <ul class="v-stack gap-2.5 unstyled-list" role="list">
+                        <li><a href="{{ shipping_url }}" class="link-faded">Shipping Policy</a></li>
+                        <li><a href="{{ refund_url }}" class="link-faded">Refund Policy</a></li>
+                        <li><a href="/pages/contact" class="link-faded">Contact Us</a></li>
+                        <li><a href="/policies/privacy-policy" class="link-faded">Privacy Policy</a></li>
+                        <li><a href="/pages/size-guide" class="link-faded">Size Guide</a></li>
+                      </ul>
+                    </div>
+                  {%- elsif menu != blank and menu.links.size > 0 -%}
                     {%- assign menu_title = block.settings.menu_title | default: menu.title -%}
                     
                     {%- capture menu_content -%}
@@ -140,7 +173,7 @@
               -%}
 
               {%- capture current_block -%}
-                <div class="footer__block footer__block--{{ block.type | remove_first: '@' }}" {{ block.shopify_attributes }}>
+                <div class="footer__block footer__block--{{ block.type | remove_first: '@' }} {% if block.type == 'links' and block.settings.menu == blank and block.settings.menu_title == 'Customer Care' %}footer__block--customer-care{% endif %}" {{ block.shopify_attributes }}>
                   {{- block_content -}}
                 </div>
               {%- endcapture -%}
@@ -409,7 +442,7 @@
           "type": "richtext",
           "id": "content",
           "label": "t:global.text.content",
-          "default": "<p>Sign up to our newsletter to receive exclusive offers.</p>"
+          "default": "<p>SIGN UP TO OUR NEWSLETTER TO RECEIVE EXCLUSIVE OFFERS.</p>"
         },
         {
           "type": "color",

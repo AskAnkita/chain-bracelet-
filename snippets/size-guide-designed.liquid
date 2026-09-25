@@ -83,6 +83,17 @@
           <div class="sg-lg__ruler">
             {%- if s[k_measure_image] != blank -%}
               {{- s[k_measure_image] | image_url: width: 1200 | image_tag: widths: '400,600,800,1200', loading: 'lazy', sizes: '(max-width: 699px) 92vw, 420px', alt: s[k_measure_image].alt -}}
+            {%- elsif key == 'ring' -%}
+              <img
+                src="{{ 'size-guide-rings.png' | asset_img_url: '800x' }}"
+                srcset="{{ 'size-guide-rings.png' | asset_img_url: '480x' }} 480w, {{ 'size-guide-rings.png' | asset_img_url: '800x' }} 800w, {{ 'size-guide-rings.png' | asset_img_url: '1200x' }} 1200w"
+                sizes="(max-width: 699px) 92vw, 420px"
+                width="1254"
+                height="1254"
+                loading="lazy"
+                decoding="async"
+                alt="Measuring a finger with a paper strip to find ring size"
+              >
             {%- else -%}
               <svg viewBox="0 0 480 170" role="img" aria-label="A paper strip wrapped round a finger, then measured against a ruler" font-family="Archivo, system-ui, sans-serif">
                 <rect x="40" y="20" width="56" height="130" rx="28" fill="#e8d3bd"/>
@@ -152,20 +163,16 @@
 
           <div class="sg-lg__table-wrap">
             <table class="sg-lg__table">
-              {%- assign header_done = false -%}
-              {%- for row in chart_rows -%}
-                {%- assign cells = row | strip | split: '|' -%}
-                {%- if cells.size == 0 -%}{%- continue -%}{%- endif -%}
-                {%- if header_done == false -%}
-                  {%- assign header_done = true -%}
-                  <thead>
-                    <tr>{%- for cell in cells -%}<th scope="col">{{ cell | strip }}</th>{%- endfor -%}</tr>
-                  </thead>
-                  <tbody>
-                {%- else -%}
+              {%- assign header_cells = chart_rows.first | strip | split: '|' -%}
+              <thead>
+                <tr>{%- for cell in header_cells -%}<th scope="col">{{ cell | strip }}</th>{%- endfor -%}</tr>
+              </thead>
+              <tbody>
+                {%- for row in chart_rows offset: 1 -%}
+                  {%- assign cells = row | strip | split: '|' -%}
+                  {%- if cells.size == 0 -%}{%- continue -%}{%- endif -%}
                   <tr>{%- for cell in cells -%}<td>{{ cell | strip }}</td>{%- endfor -%}</tr>
-                {%- endif -%}
-              {%- endfor -%}
+                {%- endfor -%}
               </tbody>
             </table>
           </div>

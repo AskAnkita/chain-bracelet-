@@ -1,9 +1,13 @@
 {%- comment -%}
-  Shows one product from each of the store's other jewelry categories (Necklaces,
-  Bracelets, Rings, Earrings), based on which category the current product belongs
-  to -- e.g. on a bracelet, it shows a ring, a necklace, and an earring. Fully
-  dynamic: nothing here is picked by hand, so it works unchanged across every
-  product without per-product setup.
+  Shows a random handful of products (4 by default) from the store's other jewelry
+  categories (Necklaces, Bracelets, Rings, Earrings), based on which category the
+  current product belongs to -- e.g. on a ring: a necklace, a bracelet, earrings and
+  one more from any of those three. Fully dynamic: nothing here is picked by hand,
+  so it works unchanged across every product without per-product setup.
+
+  Shopify caches the rendered page, so the randomness can't happen in Liquid.
+  Instead each other category renders a pool of its first few products and a small
+  script picks the cards to keep on every page view, before the cards are revealed.
 
   Category is detected from collection membership, matching the same four
   collection handles (necklaces, bracelets, rings, earrings) the main nav uses --
@@ -33,7 +37,7 @@
 {%- if current_category != blank -%}
   <style>
     #shopify-section-{{ section.id }} {
-      --product-list-items-per-row: 1;
+      --product-list-items-per-row: 2;
       --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
       --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
     }
@@ -57,25 +61,90 @@
           content: section.settings.content
         -%}
 
-        <div class="product-list justify-center">
+        {%- comment -%}
+          Must be the <product-list> element, not a plain div: the cards are rendered
+          with reveal-on-scroll, which theme.css starts at opacity 0, and only
+          <product-list> fades them in. As a div the section showed its heading over
+          three invisible cards.
+        {%- endcomment -%}
+        {%- liquid
+          assign pool_per_category = 4
+          assign pool_sizes = ''
+        -%}
+        <product-list class="product-list justify-center" data-cross-sell-show="{{ section.settings.products_to_show }}">
           {%- assign card_position = 0 -%}
 
           {%- for handle in categories -%}
-            {%- unless handle == current_category -%}
-              {%- assign other_collection = collections[handle] -%}
+            {%- if handle == current_category -%}
+              {%- continue -%}
+            {%- endif -%}
 
-              {%- if other_collection != blank and other_collection.products.size > 0 -%}
+            {%- assign other_collection = collections[handle] -%}
+            {%- assign pool_count = 0 -%}
+
+            {%- if other_collection != blank -%}
+              {%- for other_product in other_collection.products limit: 12 -%}
+                {%- if other_product.id == product.id -%}
+                  {%- continue -%}
+                {%- endif -%}
+
                 {%- assign card_position = card_position | plus: 1 -%}
+                {%- assign pool_count = pool_count | plus: 1 -%}
                 {%- render 'product-card',
-                  product: other_collection.products.first,
+                  product: other_product,
                   position: card_position,
                   reveal: settings.stagger_products_apparition,
                   section: section
                 -%}
-              {%- endif -%}
-            {%- endunless -%}
+
+                {%- if pool_count >= pool_per_category -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+            {%- assign pool_sizes = pool_sizes | append: pool_count | append: ',' -%}
           {%- endfor -%}
-        </div>
+        </product-list>
+
+        {%- comment -%}
+          Runs as soon as the list above is parsed, before theme.js upgrades
+          <product-list> and reveals its cards. Takes one random card from each
+          category in turn (random category order) until it has enough, so every
+          category shows up before any repeats, then shuffles the picks and drops the
+          rest.
+        {%- endcomment -%}
+        <script>
+          (() => {
+            const list = document.currentScript.previousElementSibling;
+            if (!list || list.tagName !== 'PRODUCT-LIST') return;
+
+            const show = parseInt(list.dataset.crossSellShow, 10) || 4;
+            const sizes = '{{ pool_sizes }}'.split(',').filter(Boolean).map(Number);
+            const cards = Array.from(list.querySelectorAll(':scope > product-card'));
+            const shuffle = (items) => {
+              for (let i = items.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [items[i], items[j]] = [items[j], items[i]];
+              }
+              return items;
+            };
+
+            let start = 0;
+            const groups = sizes.map((size) => shuffle(cards.slice(start, start += size)));
+            const picked = [];
+
+            while (picked.length < show && groups.some((group) => group.length > 0)) {
+              for (const group of shuffle([...groups])) {
+                if (picked.length >= show) break;
+                if (group.length > 0) picked.push(group.shift());
+              }
+            }
+
+            cards.forEach((card) => { if (!picked.includes(card)) card.remove(); });
+            shuffle(picked).forEach((card) => list.append(card));
+          })();
+        </script>
       </div>
     </div>
   </div>
@@ -92,7 +161,15 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows one product from each of the other three jewelry categories (Necklaces, Bracelets, Rings, Earrings), chosen automatically from the category the current product isn't in. Nothing to pick by hand -- add this once and it adapts per product."
+      "content": "Shows a random pick of products from the other three jewelry categories (Necklaces, Bracelets, Rings, Earrings) -- at least one from each -- chosen again on every page view. Nothing to pick by hand -- add this once and it adapts per product."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 3,
+      "max": 8,
+      "label": "Products to show",
+      "default": 4
     },
     {
       "type": "color_scheme",
@@ -116,7 +193,7 @@
       "min": 2,
       "max": 4,
       "label": "t:global.product_list.products_per_row_desktop",
-      "default": 3
+      "default": 4
     },
     {
       "type": "header",
