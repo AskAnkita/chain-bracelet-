@@ -406,11 +406,18 @@
             {%- if context == 'main_product' and product != blank -%}
               {%- assign accepted_payment_types = 'visa,master,american_express,discover,apple_pay,google_pay' | split: ',' -%}
 
-              <ul class="product-payment-icons unstyled-list" aria-label="Accepted payment methods">
-                {%- for type in accepted_payment_types -%}
-                  <li>{{- type | payment_type_svg_tag -}}</li>
-                {%- endfor -%}
-              </ul>
+              <div class="product-payment">
+                <p class="product-payment__label">
+                  {%- render 'icon' with 'lock', width: 9, stroke_width: 1.5 -%}
+                  <span>Secure checkout</span>
+                </p>
+
+                <ul class="product-payment-icons unstyled-list" aria-label="Accepted payment methods">
+                  {%- for type in accepted_payment_types -%}
+                    <li>{{- type | payment_type_svg_tag -}}</li>
+                  {%- endfor -%}
+                </ul>
+              </div>
             {%- endif -%}
 
           {%- when 'pickup_availability' -%}

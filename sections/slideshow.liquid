@@ -303,17 +303,17 @@
       }
 
       {%- comment -%}
-        Capitals read bigger than mixed case at the same size, so they're set about a fifth
-        smaller than the regular hero size (clamp(1.75rem, 2.6vw, 3.1rem) desktop,
-        clamp(1.5rem, 6.5vw, 2.5rem) phones).
+        Capitals read bigger than mixed case at the same size, so they're set well under the
+        regular hero size (clamp(1.75rem, 2.6vw, 3.1rem) desktop, clamp(1.5rem, 6.5vw, 2.5rem)
+        phones): about 23px on a 1440px screen.
       {%- endcomment -%}
       #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--uppercase :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
-        font-size: clamp(1.4rem, 2vw, 2.4rem);
+        font-size: clamp(1.15rem, 1.6vw, 1.9rem);
       }
 
       @media screen and (max-width: 699px) {
         #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--uppercase :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
-          font-size: clamp(1.2rem, 5.2vw, 2rem);
+          font-size: clamp(1.05rem, 4.4vw, 1.6rem);
         }
       }
 
@@ -331,6 +331,14 @@
       }
 
       @media screen and (max-width: 699px) {
+        {%- comment -%}
+          The hero fills the screen under the header, so on a phone the photo is cropped to
+          fit. Anchored to the top, the crop comes off the bottom and the model's face stays.
+        {%- endcomment -%}
+        #shopify-section-{{ section.id }} .content-over-media > picture img {
+          object-position: center top;
+        }
+
         #shopify-section-{{ section.id }} .content-over-media--elegant:before {
           background: linear-gradient(90deg, rgb(0 0 0 / .46) 0%, rgb(0 0 0 / .28) 48%, rgb(0 0 0 / .08) 100%);
         }
@@ -385,7 +393,14 @@
 
               {%- capture image_content -%}
                 <picture>
-                  {%- if block.settings.mobile_image != blank -%}
+                  {%- if request.page_type == 'list-collections' and forloop.first -%}
+                    <source
+                        media="(max-width: 699px)"
+                        srcset="{{ 'collections-hero-american-mobile.png' | asset_img_url: '900x' }}"
+                        width="1122"
+                        height="1402"
+                    >
+                  {%- elsif block.settings.mobile_image != blank -%}
                     <source
                         media="(max-width: 699px)"
                         srcset="{{ block.settings.mobile_image | image_url: width: 800 }} 800w, {{ block.settings.mobile_image | image_url: width: 1000 }} 1000w, {{ block.settings.mobile_image | image_url: width: 1200 }} 1200w"
@@ -394,15 +409,26 @@
                     >
                   {%- endif -%}
 
-                  {%- liquid
-                    if block.settings.split_image != blank
-                      assign sizes = '(max-width: 699px) 100vw, 50vw'
-                    else
-                      assign sizes = '100vw'
-                    endif
+                  {%- if request.page_type == 'list-collections' and forloop.first -%}
+                    <img
+                      src="{{ 'collections-hero-american-desktop.png' | asset_img_url: '1800x' }}"
+                      width="1536"
+                      height="1024"
+                      alt="Woman wearing a diamond necklace, earrings, bracelet, and ring"
+                      fetchpriority="{{ fetch_priority }}"
+                      style="object-position: center top;"
+                    >
+                  {%- else -%}
+                    {%- liquid
+                      if block.settings.split_image != blank
+                        assign sizes = '(max-width: 699px) 100vw, 50vw'
+                      else
+                        assign sizes = '100vw'
+                      endif
 
-                    echo block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: loading_strategy, fetchpriority: fetch_priority, sizes: sizes, widths: '800,1200,1800,2400,2800,3200'
-                  -%}
+                      echo block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: loading_strategy, fetchpriority: fetch_priority, sizes: sizes, widths: '800,1200,1800,2400,2800,3200'
+                    -%}
+                  {%- endif -%}
                 </picture>
               {%- endcapture -%}
 

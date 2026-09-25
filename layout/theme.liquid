@@ -226,6 +226,20 @@
       }
 
       /*
+        Phones: product names on cards stop at two lines with "…", so every card is image,
+        two lines of name, then the price. Long names ("1.17 CTW Round Brilliant Lab-Grown
+        Diamond Halo Pendant Necklace") ran to four. Desktop shows the whole name.
+      */
+      @media screen and (max-width: 699px) {
+        .product-card .product-title {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+      }
+
+      /*
         Buttons are gold with white text everywhere ("View all", "View products", Add to cart,
         Subscribe...), instead of each colour scheme's own button colour. On hover the theme's
         wipe turns them transparent with gold text and border. A button given its own colours
@@ -236,6 +250,11 @@
         --button-background: 173 125 49;
         --button-text-color: 255 255 255;
         --button-outline-color: 173 125 49;
+      }
+
+      /* Collection title ("NECKLACES", "TENNIS BRACELETS"...) in the header's gold, on every collection page. */
+      .shopify-section--collection-banner h1 {
+        color: rgb(173 125 49);
       }
 
       /* Collection subheading (the description under the title): smaller and tracked out. */

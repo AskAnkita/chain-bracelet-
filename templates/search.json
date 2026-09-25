@@ -11,7 +11,10 @@
   "sections": {
     "main": {
       "type": "main-search",
-      "settings": {}
+      "settings": {
+        "horizontal_spacing_factor": 0.2,
+        "vertical_spacing_factor": 0.5
+      }
     }
   },
   "order": [

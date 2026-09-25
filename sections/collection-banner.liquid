@@ -4,6 +4,20 @@
   {%- assign show_image = true -%}
 {%- endif -%}
 
+{%- liquid
+  # The homepage's New Arrivals and Best Sellers tiles open the all-products page sorted by
+  # newest / best-selling (there are no such collections), so that page takes the tile's name
+  # instead of "Products" when it's sorted that way.
+  assign collection_title = collection.title
+  if collection.handle == 'all'
+    if collection.sort_by == 'created-descending'
+      assign collection_title = 'New Arrivals'
+    elsif collection.sort_by == 'best-selling'
+      assign collection_title = 'Best Sellers'
+    endif
+  endif
+-%}
+
 {%- capture collection_breadcrumb -%}
   {%- if section.settings.show_breadcrumb -%}
     <nav class="breadcrumb breadcrumb--floating" aria-label="{{ 'general.breadcrumb.label' | t | escape }}">
@@ -17,7 +31,7 @@
         </li>
 
         <li class="breadcrumb__list-item">
-          <a href="{{ collection.url }}" aria-current="page" class="smallcaps {% unless show_image %}link-faded{% endunless %}">{{ collection.title }}</a>
+          <a href="{{ collection.url }}" aria-current="page" class="smallcaps {% unless show_image %}link-faded{% endunless %}">{{ collection_title }}</a>
         </li>
       </ol>
     </nav>
@@ -26,7 +40,7 @@
 
 {%- capture collection_content -%}
   {%- if section.settings.show_collection_title -%}
-    <h1 class="h1">{{ collection.title }}</h1>
+    <h1 class="h1">{{ collection_title }}</h1>
   {%- endif -%}
 
   {%- if section.settings.show_collection_description -%}

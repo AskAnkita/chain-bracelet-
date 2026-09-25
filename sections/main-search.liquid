@@ -17,33 +17,60 @@
     else
       assign show_filters = false
     endif
+
+    # Grid size, remembered the same way as on collection pages (the toolbar's layout switch saves the
+    # shopper's choice in cart attributes), so a size picked on a collection carries over to search.
+    assign products_mobile_grid_mode = cart.attributes.products_mobile_grid_mode | default: 'medium'
+    assign products_desktop_grid_mode = cart.attributes.products_desktop_grid_mode | default: 'medium'
+
+    if request.design_mode
+      assign products_mobile_grid_mode = 'medium'
+      assign products_desktop_grid_mode = 'medium'
+    endif
   -%}
 
   {%- if search.results_count > 0 or active_values_count > 0 -%}
+    {%- comment -%}
+      Laid out like the collection pages (sections/main-collection.liquid): a gold page title with a small tracked subtitle, the same toolbar (grid size, results
+      count, sort, filter), filters in the slide-out drawer at every size rather than a
+      sidebar, and the full-width grid with the same per-row counts.
+    {%- endcomment -%}
     <style>
       #shopify-section-{{ section.id }} {
         --product-list-horizontal-spacing-factor: {{ section.settings.horizontal_spacing_factor }};
         --product-list-vertical-spacing-factor: {{ section.settings.vertical_spacing_factor }};
-        --product-list-items-per-row: 2;
+        --collection-items-per-row-medium: 2;
+        --collection-items-per-row-large: 1;
+      }
+
+      #shopify-section-{{ section.id }} .product-list {
+        --product-list-max-items-per-row-allowed: 99 !important;
+      }
+
+      #shopify-section-{{ section.id }} .section-header h1 {
+        color: rgb(173 125 49);
+      }
+
+      #shopify-section-{{ section.id }} .section-header p {
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        line-height: 1.8;
+        text-transform: uppercase;
       }
 
       @media screen and (min-width: 700px) {
         #shopify-section-{{ section.id }} {
-          --product-list-items-per-row: 3;
+          --collection-items-per-row-compact: 4;
+          --collection-items-per-row-medium: 3;
+          --collection-items-per-row-large: 2;
         }
       }
 
       @media screen and (min-width: 1000px) {
-        #shopify-section-{{ section.id }} .collection {
-          {%- if show_filters -%}
-            --collection-grid-template: var(--collection-sidebar-width, 0) minmax(0,1fr);
-          {%- endif -%}
-        }
-      }
-
-      @media screen and (min-width: 1400px) {
         #shopify-section-{{ section.id }} {
-          --product-list-items-per-row: 4;
+          --collection-items-per-row-compact: 6;
+          --collection-items-per-row-medium: 4;
+          --collection-items-per-row-large: 3;
         }
       }
     </style>
@@ -54,7 +81,7 @@
           <div class="section-stack">
             <div class="section-header justify-self-center text-center">
               <div class="v-stack gap-4">
-                <h1 class="h2">{{ 'search.general.title' | t }}</h1>
+                <h1 class="h1">{{ 'search.general.title' | t }}</h1>
                 <p>{{ 'search.results_count_for_terms' | t: count: search.results_count, terms: search.terms }}</p>
               </div>
             </div>
@@ -82,6 +109,14 @@
                 {%- assign product_results = search.results | where: 'object_type', 'product' -%}
                 {%- assign article_results = search.results | where: 'object_type', 'article' -%}
                 {%- assign page_results = search.results | where: 'object_type', 'page' -%}
+                {%- liquid
+                  # search.results_count spans every page of results but also counts posts and pages, so it's
+                  # only used when the search is for products alone; otherwise count this page's products.
+                  assign product_results_count = product_results.size
+                  if search.types.size == 1 and search.types.first == 'product'
+                    assign product_results_count = search.results_count
+                  endif
+                -%}
 
                 {%- if product_results.size > 0 or active_values_count > 0 -%}
                   <button type="button" class="h6" role="tab" slot="title">{{ 'search.general.products' | t }}</button>
@@ -92,7 +127,7 @@
                         <height-observer variable="collection-toolbar" class="collection-toolbar full-bleed">
                           <div class="collection-toolbar__button-list">
                             {%- if show_filters -%}
-                              <div class="collection-toolbar__button-container md:hidden">
+                              <div class="collection-toolbar__button-container">
                                 <button type="button" aria-controls="facets-drawer" class="collection-toolbar__button heading text-xxs w-full">
                                   {{- 'collection.faceting.filter_button' | t }}
                                   {% if active_values_count > 0 %}({{ active_values_count }}){% endif -%}
@@ -140,12 +175,37 @@
                               </div>
                             {%- endif -%}
                           </div>
+
+                          <p class="collection-toolbar__products-count h6 text-subdued md-max:hidden">
+                            {{ 'collection.products_count' | t: count: product_results_count }}
+                          </p>
+
+                          <collection-layout-switch device="mobile" class="collection-toolbar__layout-switch-list sm:hidden" aria-controls="product-list-{{ section.id }}">
+                            <button type="button" value="large" class="collection-toolbar__button {% if products_mobile_grid_mode == 'large' %}is-active{% endif %}" aria-label="Switch to larger product images">
+                              {%- render 'icon' with 'collection-layout-1' -%}
+                            </button>
+                            <button type="button" value="medium" class="collection-toolbar__button {% if products_mobile_grid_mode == 'medium' %}is-active{% endif %}" aria-label="Switch to smaller product images">
+                              {%- render 'icon' with 'collection-layout-2' -%}
+                            </button>
+                          </collection-layout-switch>
+
+                          <collection-layout-switch device="desktop" class="collection-toolbar__layout-switch-list sm-max:hidden" aria-controls="product-list-{{ section.id }}">
+                            <button type="button" value="large" class="collection-toolbar__button {% if products_desktop_grid_mode == 'large' %}is-active{% endif %}" aria-label="Switch to larger product images">
+                              {%- render 'icon' with 'collection-layout-2' -%}
+                            </button>
+                            <button type="button" value="medium" class="collection-toolbar__button {% if products_desktop_grid_mode == 'medium' %}is-active{% endif %}" aria-label="Switch to smaller product images">
+                              {%- render 'icon' with 'collection-layout-3' -%}
+                            </button>
+                            <button type="button" value="compact" class="collection-toolbar__button {% if products_desktop_grid_mode == 'compact' %}is-active{% endif %}" aria-label="Switch to compact product images">
+                              {%- render 'icon' with 'collection-layout-4' -%}
+                            </button>
+                          </collection-layout-switch>
                         </height-observer>
                       {%- endif -%}
 
                       <div class="collection">
                         {%- if show_filters -%}
-                          <facets-drawer id="facets-drawer" class="facets-drawer drawer drawer--sm color-scheme color-scheme--dialog md:hidden">
+                          <facets-drawer id="facets-drawer" class="facets-drawer drawer drawer--sm color-scheme color-scheme--dialog">
                             <p class="h4" slot="header">{{ 'collection.faceting.filters' | t }}</p>
 
                             {%- render 'facets',
@@ -165,15 +225,6 @@
                             </div>
                           </facets-drawer>
 
-                          <safe-sticky class="facets-sidebar md-max:hidden">
-                            {%- render 'facets',
-                              results: search,
-                              show_filters: section.settings.show_filters,
-                              open_filters_by_default: section.settings.open_filters_by_default,
-                              update_on_change: true,
-                              context: 'sidebar'
-                            -%}
-                          </safe-sticky>
                         {%- endif -%}
 
                         {%- if search.results_count == 0 -%}
@@ -193,7 +244,12 @@
                           <div class="collection__main">
                             {%- render 'active-facets', results: search -%}
 
-                            <product-list id="product-list-{{ section.id }}" class="product-list">
+                            <product-list
+                              id="product-list-{{ section.id }}"
+                              class="product-list"
+                              collection-mobile-layout="{{ products_mobile_grid_mode }}"
+                              collection-desktop-layout="{{ products_desktop_grid_mode }}"
+                            >
                               {%- for product in product_results -%}
                                 {%- render 'product-card', product: product, stacked: true, reveal: settings.stagger_products_apparition, position: forloop.index -%}
                               {%- endfor -%}

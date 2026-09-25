@@ -11,49 +11,154 @@
     #shopify-section-{{ section.id }} .category-products-showcase__row {
       display: grid;
       gap: 1rem;
+      min-width: 0;
     }
 
     #shopify-section-{{ section.id }} .category-products-showcase__row + .category-products-showcase__row {
       margin-block-start: var(--section-vertical-spacing, 2.5rem);
     }
 
+    #shopify-section-{{ section.id }} .category-products-showcase__tile {
+      position: relative;
+      align-self: start;
+      aspect-ratio: 1;
+      isolation: isolate;
+      border: 1px solid rgb(var(--text-color) / .12);
+      border-radius: .25rem;
+      background: rgb(var(--text-color) / .04);
+      box-shadow: 0 10px 30px rgb(31 42 36 / .08);
+      transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__tile:focus-visible {
+      outline: 2px solid #b5812f;
+      outline-offset: 3px;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__tile > .content {
+      position: absolute;
+      inset: auto 0 0;
+      width: 100%;
+      max-width: none;
+      padding: 0;
+      text-shadow: none;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      width: 100%;
+      padding: .9rem 1rem;
+      color: #30463b;
+      background: rgb(255 255 255 / .94);
+      backdrop-filter: blur(8px);
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__eyebrow {
+      display: block;
+      margin-block-end: .2rem;
+      color: #a97524;
+      font-size: .625rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__title {
+      display: block;
+      font-size: clamp(1rem, 1.35vw, 1.35rem);
+      line-height: 1.15;
+      letter-spacing: .04em;
+      overflow-wrap: normal;
+      word-break: normal;
+      hyphens: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__arrow {
+      display: grid;
+      flex: 0 0 2rem;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      color: #a97524;
+      border: 1px solid rgb(169 117 36 / .5);
+      border-radius: 50%;
+      transition: color .25s ease, background-color .25s ease, transform .25s ease;
+    }
+
+    @media (hover: hover) {
+      #shopify-section-{{ section.id }} .category-products-showcase__tile:hover {
+        border-color: rgb(169 117 36 / .45);
+        box-shadow: 0 14px 36px rgb(31 42 36 / .14);
+        transform: translateY(-2px);
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__tile:hover .category-products-showcase__arrow {
+        color: #fff;
+        background: #30463b;
+        transform: translateX(2px);
+      }
+    }
+
     {%- comment -%}
-      Mobile: a horizontal scroll-snap strip (matching the carousel convention used
-      elsewhere in the theme, e.g. product-offers) rather than a squeezed N-column grid --
-      a tile plus 3 product cards has no readable width left per column below ~700px.
+      Mobile: each category gets a full-width shopping card, followed by a contained
+      horizontal product strip. The next product remains visible as a swipe cue without
+      making the page itself wider than the viewport.
     {%- endcomment -%}
     @media screen and (max-width: 699px) {
       #shopify-section-{{ section.id }} .category-products-showcase__row {
-        grid-auto-flow: column;
-        grid-auto-columns: 74%;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        margin-inline: calc(var(--container-gutter, 1rem) * -1);
-        padding-inline: var(--container-gutter, 1rem);
+        gap: 1rem;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__row > * {
+      #shopify-section-{{ section.id }} .category-products-showcase__row > .category-products-showcase__tile {
+        aspect-ratio: 4 / 3;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__products {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(148px, 72%);
+        gap: .75rem;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding-inline-end: 1rem;
+        scroll-padding-inline: 0;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__products::-webkit-scrollbar {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__products > * {
         scroll-snap-align: start;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__title {
+        font-size: 1.2rem;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__cta {
+        padding: .85rem 1rem;
       }
     }
 
     @media screen and (min-width: 700px) {
       #shopify-section-{{ section.id }} .category-products-showcase__row {
-        grid-template-columns: repeat(var(--category-products-showcase-columns, 4), 1fr);
+        grid-template-columns: repeat(var(--category-products-showcase-columns, 4), minmax(0, 1fr));
       }
-    }
 
-    {%- comment -%}
-      The tile has no separate caption below it (its label sits inside the photo), so
-      stretching it to the row's full height (image + title + price of its neighboring
-      cards) would make it taller than the product photos themselves. Pin it to the top
-      and match the product image's own square ratio instead, so it lines up with just
-      the image portion of the cards next to it.
-    {%- endcomment -%}
-    #shopify-section-{{ section.id }} .category-products-showcase__tile {
-      position: relative;
-      align-self: start;
-      aspect-ratio: 1;
+      #shopify-section-{{ section.id }} .category-products-showcase__products {
+        display: contents;
+      }
     }
   </style>
 
@@ -78,7 +183,7 @@
 
           {%- if showcase_collection != blank -%}
             <div class="category-products-showcase__row" style="--category-products-showcase-columns: {{ columns }};" {{ block.shopify_attributes }}>
-              <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group">
+              <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group" aria-label="Shop {{ block.settings.title | default: showcase_collection.title | escape }}">
                 {%- liquid
                   assign tile_image = block.settings.image | default: showcase_collection.image
                 -%}
@@ -91,19 +196,28 @@
                 {%- endif -%}
 
                 <div class="content w-full align-self-end text-start">
-                  <div class="prose">
-                    <p class="h3">{{ block.settings.title | default: showcase_collection.title }}</p>
+                  <div class="category-products-showcase__cta">
+                    <div>
+                      <span class="category-products-showcase__eyebrow">Shop collection</span>
+                      <span class="h3 category-products-showcase__title">{{ block.settings.title | default: showcase_collection.title }}</span>
+                    </div>
+
+                    <span class="category-products-showcase__arrow" aria-hidden="true">
+                      {%- render 'icon' with 'arrow-right', width: 14, direction_aware: true -%}
+                    </span>
                   </div>
                 </div>
               </a>
 
-              {%- for product in showcase_collection.products limit: products_count -%}
-                {%- render 'product-card', product: product, reveal: false, position: forloop.index, section: section -%}
-              {%- else -%}
-                {%- for i in (1..products_count) -%}
-                  {%- render 'product-card-placeholder', reveal: false, loop_index: forloop.index0 -%}
+              <div class="category-products-showcase__products">
+                {%- for product in showcase_collection.products limit: products_count -%}
+                  {%- render 'product-card', product: product, reveal: false, position: forloop.index, section: section -%}
+                {%- else -%}
+                  {%- for i in (1..products_count) -%}
+                    {%- render 'product-card-placeholder', reveal: false, loop_index: forloop.index0 -%}
+                  {%- endfor -%}
                 {%- endfor -%}
-              {%- endfor -%}
+              </div>
             </div>
           {%- endif -%}
         {%- endfor -%}

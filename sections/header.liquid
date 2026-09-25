@@ -169,6 +169,11 @@
     color: rgb(var(--text-color));
   }
 
+  {%- comment -%}Login and Wishlist at the foot of the drawer, with their icons.{%- endcomment -%}
+  #sidebar-menu .header-sidebar__footer :is(shopify-account, .text-with-icon) {
+    color: rgb(173 125 49);
+  }
+
   #sidebar-menu::part(close-button) {
     color: rgb(173 125 49);
   }
@@ -649,12 +654,12 @@
     {%- endcomment -%}
     @media screen and (max-width: 699px) {
       #shopify-section-{{ section.id }} {
-        --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) minmax(96px, 120px) minmax(0, 1fr);
+        --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) minmax(120px, 152px) minmax(0, 1fr);
         --header-padding-block: .375rem;
       }
 
       #shopify-section-{{ section.id }} .header-compact .header {
-        min-height: 64px;
+        min-height: 74px;
         padding-inline: 1rem;
         column-gap: .5rem;
       }
@@ -669,8 +674,8 @@
       }
 
       #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup {
-        width: 120px;
-        height: 56px;
+        width: 152px;
+        height: 66px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -687,14 +692,19 @@
         object-fit: contain;
       }
 
+      {%- comment -%}
+        About a third bigger than it first was (32px monogram / 112px wordmark), which read as
+        too small on a phone; the bar grew 10px to hold it. Screens under 360px fall back to
+        the old sizes below, so the search and cart icons still fit beside it.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-monogram {
-        width: 32px;
-        height: 32px;
+        width: 42px;
+        height: 42px;
       }
 
       #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-wordmark {
         display: block;
-        width: 112px;
+        width: 148px;
         height: auto;
       }
 
@@ -705,12 +715,17 @@
         justify-content: flex-start;
       }
 
+      {%- comment -%}
+        The menu icon sits nearer the left corner than the bar's 1.75rem padding would put it:
+        the icon's left edge is 18px from the screen edge (it was 32px). Only the button moves;
+        the cart keeps its spacing on the right.
+      {%- endcomment -%}
       #shopify-section-{{ section.id }} .header-compact .header__primary-nav > button {
         display: grid;
         place-items: center;
         width: 40px;
         height: 40px;
-        margin-inline-start: -.375rem;
+        margin-inline-start: -1.25rem;
       }
 
       #shopify-section-{{ section.id }} .header-compact .header__secondary-nav {
@@ -750,8 +765,27 @@
     }
 
     @media screen and (max-width: 359px) {
+      #shopify-section-{{ section.id }} {
+        --header-grid: "primary-nav logo secondary-nav" / minmax(0, 1fr) minmax(96px, 120px) minmax(0, 1fr);
+      }
+
       #shopify-section-{{ section.id }} .header-compact .header {
+        min-height: 64px;
         padding-inline: .75rem;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup {
+        width: 120px;
+        height: 56px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-monogram {
+        width: 32px;
+        height: 32px;
+      }
+
+      #shopify-section-{{ section.id }} .header-compact .header__mobile-lockup .header__mobile-wordmark {
+        width: 112px;
       }
     }
 

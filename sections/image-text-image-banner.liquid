@@ -338,6 +338,55 @@
         }
       }
     {%- endif -%}
+
+    {%- comment -%}
+      Phones and tablets (the panels stack below 1000px): the triptych read as three tall
+      blocks in a row, so it becomes one. The left photo is hidden and the right photo keeps
+      its usual height; of the text panel only the link ("Shop the Collection") stays, in
+      white over the bottom of the photo on a soft dark gradient. The logo, heading, body
+      copy and product shot are hidden on these screens.
+    {%- endcomment -%}
+    @media screen and (max-width: 999px) {
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__media--left {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__media--right {
+        grid-area: 1 / 1;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__media--right::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgb(0 0 0 / .55) 0%, rgb(0 0 0 / .15) 30%, rgb(0 0 0 / 0) 50%);
+        pointer-events: none;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__content {
+        --triptych-banner-center-text-color: 255 255 255;
+        grid-area: 1 / 1;
+        z-index: 1;
+        justify-content: flex-end;
+        padding: 1.5rem;
+        background: transparent;
+        color: rgb(255 255 255);
+        pointer-events: none;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__content a {
+        pointer-events: auto;
+        color: rgb(255 255 255);
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__content :is(.triptych-banner__logo, .triptych-banner__rule, .triptych-banner__eyebrow, .triptych-banner__title, .triptych-banner__kicker, .triptych-banner__heading, .triptych-banner__body, .triptych-banner__quote, .triptych-banner__product-image) {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .triptych-banner > .triptych-banner__content :is(.triptych-banner__cta, .prose > .h6) {
+        margin: 0;
+      }
+    }
   </style>
 
   <div class="{% if section.settings.vertical_spacing != 'none' %}section-spacing {% if section.settings.vertical_spacing == 'tight' %}section-spacing--tight {% endif %}{% endif %}color-scheme color-scheme--{{ section.settings.color_scheme.id }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">

@@ -1,4 +1,23 @@
 {%- if section.blocks.size > 0 -%}
+  {%- comment -%}
+    Phones: a look photo taller than square (a 4:5 portrait, say) is cropped to a square so
+    it matches the square looks beside it in the carousel. The crop window is centred on the
+    look's hot spots, and each hot spot is moved to where its jewellery lands in the crop.
+  {%- endcomment -%}
+  <style>
+    #shopify-section-{{ section.id }} .shop-the-look__image-wrapper--square {
+      aspect-ratio: 1;
+    }
+
+    #shopify-section-{{ section.id }} .shop-the-look__image-wrapper--square > img {
+      object-position: 50% var(--look-object-y, 50%);
+    }
+
+    #shopify-section-{{ section.id }} .shop-the-look__image-wrapper--square .shop-the-look__hot-spot {
+      top: calc(var(--shop-the-look-hot-spot-top-square, var(--shop-the-look-hot-spot-top)) - (var(--hot-spot-size) / 2));
+    }
+  </style>
+
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
   <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
@@ -41,10 +60,32 @@
                   assign show_placeholder = true
                   assign products_count = 3
                 endif
+
+                # Square crop on phones (see the style block above). visible = share of the photo's height
+                # a square frame shows; crop_top = where that window starts, in % of the photo's height.
+                assign square_crop = false
+                if device == 'mobile' and block.settings.image != blank and block.settings.image.aspect_ratio < 1
+                  assign square_crop = true
+                  assign visible = block.settings.image.aspect_ratio | times: 100.0
+                  assign spot_min = 100.0
+                  assign spot_max = 0.0
+
+                  for product_index in (1..products_count)
+                    assign vertical_position_id = 'product_' | append: product_index | append: '_vertical_position'
+                    assign spot = block.settings[vertical_position_id] | times: 1.0
+                    assign spot_min = spot_min | at_most: spot
+                    assign spot_max = spot_max | at_least: spot
+                  endfor
+
+                  assign crop_room = 100.0 | minus: visible
+                  assign half_visible = visible | divided_by: 2.0
+                  assign crop_top = spot_min | plus: spot_max | divided_by: 2.0 | minus: half_visible | at_least: 0.0 | at_most: crop_room
+                  assign look_object_y = crop_top | divided_by: crop_room | times: 100.0 | round: 2
+                endif
               -%}
 
               <div class="shop-the-look__item snap-start {% if forloop.first %}is-selected{% endif %} w-full" {% if device == 'mobile' %}data-popover-id="shop-the-look-item-popover-{{ block.id }}"{% endif %} {% if forloop.parentloop.last %}{{ block.shopify_attributes }}{% endif %}>
-                <div class="shop-the-look__image-wrapper">
+                <div class="shop-the-look__image-wrapper {% if square_crop %}shop-the-look__image-wrapper--square{% endif %}" {% if square_crop %}style="--look-object-y: {{ look_object_y }}%;"{% endif %}>
                   {%- if block.settings.image != blank -%}
                     {%- capture sizes -%}(max-width: 999px) 100vw, min(60vw, 550px){%- endcapture -%}
                     {{- block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: look_image_loading_strategy, widths: '400,500,600,700,800,1000,1200,1400,1600,1800', sizes: sizes, class: 'image-cover' -}}
@@ -58,7 +99,15 @@
                       {%- capture horizontal_position_id -%}product_{{ product_index }}_horizontal_position{%- endcapture -%}
                       {%- capture vertical_position_id -%}product_{{ product_index }}_vertical_position{%- endcapture -%}
 
-                      <button class="shop-the-look__hot-spot" style="--shop-the-look-hot-spot-top: {{ block.settings[vertical_position_id] }}%; --shop-the-look-hot-spot-left: {{ block.settings[horizontal_position_id] }}%; {% render 'surface', background: block.settings.hot_spots_background %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="{{ 'general.accessibility.go_to_item' | t: index: product_index | escape }}">
+                      {%- liquid
+                        assign square_spot_top = ''
+                        if square_crop
+                          assign square_spot_top = block.settings[vertical_position_id] | times: 1.0 | minus: crop_top | divided_by: visible | times: 100.0 | at_least: 4.0 | at_most: 96.0 | round: 2
+                          assign square_spot_top = '--shop-the-look-hot-spot-top-square: ' | append: square_spot_top | append: '%; '
+                        endif
+                      -%}
+
+                      <button class="shop-the-look__hot-spot" style="{{ square_spot_top }}--shop-the-look-hot-spot-top: {{ block.settings[vertical_position_id] }}%; --shop-the-look-hot-spot-left: {{ block.settings[horizontal_position_id] }}%; {% render 'surface', background: block.settings.hot_spots_background %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="{{ 'general.accessibility.go_to_item' | t: index: product_index | escape }}">
                         <span class="sr-only">{{- 'general.accessibility.go_to_item' | t: index: product_index -}}</span>
                       </button>
                     {%- endfor -%}
