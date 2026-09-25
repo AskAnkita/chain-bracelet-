@@ -115,9 +115,20 @@
       {%- endif -%}
 
       {%- if settings.product_price_strategy == 'from_price' -%}
+        {%- comment -%}
+          Cheapest to dearest ("$254.46 – $1,174.81") instead of "From $254.46", so shoppers see up front
+          what the gold versions cost. Only products whose variants differ in price get a range.
+        {%- endcomment -%}
+        {%- liquid
+          if settings.currency_code_enabled
+            assign product_price_max = product.price_max | money_with_currency
+          else
+            assign product_price_max = product.price_max | money
+          endif
+        -%}
         <sale-price class="{% if is_variant_on_sale %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
           <span class="sr-only">{{ 'product.price.sale_price' | t }}</span>
-          {{- 'product.price.from_price_html' | t: price_min: variant_price -}}
+          {{- variant_price }} – {{ product_price_max -}}
         </sale-price>
       {%- else -%}
         <sale-price class="{{ on_sale_price_classes }}">

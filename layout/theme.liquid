@@ -206,6 +206,45 @@
       }
 
     </style>
+
+    <style>
+      /*
+        Gold hover for breadcrumbs and product titles: the header's gold (--header-gold,
+        #ad7d31, in sections/header.liquid), spelled out because that variable is scoped
+        to the header section.
+      */
+      @media screen and (pointer: fine) {
+        .breadcrumb a:hover,
+        a.product-title:hover,
+        .product-card:has(.product-card__media:hover) .product-title {
+          color: rgb(173 125 49);
+        }
+      }
+
+      .product-card .product-title {
+        transition: color .2s ease-in-out;
+      }
+
+      /*
+        Buttons are gold with white text everywhere ("View all", "View products", Add to cart,
+        Subscribe...), instead of each colour scheme's own button colour. On hover the theme's
+        wipe turns them transparent with gold text and border. A button given its own colours
+        (the block's Background / Text settings, printed inline) keeps them, and so do the
+        buttons inside error / success / warning messages, which follow the message's colours.
+      */
+      :is(.button, .shopify-challenge__button):not(.banner *) {
+        --button-background: 173 125 49;
+        --button-text-color: 255 255 255;
+        --button-outline-color: 173 125 49;
+      }
+
+      /* Collection subheading (the description under the title): smaller and tracked out. */
+      .shopify-section--collection-banner .collection-description {
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        line-height: 1.8;
+      }
+    </style>
   </head>
 
   {% liquid

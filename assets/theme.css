@@ -2376,10 +2376,19 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
 .wishlist-button--square .wishlist-button__toggle {
   aspect-ratio: 1;
   height: 100%;
+  padding: 0;
   border: 1px solid rgb(var(--button-outline-color, var(--border-color)));
   border-radius: var(--button-border-radius);
   background: none;
   color: rgb(var(--text-color));
+  display: grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.wishlist-button--square .wishlist-button__icon {
+  display: block;
+  margin: 0;
 }
 
 .wishlist-button--square.is-active .wishlist-button__toggle {

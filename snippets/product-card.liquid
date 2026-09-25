@@ -39,19 +39,21 @@
     assign show_swatches = show_swatches | default: true, allow_false: true
   endif
 
-  # Every card shows a metal the product is actually sold in. The featured photo is always
-  # the yellow-gold one, so grids used to read as all gold:
-  # - several metals: cards take turns, rose, white, yellow gold, by position in the grid
-  #   (by product id where no position is passed), and link to that metal's variant so the
-  #   product page opens on what the card showed;
-  # - one metal: the card shows that metal. Silver is photographed as white gold, the same
-  #   way the multi-metal products' silver variants use the white-gold photo.
-  # Photos are picked by the metal label in their alt text ("#Jewelry material_white_gold"
-  # and so on): the card shows the first photo of its metal and hovers to the second. Some
-  # products link each variant to a later shot (the 4th), so this beats the variant's own
-  # image, which is only the fallback for products without labels. A "custom.card_image" or
-  # "custom.card_hover_image" metafield, when set, still wins and turns this off for that
-  # product: those were picked to go with its default photo, not with a rotated metal.
+  # Cards show Silver by default. The featured photo is always the yellow-gold one, so
+  # grids used to read as all gold:
+  # - several metals: the card shows the 925 Sterling Silver variant (or, for products not
+  #   sold in silver, white gold) and links to it, so the product page opens on what the
+  #   card showed. Other metals are only a fallback for products sold in neither. The
+  #   silver variant is picked whether or not it is in stock, so a sold-out silver still
+  #   shows silver rather than jumping to gold;
+  # - one metal: the card shows that metal.
+  # Silver is photographed as white gold, the same way the silver variants use the
+  # white-gold photo. Photos are picked by the metal label in their alt text ("#Jewelry
+  # material_white_gold" and so on): the card shows the first photo of its metal and hovers
+  # to the second. Some products link each variant to a later shot (the 4th), so this beats
+  # the variant's own image, which is only the fallback for products without labels. A
+  # "custom.card_image" or "custom.card_hover_image" metafield, when set, still wins and
+  # turns this off for that product: those were picked to go with its default photo.
   assign card_variant = null
   assign card_media = null
   assign card_hover_media = null
@@ -61,23 +63,25 @@
 
   if product.metafields.custom.card_image == blank and product.metafields.custom.card_hover_image == blank
     if product.variants.size > 1
-      # 1st, 4th, 7th... card rose, then white, then yellow. Rose leads because yellow is what every
-      # card showed before, and single-metal products (often silver, so white) fill the rest.
-      assign metal_turn = position | default: product.id | modulo: 3
-      assign wanted_metal = 'yellow gold'
-      if metal_turn == 1
-        assign wanted_metal = 'rose gold'
-      elsif metal_turn == 2
-        assign wanted_metal = 'white gold'
-      endif
+      # In order of preference; "silver" and "white gold" both show the white-gold photos.
+      assign preferred_metals = 'silver,white gold,yellow gold,rose gold' | split: ','
 
-      for variant in product.variants
-        assign variant_title = variant.title | downcase
-        if variant.available and variant_title contains wanted_metal
-          assign card_variant = variant
-          assign card_metal = wanted_metal
-          assign card_media = variant.featured_media
-          assign card_url = variant.url
+      for wanted_metal in preferred_metals
+        for variant in product.variants
+          assign variant_title = variant.title | downcase
+          if variant_title contains wanted_metal
+            assign card_variant = variant
+            assign card_media = variant.featured_media
+            assign card_url = variant.url
+            assign card_metal = wanted_metal
+            if wanted_metal == 'silver'
+              assign card_metal = 'white gold'
+            endif
+            break
+          endif
+        endfor
+
+        if card_variant != blank
           break
         endif
       endfor

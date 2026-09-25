@@ -204,7 +204,11 @@
             {%- if product == blank -%}
               {%- assign product_description = 'general.on_boarding.product_description' | t -%}
             {%- else -%}
-              {%- assign product_description = product.description -%}
+              {%- comment -%}
+                The "Description" and "Key Features:" headings are typed in title case in the product descriptions
+                (<strong> or <h3>); they are shown in capitals on every product to match the headings around them.
+              {%- endcomment -%}
+              {%- assign product_description = product.description | replace: '>Description<', '>DESCRIPTION<' | replace: '>Key Features:<', '>KEY FEATURES:<' -%}
             {%- endif -%}
 
             {%- if product_description != blank -%}
@@ -398,6 +402,16 @@
                 payment_button_background: block.settings.payment_button_background,
                 payment_button_text_color: block.settings.payment_button_text_color
             -%}
+
+            {%- if context == 'main_product' and product != blank -%}
+              {%- assign accepted_payment_types = 'visa,master,american_express,discover,apple_pay,google_pay' | split: ',' -%}
+
+              <ul class="product-payment-icons unstyled-list" aria-label="Accepted payment methods">
+                {%- for type in accepted_payment_types -%}
+                  <li>{{- type | payment_type_svg_tag -}}</li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
 
           {%- when 'pickup_availability' -%}
             {%- if product != blank -%}

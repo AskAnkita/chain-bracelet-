@@ -7,6 +7,24 @@
     text-transform: uppercase;
   }
 
+  /*
+    Newsletter: the sign-up line was body text (Geist, 13px) shouting in capitals next to
+    the heading-font title. It now uses the heading font, smaller and tracked out, like
+    the site's other small caps labels; the e-mail field and button follow at the same size.
+  */
+  #shopify-section-{{ section.id }} .footer__block--newsletter .prose {
+    font-family: var(--heading-font-family);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .footer__block--newsletter :is(.input, .button) {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+  }
+
   @media screen and (min-width: 700px) {
     #shopify-section-{{ section.id }} .footer__block--customer-care {
       flex: 0 0 auto;
@@ -94,7 +112,6 @@
                         <li><a href="{{ refund_url }}" class="link-faded">Refund Policy</a></li>
                         <li><a href="/pages/contact" class="link-faded">Contact Us</a></li>
                         <li><a href="/policies/privacy-policy" class="link-faded">Privacy Policy</a></li>
-                        <li><a href="/pages/size-guide" class="link-faded">Size Guide</a></li>
                       </ul>
                     </div>
                   {%- elsif menu != blank and menu.links.size > 0 -%}

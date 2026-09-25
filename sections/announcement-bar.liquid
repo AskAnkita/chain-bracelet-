@@ -30,6 +30,17 @@
         --announcement-bar-font-size: {{ section.settings.desktop_font_size | divided_by: 16.0 }}rem;
       }
     }
+
+    {%- comment -%}
+      Own background colour, over the colour scheme's: the bar is red (#D71821) while its scheme
+      (shared with other sections) stays as it is. Text and arrows keep the scheme's colours.
+    {%- endcomment -%}
+    {%- if section.settings.background_color != blank and section.settings.background_color != 'rgba(0,0,0,0)' -%}
+      #shopify-section-{{ section.id }} .announcement-bar {
+        --background: {{ section.settings.background_color.rgb }};
+        background: rgb(var(--background));
+      }
+    {%- endif -%}
   </style>
 
   <height-observer variable="announcement-bar">
@@ -104,6 +115,13 @@
       "id": "color_scheme",
       "label": "t:global.colors.scheme",
       "default": "scheme-3"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Overrides the color scheme's background for this bar only.",
+      "default": "#D71821"
     },
     {
       "type": "checkbox",

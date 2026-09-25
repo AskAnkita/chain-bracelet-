@@ -13,7 +13,7 @@
   assign desktop_align = block.settings.desktop_text_position | split: 'text-' | last
 -%}
 
-<div class="slideshow-elegant {% if block.settings.title_condensed_font %}slideshow-elegant--condensed{% endif %}" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }}; --elegant-title-weight: {{ block.settings.title_font_weight | default: 350 }};">
+<div class="slideshow-elegant {% if block.settings.title_condensed_font %}slideshow-elegant--condensed{% endif %} {% if block.settings.elegant_uppercase %}slideshow-elegant--uppercase{% endif %}" style="--elegant-accent: {{ block.settings.accent_color }}; --elegant-justify-mobile: {{ mobile_align }}; --elegant-justify-desktop: {{ desktop_align }}; --elegant-title-weight: {{ block.settings.title_font_weight | default: 350 }};">
   {%- if block.settings.subheading == blank and block.settings.title_image != blank -%}
     <p class="slideshow-elegant__heading-image">
       {%- assign title_image_alt = block.settings.title_image.alt | default: block.settings.title | strip_html | escape -%}
@@ -64,6 +64,16 @@
   {%- endif -%}
 
   {%- if block.settings.tagline != blank -%}
-    <p class="slideshow-elegant__tagline">{{ block.settings.tagline }}</p>
+    {%- comment -%}
+      A word wrapped in asterisks ("Bound *by* timeless design") is emphasised: every second piece
+      of the split is what sat between a pair of asterisks.
+    {%- endcomment -%}
+    <p class="slideshow-elegant__tagline">
+      {%- assign tagline_parts = block.settings.tagline | escape | split: '*' -%}
+      {%- for part in tagline_parts -%}
+        {%- assign part_parity = forloop.index0 | modulo: 2 -%}
+        {%- if part_parity == 1 -%}<em>{{ part }}</em>{%- else -%}{{ part }}{%- endif -%}
+      {%- endfor -%}
+    </p>
   {%- endif -%}
 </div>

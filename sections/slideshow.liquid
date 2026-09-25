@@ -288,6 +288,42 @@
         text-shadow: 0 2px 18px rgb(0 0 0 / .2);
       }
 
+      {%- comment -%}
+        "Heading and tagline in capitals": the title can't keep its 10em cap in capitals, or
+        "MODERN BRILLIANCE," breaks over two lines above a one-line tagline. The emphasised
+        tagline word (*by*) switches to the italic display serif, which sets it apart from the
+        Tenor Sans capitals around it.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow-elegant--uppercase :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
+        text-transform: uppercase;
+      }
+
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--uppercase .slideshow-elegant__title {
+        max-width: none;
+      }
+
+      {%- comment -%}
+        Capitals read bigger than mixed case at the same size, so they're set about a fifth
+        smaller than the regular hero size (clamp(1.75rem, 2.6vw, 3.1rem) desktop,
+        clamp(1.5rem, 6.5vw, 2.5rem) phones).
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--uppercase :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
+        font-size: clamp(1.4rem, 2vw, 2.4rem);
+      }
+
+      @media screen and (max-width: 699px) {
+        #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant--uppercase :is(.slideshow-elegant__title, .slideshow-elegant__tagline) {
+          font-size: clamp(1.2rem, 5.2vw, 2rem);
+        }
+      }
+
+      #shopify-section-{{ section.id }} .prose .slideshow-elegant__tagline em {
+        font-family: 'Noto Serif Display', serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: .02em;
+      }
+
       @media screen and (min-width: 700px) {
         #shopify-section-{{ section.id }} .slideshow-elegant {
           --elegant-justify: var(--elegant-justify-desktop);
@@ -802,7 +838,14 @@
         {
           "type": "text",
           "id": "tagline",
-          "label": "Tagline"
+          "label": "Tagline",
+          "info": "Wrap a word in asterisks to emphasise it, e.g. Bound *by* timeless design"
+        },
+        {
+          "type": "checkbox",
+          "id": "elegant_uppercase",
+          "label": "Heading and tagline in capitals",
+          "default": false
         },
         {
           "type": "select",
