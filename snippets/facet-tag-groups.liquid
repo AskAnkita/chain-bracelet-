@@ -49,7 +49,7 @@
   {%- assign prefix = group | append: ':' -%}
 
   {%- capture group_content -%}
-    <div class="v-stack gap-2.5">
+    <div class="facet-options">
       {%- for filter_value in filter.values -%}
         {%- assign value_start = filter_value.value | slice: 0, prefix.size -%}
         {%- if value_start != prefix -%}
@@ -58,18 +58,24 @@
 
         {%- liquid
           assign label = filter_value.label | remove_first: prefix | strip
+          assign value_count = nil
           if show_count
-            assign label = label | append: ' (' | append: filter_value.count | append: ')'
+            assign value_count = filter_value.count
+          endif
+          assign value_media = ''
+          if group == 'Shape'
+            assign value_media = 'shape'
           endif
           assign value_id_prefix = id_prefix | append: '-' | append: group | append: '-' | append: forloop.index
         -%}
 
-        {%- render 'checkbox',
-          hide_checkbox: true,
+        {%- render 'facet-option',
           label: label,
+          count: value_count,
           name: filter_value.param_name,
           value: filter_value.value,
           checked: filter_value.active,
+          media: value_media,
           id_prefix: value_id_prefix,
           section: section
         -%}
@@ -78,7 +84,7 @@
   {%- endcapture -%}
 
   {%- comment -%}An empty group means no product in these results carries that prefix.{%- endcomment -%}
-  {%- unless group_content contains 'checkbox-control' -%}
+  {%- unless group_content contains 'facet-option__input' -%}
     {%- continue -%}
   {%- endunless -%}
 

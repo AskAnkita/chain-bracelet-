@@ -212,11 +212,13 @@
             {%- endif -%}
 
             {%- if product_description != blank -%}
+              {%- comment -%}The whole description is in capitals, like the headings above it (theme.css, .product-description).{%- endcomment -%}
               {%- if block.settings.collapse_content -%}
                 {%- assign accordion_title = 'product.general.description' | t -%}
+                {%- assign product_description = '<div class="product-description">' | append: product_description | append: '</div>' -%}
                 {%- render 'accordion', title: accordion_title, content: product_description, prose_content: true, block: block -%}
               {%- else -%}
-                <div class="prose">
+                <div class="prose product-description">
                   {{- product_description -}}
                 </div>
               {%- endif -%}

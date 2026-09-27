@@ -38,6 +38,10 @@
           assign facet_group = filter.label
           assign facet_label = active_value.label
 
+          if filter.param_name contains 'jewelry material' or filter.param_name contains 'jewellery material'
+            assign facet_group = 'Jewelry Material'
+          endif
+
           if filter.param_name == 'filter.p.tag'
             assign value_parts = active_value.value | split: ':'
             if value_parts.size > 1

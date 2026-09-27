@@ -1,0 +1,91 @@
+{%- doc -%}
+  One value in a filter list, drawn as a row: an optional picture on the left (a metal
+  coin or a stone-shape outline), the name in capitals, and the product count pushed to
+  the right. The checkbox itself is hidden; the row turns gold and its picture gets a
+  ring when it is checked.
+
+  The input keeps the name and value Shopify gave it, so <facets-form> submits it exactly
+  like the theme's own checkbox.
+
+  @param {string} name - the input's name (the filter value's param_name)
+  @param {string} value - the input's value
+  @param {string} label - the text to show
+  @param {number} [count] - the product count, shown when passed
+  @param {boolean} [checked] - whether the value is active
+  @param {string} [media] - 'metal' for a metal coin, 'shape' for a stone-shape outline
+  @param {string} [id_prefix] - makes the input ID unique across repeated forms
+  @param {object} [section]
+{%- enddoc -%}
+
+{%- liquid
+  assign id = 'facet-' | append: id_prefix | append: '-' | append: section.id | append: '-' | append: name | append: '-' | append: value | handle
+  assign downcase_label = label | downcase
+-%}
+
+<label class="facet-option{% if checked %} is-checked{% endif %}" for="{{ id }}">
+  <input id="{{ id }}" class="facet-option__input" type="checkbox" name="{{ name }}" value="{{ value | escape }}" {% if checked %}checked{% endif %}>
+
+  {%- case media -%}
+    {%- when 'metal' -%}
+      {%- liquid
+        # Same metallic discs as the product page's Metal Type coins (option-value.liquid):
+        # coloured by the metal, with the karat or "SS" struck inside.
+        assign coin_fill = 'radial-gradient(circle at 34% 30%, #f8e7b2, #e6c568 46%, #b28f36 100%)'
+        if downcase_label contains 'rose'
+          assign coin_fill = 'radial-gradient(circle at 34% 30%, #f7dccd, #e5b39a 46%, #b67c60 100%)'
+        elsif downcase_label contains 'white' or downcase_label contains 'silver' or downcase_label contains 'platinum'
+          assign coin_fill = 'radial-gradient(circle at 34% 30%, #ffffff, #e3e3e7 46%, #a7abb2 100%)'
+        endif
+
+        assign coin_text = ''
+        assign first_word = downcase_label | split: ' ' | first
+        if downcase_label contains 'sterling' or downcase_label contains 'silver'
+          assign coin_text = 'SS'
+        elsif downcase_label contains 'platinum'
+          assign coin_text = 'PT'
+        elsif first_word.size <= 3 and first_word contains 'k'
+          assign coin_text = first_word | upcase
+        endif
+      -%}
+      <span class="facet-option__media facet-option__coin" style="--coin-fill: {{ coin_fill }}" aria-hidden="true">
+        {%- if coin_text != blank -%}<span>{{ coin_text }}</span>{%- endif -%}
+      </span>
+
+    {%- when 'shape' -%}
+      <span class="facet-option__media facet-option__shape" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round">
+          {%- if downcase_label contains 'round' or downcase_label contains 'brilliant' -%}
+            <circle cx="12" cy="12" r="8.5"/><path d="M12 3.5 15 9l5.5 3L15 15l-3 5.5L9 15l-5.5-3L9 9z"/>
+          {%- elsif downcase_label contains 'oval' -%}
+            <ellipse cx="12" cy="12" rx="6.2" ry="9"/><ellipse cx="12" cy="12" rx="3" ry="4.8"/>
+          {%- elsif downcase_label contains 'heart' -%}
+            <path d="M12 20.5C5.2 15 3.2 11.8 3.2 8.8a4.4 4.4 0 0 1 8.8-1.4 4.4 4.4 0 0 1 8.8 1.4c0 3-2 6.2-8.8 11.7z"/><path d="M12 7.4v7.6"/>
+          {%- elsif downcase_label contains 'pear' -%}
+            <path d="M12 2.8c3.4 4.3 6.3 8.2 6.3 11.8a6.3 6.3 0 0 1-12.6 0c0-3.6 2.9-7.5 6.3-11.8z"/><circle cx="12" cy="14.6" r="2.6"/>
+          {%- elsif downcase_label contains 'marquise' -%}
+            <path d="M12 2.5c5.2 4.6 5.2 14.4 0 19-5.2-4.6-5.2-14.4 0-19z"/><path d="M12 7v10"/>
+          {%- elsif downcase_label contains 'princess' or downcase_label contains 'square' -%}
+            <rect x="4.5" y="4.5" width="15" height="15"/><path d="m4.5 4.5 15 15m0-15-15 15"/>
+          {%- elsif downcase_label contains 'cushion' -%}
+            <rect x="4.5" y="4.5" width="15" height="15" rx="4.5"/><rect x="8.5" y="8.5" width="7" height="7" rx="2"/>
+          {%- elsif downcase_label contains 'asscher' -%}
+            <path d="M8.5 3.5h7l5 5v7l-5 5h-7l-5-5v-7z"/><path d="M10 7.5h4l2.5 2.5v4L14 16.5h-4L7.5 14v-4z"/>
+          {%- elsif downcase_label contains 'baguette' -%}
+            <rect x="8" y="3" width="8" height="18"/><rect x="10.2" y="5.5" width="3.6" height="13"/>
+          {%- elsif downcase_label contains 'radiant' -%}
+            <path d="M8.5 3h7l2.5 2.5v13L15.5 21h-7L6 18.5v-13z"/><path d="m6 5.5 12 13m0-13-12 13"/>
+          {%- elsif downcase_label contains 'emerald' or downcase_label contains 'rect' -%}
+            <path d="M8.5 3h7l2.5 2.5v13L15.5 21h-7L6 18.5v-13z"/><rect x="9" y="6.5" width="6" height="11"/>
+          {%- else -%}
+            <path d="M6.5 4.5h11l3.5 5-9 10.5L3 9.5z"/><path d="M3 9.5h18M9.5 4.5 8 9.5l4 10.5 4-10.5-1.5-5"/>
+          {%- endif -%}
+        </svg>
+      </span>
+  {%- endcase -%}
+
+  <span class="facet-option__label">{{ label }}</span>
+
+  {%- if count != blank -%}
+    <span class="facet-option__count">{{ count }}</span>
+  {%- endif -%}
+</label>

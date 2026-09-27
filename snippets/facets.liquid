@@ -105,7 +105,7 @@
                     elsif filter.presentation == 'swatch' or color_label_list contains downcase_label
                       assign wrapper_class_list = 'h-stack wrap gap-2'
                     else
-                      assign wrapper_class_list = 'v-stack gap-2.5'
+                      assign wrapper_class_list = 'facet-options'
                     endif
                   -%}
 
@@ -119,13 +119,21 @@
                         elsif filter.presentation == 'swatch' or color_label_list contains downcase_label
                           render 'option-value', type: 'swatch', filter_value: filter_value, show_tooltip: true, id_prefix: value_id_prefix
                         else
-                          if section.settings.show_filter_values_count
-                            assign label = filter_value.label | append: ' (' | append: filter_value.count | append: ')'
-                          else
-                            assign label = filter_value.label
+                          # A metal coin or a stone-shape outline beside the value where one fits.
+                          assign value_media = ''
+                          assign filter_key = filter.param_name | append: ' ' | append: downcase_label | downcase
+                          if filter_key contains 'metal' or filter_key contains 'material'
+                            assign value_media = 'metal'
+                          elsif filter_key contains 'shape'
+                            assign value_media = 'shape'
                           endif
 
-                          render 'checkbox', hide_checkbox: true, label: label, name: filter_value.param_name, value: filter_value.value, checked: filter_value.active, id_prefix: value_id_prefix
+                          assign value_count = nil
+                          if section.settings.show_filter_values_count
+                            assign value_count = filter_value.count
+                          endif
+
+                          render 'facet-option', label: filter_value.label, count: value_count, name: filter_value.param_name, value: filter_value.value, checked: filter_value.active, media: value_media, id_prefix: value_id_prefix, section: section
                         endif
                       endfor
                     %}
@@ -138,7 +146,14 @@
           {%- endcapture -%}
 
           {%- if filter_content != blank -%}
-            {%- render 'accordion', title: filter.label, content: filter_content, open: open_filters_by_default, show_arrow: true -%}
+            {%- liquid
+              # The metal option's filter reads "Jewelry Material", the name the products use.
+              assign filter_title = filter.label
+              if filter.param_name contains 'jewelry material' or filter.param_name contains 'jewellery material'
+                assign filter_title = 'Jewelry Material'
+              endif
+            -%}
+            {%- render 'accordion', title: filter_title, content: filter_content, open: open_filters_by_default, show_arrow: true -%}
           {%- endif -%}
         {%- endfor -%}
       {%- endif -%}

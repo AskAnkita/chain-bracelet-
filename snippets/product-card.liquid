@@ -39,13 +39,13 @@
     assign show_swatches = show_swatches | default: true, allow_false: true
   endif
 
-  # Cards show Silver by default. The featured photo is always the yellow-gold one, so
-  # grids used to read as all gold:
-  # - several metals: the card shows the 925 Sterling Silver variant (or, for products not
-  #   sold in silver, white gold) and links to it, so the product page opens on what the
-  #   card showed. Other metals are only a fallback for products sold in neither. The
-  #   silver variant is picked whether or not it is in stock, so a sold-out silver still
-  #   shows silver rather than jumping to gold;
+  # Cards take turns between metals, so a grid shows a mix instead of one colour. The
+  # featured photo is always the yellow-gold one, so grids used to read as all gold:
+  # - several metals: by position in the grid (by product id where no position is passed)
+  #   the 1st, 4th, 7th... card shows rose gold, then white (925 Sterling Silver, or white
+  #   gold for products not sold in silver), then yellow gold. A product not sold in its
+  #   card's metal shows the next metal in that order. The card links to that metal's
+  #   variant, whether or not it is in stock, so the product page opens on what it showed;
   # - one metal: the card shows that metal.
   # Silver is photographed as white gold, the same way the silver variants use the
   # white-gold photo. Photos are picked by the metal label in their alt text ("#Jewelry
@@ -63,8 +63,17 @@
 
   if product.metafields.custom.card_image == blank and product.metafields.custom.card_hover_image == blank
     if product.variants.size > 1
-      # In order of preference; "silver" and "white gold" both show the white-gold photos.
-      assign preferred_metals = 'silver,white gold,yellow gold,rose gold' | split: ','
+      # This card's turn first, then the others in order. "silver" and "white gold" are one
+      # turn: both show the white-gold photos, and silver is tried first.
+      assign metal_turn = position | default: product.id | modulo: 3
+      if metal_turn == 1
+        assign preferred_metals = 'rose gold,silver,white gold,yellow gold'
+      elsif metal_turn == 2
+        assign preferred_metals = 'silver,white gold,yellow gold,rose gold'
+      else
+        assign preferred_metals = 'yellow gold,rose gold,silver,white gold'
+      endif
+      assign preferred_metals = preferred_metals | split: ','
 
       for wanted_metal in preferred_metals
         for variant in product.variants

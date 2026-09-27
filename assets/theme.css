@@ -4738,6 +4738,131 @@ product-rerender {
   padding-block-end: 0;
 }
 
+/*
+  Filter values (snippets/facet-option.liquid): a row per value with a metal coin or a
+  stone-shape outline where one fits, the name in the title typeface's capitals and the
+  count on the right. Checked rows turn gold, with a ring round their picture.
+*/
+.facet-options {
+  display: grid;
+  row-gap: .25rem;
+}
+
+.facet-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin-inline: -.6rem;
+  padding: .5rem .6rem;
+  border-radius: .5rem;
+  color: rgb(var(--text-color) / .72);
+  cursor: pointer;
+  transition: color .2s ease, background-color .2s ease;
+}
+
+.facet-option__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.facet-option__media {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  border-radius: 50%;
+}
+
+.facet-option__media::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  transition: border-color .2s ease;
+}
+
+.facet-option__coin {
+  background: var(--coin-fill);
+  box-shadow: inset 0 0 0 1px rgb(59 58 48 / .16), 0 1px 2px rgb(59 58 48 / .2);
+}
+
+.facet-option__coin span {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight-bold);
+  font-size: .5rem;
+  letter-spacing: .04em;
+  color: rgb(40 36 26 / .75);
+  text-shadow: 0 1px 0 rgb(255 255 255 / .4);
+}
+
+.facet-option__shape {
+  border: 1px solid rgb(var(--text-color) / .12);
+  color: rgb(var(--text-color) / .7);
+}
+
+.facet-option__shape svg {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.facet-option__label {
+  flex: 1;
+  min-inline-size: 0;
+  font-family: var(--heading-font-family);
+  font-size: .75rem;
+  line-height: 1.4;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.facet-option__count {
+  flex: none;
+  min-inline-size: 1.6rem;
+  padding: .1rem .45rem;
+  border-radius: 1rem;
+  background: rgb(var(--text-color) / .05);
+  font-size: .68rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: rgb(var(--text-color) / .55);
+}
+
+@media screen and (pointer: fine) {
+  .facet-option:hover {
+    color: rgb(var(--text-color));
+    background: rgb(var(--text-color) / .035);
+  }
+}
+
+.facet-option:has(:checked) {
+  color: rgb(173 125 49);
+  background: rgb(173 125 49 / .07);
+}
+
+.facet-option:has(:checked) .facet-option__media::after {
+  border-color: rgb(173 125 49);
+}
+
+.facet-option:has(:checked) .facet-option__shape {
+  color: rgb(173 125 49);
+  border-color: rgb(173 125 49 / .4);
+}
+
+.facet-option:has(:checked) .facet-option__count {
+  background: rgb(173 125 49 / .14);
+  color: rgb(173 125 49);
+}
+
+.facet-option:has(:focus-visible) {
+  outline: 2px solid rgb(173 125 49);
+  outline-offset: 1px;
+}
+
 .active-facets {
   flex-wrap: wrap;
   align-items: center;
@@ -7326,6 +7451,36 @@ shopify-account::part(content) {
 
 .shopify-policy__body .rte {
   font-size: var(--text-sm);
+  font-family: var(--heading-font-family);
+  font-style: var(--heading-font-style);
+  letter-spacing: var(--heading-letter-spacing);
+  text-transform: var(--heading-text-transform);
+}
+
+.shopify-policy__body .rte :is(p, li) {
+  font-weight: var(--heading-font-weight-light);
+}
+
+/* Product descriptions in capitals, with the title letter spacing */
+.product-description {
+  text-transform: var(--heading-text-transform);
+  letter-spacing: var(--heading-letter-spacing);
+}
+
+/* Cart "Add order note" and taxes/shipping line, in the title typeface and caps */
+.cart-footnote, .cart-note label {
+  font-family: var(--heading-font-family);
+  font-style: var(--heading-font-style);
+  letter-spacing: var(--heading-letter-spacing);
+  text-transform: var(--heading-text-transform);
+}
+
+p.cart-footnote {
+  font-weight: var(--heading-font-weight-light);
+}
+
+.shopify-policy__body .rte :is(strong, b) {
+  font-weight: var(--heading-font-weight-bold);
 }
 
 .shopify-policy__body .rte > * {

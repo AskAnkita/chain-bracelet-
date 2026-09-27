@@ -1,5 +1,22 @@
 {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
 
+{%- comment -%}The form's title ("CONTACT") in the header's gold, like the collection titles.{%- endcomment -%}
+<style>
+  #shopify-section-{{ section.id }} .section-header :is(h1, h2, h3, .h1, .h2, .h3) {
+    color: rgb(173 125 49);
+  }
+
+  /* Field placeholders (and the label they float into) in the title's typeface, in caps */
+  #shopify-section-{{ section.id }} :is(.input, .textarea)::placeholder,
+  #shopify-section-{{ section.id }} .floating-label {
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-style: var(--heading-font-style);
+    letter-spacing: var(--heading-letter-spacing);
+    text-transform: var(--heading-text-transform);
+  }
+</style>
+
 <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
   <div class="container container--xs">
     <div class="section-stack text-center">

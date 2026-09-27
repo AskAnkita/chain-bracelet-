@@ -8,6 +8,8 @@
 
 <style>
   {%- assign heading_font_italic = settings.heading_font | font_modify: 'style', 'italic' -%}
+  {%- assign heading_font_light = settings.heading_font | font_modify: 'weight', 'lighter' -%}
+  {%- assign heading_font_bold = settings.heading_font | font_modify: 'weight', 'bold' -%}
   {%- assign text_font_italic = settings.text_font | font_modify: 'style', 'italic' -%}
   {%- assign text_font_bold = settings.text_font | font_modify: 'weight', 'bolder' -%}
   {%- assign text_font_bold_italic = text_font_bold | font_modify: 'style', 'italic' -%}
@@ -17,6 +19,14 @@
 
   {%- if heading_font_italic -%}
     {{ heading_font_italic | font_face: font_display: 'fallback' }}
+  {%- endif -%}
+
+  {%- if heading_font_light -%}
+    {{ heading_font_light | font_face: font_display: 'fallback' }}
+  {%- endif -%}
+
+  {%- if heading_font_bold -%}
+    {{ heading_font_bold | font_face: font_display: 'fallback' }}
   {%- endif -%}
 
   /* Typography (body) */
@@ -78,6 +88,8 @@
     --heading-font-family: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};
     --heading-font-weight: {{ settings.heading_font.weight }};
     --heading-font-style: {{ settings.heading_font.style }};
+    --heading-font-weight-light: {{ heading_font_light.weight | default: settings.heading_font.weight }};
+    --heading-font-weight-bold: {{ heading_font_bold.weight | default: 700 }};
     --heading-text-transform: {{ settings.heading_text_transform }};
     --heading-letter-spacing: {% if language_code == 'ar' %}0{% else %}{{ settings.heading_letter_spacing | divided_by: 100.0 }}{% endif %}em;
     --text-font-family: {{ settings.text_font.family }}, {{ settings.text_font.fallback_families }};

@@ -85,7 +85,7 @@
           <div class="v-stack gap-0.5 justify-items-start">
             {%- if section.settings.show_cart_note -%}
               {%- assign cart_note_dialog_id = 'cart-note-' | append: section.id -%}
-              <button class="link-faded-reverse" aria-controls="{{ cart_note_dialog_id }}">{{ 'cart.general.add_order_note' | t }}</button>
+              <button class="link-faded-reverse cart-footnote" aria-controls="{{ cart_note_dialog_id }}">{{ 'cart.general.add_order_note' | t }}</button>
 
               <cart-note-dialog id="{{ cart_note_dialog_id }}" class="cart-drawer__order-note">
                 <div class="form">
@@ -103,7 +103,7 @@
             {%- endif -%}
 
             {%- if section.settings.show_shipping_text -%}
-              <p class="text-subdued">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
+              <p class="text-subdued cart-footnote">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
             {%- endif -%}
           </div>
         {%- endif -%}

@@ -42,6 +42,20 @@
       transform: rotate(8deg);
     }
 
+    /* Body copy on the About page uses the same typeface as its titles */
+    #main .prose {
+      font-family: var(--heading-font-family);
+      font-weight: var(--heading-font-weight);
+      font-style: var(--heading-font-style);
+      letter-spacing: var(--heading-letter-spacing);
+      text-transform: var(--heading-text-transform);
+    }
+
+    #main .prose :is(p, li) {
+      font-size: .9375em;
+      font-weight: var(--heading-font-weight-light);
+    }
+
     @media screen and (max-width: 699px) {
       #shopify-section-{{ section.id }} .about-page {
         min-height: auto;
