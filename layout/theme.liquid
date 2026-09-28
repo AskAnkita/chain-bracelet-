@@ -216,6 +216,7 @@
       @media screen and (pointer: fine) {
         .breadcrumb a:hover,
         a.product-title:hover,
+        a.line-item-title:hover,
         .product-card:has(.product-card__media:hover) .product-title {
           color: rgb(173 125 49);
         }
@@ -225,11 +226,16 @@
         transition: color .2s ease-in-out;
       }
 
-      /* Touch screens have no hover, so product names on cards are gold from the start. */
+      /* Touch screens have no hover, so product names on cards and in the cart are gold from the start. */
       @media not all and (pointer: fine) {
-        .product-card .product-title {
+        .product-card .product-title,
+        .line-item-title {
           color: rgb(173 125 49);
         }
+      }
+
+      .line-item-title {
+        transition: color .2s ease-in-out;
       }
 
       /*
@@ -331,6 +337,29 @@
         {%- sections 'footer-group' -%}
       {%- endif -%}
     </main>
+
+    {%- if request.page_type == 'policy' -%}
+      <script>
+        (() => {
+          // Shopify wrote the store name into the policy text as "ChainandBracelet"; show it as
+          // "Chain & Bracelet". Email addresses and links (chainandbracelet.com) are left alone.
+          // Editing the policy text in admin (Settings → Policies) makes this unnecessary.
+          const policyBody = document.querySelector('.shopify-policy__body');
+          if (!policyBody) return;
+
+          const storeName = /\bChainandBracelet\b(?![.@])/g;
+          const walker = document.createTreeWalker(policyBody, NodeFilter.SHOW_TEXT);
+
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (storeName.test(node.nodeValue)) {
+              node.nodeValue = node.nodeValue.replace(storeName, 'Chain & Bracelet');
+            }
+            storeName.lastIndex = 0;
+          }
+        })();
+      </script>
+    {%- endif -%}
 
     {%- if request.page_type == 'policy' and request.path contains 'privacy-policy' -%}
       <script>

@@ -55,7 +55,7 @@
                         <line-item-quantity class="v-stack justify-items-center gap-2">
                           {%- render 'quantity-selector', line_item: line_item, size: 'sm' -%}
 
-                          <a href="{{ line_item.url_to_remove }}" class="link text-xs" aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
+                          <a href="{{ line_item.url_to_remove }}" class="link text-xs line-item-remove" aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
                             {{- 'cart.order.remove' | t -}}
                           </a>
                         </line-item-quantity>

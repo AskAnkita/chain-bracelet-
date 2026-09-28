@@ -29,7 +29,13 @@
 
   {%- when 'collection' -%}
     <a href="{{ collection.url }}" class="v-stack gap-3 sm:gap-5">
-      {%- if collection.image -%}
+      {%- comment -%}
+        Collection images are switched off in search for now: only Bracelets has one, so it
+        stood out from the text-only results beside it. Set show_collection_image to true once
+        every collection has its image.
+      {%- endcomment -%}
+      {%- assign show_collection_image = false -%}
+      {%- if show_collection_image and collection.image -%}
         {{- collection.image | image_url: width: collection.image.width | image_tag: sizes: '(max-width: 699px) 160px, 500px', widths: '200,300,400,500,600,800,1000,1200,1400' -}}
       {%- endif -%}
 

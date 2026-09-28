@@ -29,6 +29,12 @@
     assign products_desktop_grid_mode = section.settings.products_size_desktop
   endif
 
+  # The compact grid (6 across) hides product names, so its button is gone from the toolbar; anyone who
+  # had picked it gets the medium grid instead.
+  if products_desktop_grid_mode == 'compact'
+    assign products_desktop_grid_mode = 'medium'
+  endif
+
   if products_mobile_grid_mode == blank or request.design_mode
     if section.settings.products_per_row_mobile == '1'
       assign products_mobile_grid_mode = 'large'
@@ -226,14 +232,6 @@
                   aria-label="Switch to smaller product images"
                 >
                   {%- render 'icon' with 'collection-layout-3' -%}
-                </button>
-                <button
-                  type="button"
-                  value="compact"
-                  class="collection-toolbar__button {% if products_desktop_grid_mode == 'compact' %}is-active{% endif %}"
-                  aria-label="Switch to compact product images"
-                >
-                  {%- render 'icon' with 'collection-layout-4' -%}
                 </button>
               </collection-layout-switch>
             {%- endif -%}

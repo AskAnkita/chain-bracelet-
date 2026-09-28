@@ -7461,6 +7461,11 @@ shopify-account::part(content) {
   font-weight: var(--heading-font-weight-light);
 }
 
+/* Product name in the sticky Add to cart bar, in the header's gold */
+.product-sticky-bar__title {
+  color: rgb(173 125 49);
+}
+
 /* Product descriptions in capitals, with the title letter spacing */
 .product-description {
   text-transform: var(--heading-text-transform);
@@ -7477,6 +7482,26 @@ shopify-account::part(content) {
 
 p.cart-footnote {
   font-weight: var(--heading-font-weight-light);
+}
+
+/* "Add order note" and the taxes line in the plain text colour (black). The element in the
+   selector outranks .text-subdued, which comes later in this file. */
+:is(p, button).cart-footnote,
+.cart-note label {
+  color: rgb(var(--text-color));
+}
+
+/* "Add order note" a touch bolder than the text around it (cart drawer button and cart page label) */
+button.cart-footnote,
+.cart-note label {
+  font-weight: var(--heading-font-weight-medium);
+}
+
+/* Cart "Remove" link in capitals, like the other cart labels */
+.line-item-remove {
+  font-family: var(--heading-font-family);
+  letter-spacing: var(--heading-letter-spacing);
+  text-transform: var(--heading-text-transform);
 }
 
 .shopify-policy__body .rte :is(strong, b) {

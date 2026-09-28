@@ -49,7 +49,29 @@
       {%- endif -%}
 
       {%- if show_filters -%}
+        {%- liquid
+          # When the "Product tag" filter is on, its Shape group (Shape:Round, Shape:Pear…) covers every
+          # category; Shopify's own stone-shape filter only knows the rings, so it's hidden to avoid two
+          # Shape filters.
+          assign has_tag_shapes = false
+          for filter in results.filters
+            if filter.param_name == 'filter.p.tag'
+              for filter_value in filter.values
+                assign value_start = filter_value.value | slice: 0, 6
+                if value_start == 'Shape:'
+                  assign has_tag_shapes = true
+                  break
+                endif
+              endfor
+            endif
+          endfor
+        -%}
+
         {%- for filter in results.filters -%}
+          {%- if has_tag_shapes and filter.param_name contains 'stone-shape' -%}
+            {%- continue -%}
+          {%- endif -%}
+
           {%- comment -%}
             The products are tagged `Shape:Round`, `Style:Halo`, `Type:Studs`, and Shopify
             offers all of them as one flat "Product tag" filter. This renders it as a group
@@ -59,6 +81,7 @@
           {%- if filter.type == 'list' and filter.param_name == 'filter.p.tag' -%}
             {%- render 'facet-tag-groups',
               filter: filter,
+              groups: 'Shape',
               id_prefix: id_prefix,
               open: open_filters_by_default,
               show_count: section.settings.show_filter_values_count,
@@ -131,6 +154,15 @@
                           assign value_count = nil
                           if section.settings.show_filter_values_count
                             assign value_count = filter_value.count
+                          endif
+
+                          # One old product still carries plain "Gold" / "Rose gold" / "White gold" values next
+                          # to the karat ones (10K Rose Gold…); they're left out of the list unless selected.
+                          if value_media == 'metal' and filter_value.active == false
+                            assign plain_metal = filter_value.label | downcase | strip
+                            if plain_metal == 'gold' or plain_metal == 'rose gold' or plain_metal == 'white gold' or plain_metal == 'yellow gold'
+                              continue
+                            endif
                           endif
 
                           render 'facet-option', label: filter_value.label, count: value_count, name: filter_value.param_name, value: filter_value.value, checked: filter_value.active, media: value_media, id_prefix: value_id_prefix, section: section

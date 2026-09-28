@@ -27,6 +27,11 @@
       assign products_mobile_grid_mode = 'medium'
       assign products_desktop_grid_mode = 'medium'
     endif
+
+    # No compact grid (it hides product names), same as the collection pages.
+    if products_desktop_grid_mode == 'compact'
+      assign products_desktop_grid_mode = 'medium'
+    endif
   -%}
 
   {%- if search.results_count > 0 or active_values_count > 0 -%}
@@ -76,13 +81,37 @@
     </style>
 
     {%- paginate search.results by 48 -%}
+      {%- liquid
+        assign product_results = search.results | where: 'object_type', 'product'
+        assign article_results = search.results | where: 'object_type', 'article'
+        assign page_results = search.results | where: 'object_type', 'page'
+
+        # search.results_count spans every page of results but also counts posts and pages, so it's
+        # only used when the search is for products alone; otherwise count this page's products.
+        assign product_results_count = product_results.size
+        if search.types.size == 1 and search.types.first == 'product'
+          assign product_results_count = search.results_count
+        endif
+
+        # Products only: when a search finds products, the page shows just the product grid, with no
+        # Products / Posts / Pages tabs. Posts and pages are only listed when no product matches.
+        assign show_products = false
+        if product_results.size > 0 or active_values_count > 0
+          assign show_products = true
+        endif
+
+        assign results_count = search.results_count
+        if show_products
+          assign results_count = product_results_count
+        endif
+      -%}
       <div class="section-spacing section-spacing--tight color-scheme color-scheme--{{ section.settings.color_scheme.id }}">
         <div class="container">
           <div class="section-stack">
             <div class="section-header justify-self-center text-center">
               <div class="v-stack gap-4">
                 <h1 class="h1">{{ 'search.general.title' | t }}</h1>
-                <p>{{ 'search.results_count_for_terms' | t: count: search.results_count, terms: search.terms }}</p>
+                <p>{{ 'search.results_count_for_terms' | t: count: results_count, terms: search.terms }}</p>
               </div>
             </div>
 
@@ -95,9 +124,7 @@
                     }
                   </style>
 
-                  {%- assign unique_types = search.results | map: 'object_type' | uniq -%}
-
-                  {%- if search.types.size > 1 and unique_types.size > 1 -%}
+                  {%- if show_products == false and article_results.size > 0 and page_results.size > 0 -%}
                     <div part="tab-list-scrollable" class="scrollable">
                       <slot role="tablist" part="tab-list" name="title"></slot>
                     </div>
@@ -106,19 +133,7 @@
                   <slot part="tab-panels" name="content"></slot>
                 </template>
 
-                {%- assign product_results = search.results | where: 'object_type', 'product' -%}
-                {%- assign article_results = search.results | where: 'object_type', 'article' -%}
-                {%- assign page_results = search.results | where: 'object_type', 'page' -%}
-                {%- liquid
-                  # search.results_count spans every page of results but also counts posts and pages, so it's
-                  # only used when the search is for products alone; otherwise count this page's products.
-                  assign product_results_count = product_results.size
-                  if search.types.size == 1 and search.types.first == 'product'
-                    assign product_results_count = search.results_count
-                  endif
-                -%}
-
-                {%- if product_results.size > 0 or active_values_count > 0 -%}
+                {%- if show_products -%}
                   <button type="button" class="h6" role="tab" slot="title">{{ 'search.general.products' | t }}</button>
 
                   <div class="main-search__resource-item" role="tabpanel" slot="content" {% cycle 'result_tab': '', 'hidden', 'hidden', 'hidden' %}>
@@ -196,9 +211,6 @@
                             <button type="button" value="medium" class="collection-toolbar__button {% if products_desktop_grid_mode == 'medium' %}is-active{% endif %}" aria-label="Switch to smaller product images">
                               {%- render 'icon' with 'collection-layout-3' -%}
                             </button>
-                            <button type="button" value="compact" class="collection-toolbar__button {% if products_desktop_grid_mode == 'compact' %}is-active{% endif %}" aria-label="Switch to compact product images">
-                              {%- render 'icon' with 'collection-layout-4' -%}
-                            </button>
                           </collection-layout-switch>
                         </height-observer>
                       {%- endif -%}
@@ -263,7 +275,7 @@
                   </div>
                 {%- endif -%}
 
-                {%- if article_results.size > 0 -%}
+                {%- if show_products == false and article_results.size > 0 -%}
                   <button type="button" class="h6" role="tab" slot="title">{{ 'search.general.posts' | t }}</button>
 
                   <div class="main-search__resource-item" role="tabpanel" slot="content" {% cycle 'result_tab': '', 'hidden', 'hidden', 'hidden' %}>
@@ -289,7 +301,7 @@
                   </div>
                 {%- endif -%}
 
-                {%- if page_results.size > 0 -%}
+                {%- if show_products == false and page_results.size > 0 -%}
                   <button type="button" class="h6" role="tab" slot="title">{{ 'search.general.pages' | t }}</button>
 
                   <div class="main-search__resource-item" role="tabpanel" slot="content" {% cycle 'result_tab': '', 'hidden', 'hidden', 'hidden' %}>

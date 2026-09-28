@@ -30,9 +30,9 @@
 
       <div class="v-stack justify-items-start gap-1">
         {%- if line_item.url != blank -%}
-          <a href="{{ line_item.url }}" class="{{ text_class }}">{{ line_item.product.title | default: line_item.title }}</a>
+          <a href="{{ line_item.url }}" class="line-item-title {{ text_class }}">{{ line_item.product.title | default: line_item.title }}</a>
         {%- else -%}
-          <p class="{{ text_class }}">{{ line_item.product.title | default: line_item.title }}</p>
+          <p class="line-item-title {{ text_class }}">{{ line_item.product.title | default: line_item.title }}</p>
         {%- endif -%}
 
         {%- render 'price-list', line_item: line_item, context: 'line_item' -%}
@@ -80,7 +80,7 @@
         <line-item-quantity class="h-stack gap-4 {% if request.page_type == 'cart' %}sm:hidden{% endif %}">
           {%- render 'quantity-selector', line_item: line_item, size: 'sm' -%}
 
-          <a href="{{ line_item.url_to_remove }}" class="link text-xs" aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
+          <a href="{{ line_item.url_to_remove }}" class="link text-xs line-item-remove" aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
             {{- 'cart.order.remove' | t -}}
           </a>
         </line-item-quantity>

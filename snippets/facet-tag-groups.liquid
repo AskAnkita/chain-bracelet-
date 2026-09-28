@@ -17,6 +17,7 @@
   @param {boolean} [open] - open every group by default
   @param {boolean} [show_count] - append the product count to each value
   @param {object} [section]
+  @param {string} [groups] - comma-separated prefixes to show (e.g. "Shape"); every prefix when blank
 {%- enddoc -%}
 
 {%- liquid
@@ -43,6 +44,9 @@
   endfor
 
   assign all_groups = 'Shape,Style,Type' | append: extra_groups | split: ','
+  if groups != blank
+    assign all_groups = groups | split: ','
+  endif
 -%}
 
 {%- for group in all_groups -%}
