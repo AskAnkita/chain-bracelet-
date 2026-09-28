@@ -54,6 +54,7 @@
           # category; Shopify's own stone-shape filter only knows the rings, so it's hidden to avoid two
           # Shape filters.
           assign has_tag_shapes = false
+          assign has_stone_shapes = false
           for filter in results.filters
             if filter.param_name == 'filter.p.tag'
               for filter_value in filter.values
@@ -63,8 +64,17 @@
                   break
                 endif
               endfor
+            elsif filter.param_name contains 'stone-shape' and filter.values.size > 0
+              assign has_stone_shapes = true
             endif
           endfor
+
+          # Shape, Type and Style built from the products' tags (below). Shape only where Shopify
+          # offers no Shape filter of its own, so it steps aside once the Product tag filter is on.
+          assign tag_link_groups = 'Shape,Type,Style'
+          if has_tag_shapes or has_stone_shapes
+            assign tag_link_groups = 'Type,Style'
+          endif
         -%}
 
         {%- for filter in results.filters -%}
@@ -188,6 +198,10 @@
             {%- render 'accordion', title: filter_title, content: filter_content, open: open_filters_by_default, show_arrow: true -%}
           {%- endif -%}
         {%- endfor -%}
+
+        {%- if request.page_type == 'collection' -%}
+          {%- render 'facet-tag-links', collection: results, groups: tag_link_groups, open: open_filters_by_default, section: section -%}
+        {%- endif -%}
       {%- endif -%}
     </div>
 

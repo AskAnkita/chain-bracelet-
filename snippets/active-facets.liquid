@@ -71,6 +71,74 @@
     {%- endif -%}
   {%- endfor -%}
 
+  {%- comment -%}
+    A Shape, Type or Style picked from the tag links (snippets/facet-tag-links.liquid) lives
+    in the path (/collections/earrings/shape-round+type-studs), not among the filters.
+  {%- endcomment -%}
+  {%- if request.page_type == 'collection' -%}
+    {%- liquid
+      assign current_list = ''
+      for tag in current_tags
+        assign tag_handle = tag | handle
+        assign current_list = current_list | append: ',' | append: tag_handle
+      endfor
+      assign current_list = current_list | remove_first: ',' | split: ','
+      assign facet_groups = 'Shape,Type,Style' | split: ','
+    -%}
+
+    {%- for current_handle in current_list -%}
+      {%- liquid
+        # current_tags may hold the handle from the URL; the collection's own tag has the real name.
+        assign current_tag = ''
+        for collection_tag in collection.all_tags
+          assign collection_tag_handle = collection_tag | handle
+          if collection_tag_handle == current_handle
+            assign current_tag = collection_tag
+            break
+          endif
+        endfor
+
+        assign facet_group = current_tag | split: ':' | first
+      -%}
+      {%- unless facet_groups contains facet_group -%}
+        {%- continue -%}
+      {%- endunless -%}
+
+      {%- capture facet_label -%}{%- render 'tag-facet-label', tag: current_tag, collection: collection -%}{%- endcapture -%}
+      {%- liquid
+        assign facet_label = facet_label | strip
+        if facet_label == blank
+          assign facet_label = current_tag | remove_first: ':' | remove_first: facet_group | strip
+        endif
+
+        assign other_tags = ''
+        for other_handle in current_list
+          if other_handle != current_handle
+            assign other_tags = other_tags | append: '+' | append: other_handle
+          endif
+        endfor
+        assign other_tags = other_tags | remove_first: '+'
+      -%}
+      {%- capture remove_url -%}{{ collection.url }}{% if other_tags != blank %}/{{ other_tags }}{% endif %}{% render 'collection-filter-query', results: collection %}{%- endcapture -%}
+
+      <div class="removable-facet">
+        <facet-link>
+          <a href="{{ remove_url }}" class="tap-area link-faded" aria-label="{{ 'collection.faceting.remove_filter' | t: name: facet_label }}" data-no-instant>
+            {%- render 'icon' with 'close', width: 10 -%}
+          </a>
+        </facet-link>
+
+        {%- if section.settings.show_filter_group_name -%}
+          <span class="text-subdued">{{- facet_group }}: {{ facet_label -}}</span>
+        {%- else -%}
+          <span class="text-subdued">{{- facet_label -}}</span>
+        {%- endif -%}
+      </div>
+
+      {%- assign active_values_count = active_values_count | plus: 1 -%}
+    {%- endfor -%}
+  {%- endif -%}
+
   {%- if active_values_count > 1 -%}
     {%- if request.page_type == 'collection' -%}
       {%- assign default_url = collection.url -%}

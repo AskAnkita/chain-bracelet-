@@ -1,0 +1,46 @@
+{%- doc -%}
+  How a `Group:Value` tag reads in the filters and on the active-filter chips: the value
+  without its prefix. A type is shortened the way the mega menu does it
+  (snippets/category-menu-groups.liquid): under Necklaces, Type:Station Necklace reads
+  "Station". A type that is just the category (Type:Necklace, Type:Earrings) matches
+  nearly every product in it, so it outputs nothing and is left out.
+
+  @param {string} tag - e.g. "Type:Huggie Hoops"
+  @param {object} collection - the category the tag is shown under
+{%- enddoc -%}
+
+{%- liquid
+  assign group = tag | split: ':' | first
+  assign prefix = group | append: ':'
+  assign label = tag | remove_first: prefix | strip
+
+  if group == 'Type'
+    assign category_title_downcase = collection.title | downcase
+    assign generic_type = category_title_downcase
+    assign category_last = category_title_downcase | slice: -1, 1
+    if category_last == 's'
+      assign generic_size = category_title_downcase.size | minus: 1
+      assign generic_type = category_title_downcase | slice: 0, generic_size
+    endif
+    assign generic_suffix = ' ' | append: generic_type
+
+    assign label_downcase = label | downcase
+    if label_downcase == generic_type or label_downcase == category_title_downcase
+      assign label = ''
+    elsif label.size > generic_suffix.size
+      assign tail_offset = 0 | minus: generic_suffix.size
+      assign label_tail = label_downcase | slice: tail_offset, generic_suffix.size
+      if label_tail == generic_suffix
+        assign label_size = label.size | minus: generic_suffix.size
+        assign label = label | slice: 0, label_size
+      endif
+    endif
+
+    # What the shop calls them.
+    if label == 'Huggie Hoops'
+      assign label = 'Huggies'
+    endif
+  endif
+
+  echo label
+-%}

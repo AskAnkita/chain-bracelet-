@@ -1,0 +1,128 @@
+{%- doc -%}
+  Shape, Type and Style filters built from the products' tags (Shape:Round, Type:Studs,
+  Style:Halo), one group per prefix. Each category lists only the values its own products
+  carry, so Earrings offer Studs and Huggies while Necklaces offer Station and Tennis.
+
+  Shopify only lists a filter when Search & Discovery has one switched on for it, and the
+  "Product tag" filter isn't. Tags need no setup on Shopify's tag pages, though
+  (/collections/earrings/shape-round+type-studs), so each value links there. One value per
+  group at a time, and values from different groups combine; choosing the selected value
+  again clears it. The shopper's other filters and sort order carry over.
+
+  @param {object} collection - the collection being filtered
+  @param {string} groups - comma-separated tag prefixes, in the order to show them
+  @param {boolean} [open] - open every group by default
+  @param {object} [section]
+{%- enddoc -%}
+
+{%- liquid
+  # Tags in the URL are handles ("shape-round"), whatever case current_tags reports them in.
+  assign current_list = ''
+  for tag in current_tags
+    assign tag_handle = tag | handle
+    assign current_list = current_list | append: ',' | append: tag_handle
+  endfor
+  assign current_list = current_list | remove_first: ',' | split: ','
+
+  # "Station" is both Type:Station Necklace and Style:Station under Necklaces; it's listed once.
+  assign seen_labels = '|'
+-%}
+
+{%- capture kept_query -%}{%- render 'collection-filter-query', results: collection -%}{%- endcapture -%}
+
+{%- assign group_list = groups | split: ',' -%}
+{%- for group in group_list -%}
+  {%- liquid
+    assign group = group | strip
+    assign prefix = group | append: ':'
+    assign handle_prefix = group | handle | append: '-'
+
+    # The tag path without this group's value, which the group's links replace.
+    assign other_tags = ''
+    assign group_has_current = false
+    for current_handle in current_list
+      assign current_start = current_handle | slice: 0, handle_prefix.size
+      if current_start == handle_prefix
+        assign group_has_current = true
+      else
+        assign other_tags = other_tags | append: '+' | append: current_handle
+      endif
+    endfor
+    assign other_tags = other_tags | remove_first: '+'
+
+    assign value_media = ''
+    if group == 'Shape'
+      assign value_media = 'shape'
+    endif
+  -%}
+
+  {%- capture group_content -%}
+    <div class="facet-options">
+      {%- for tag in collection.all_tags -%}
+        {%- assign tag_start = tag | slice: 0, prefix.size -%}
+        {%- if tag_start != prefix -%}
+          {%- continue -%}
+        {%- endif -%}
+
+        {%- comment -%}
+          Once a shape, type or style is picked, collection.tags holds only the tags of the
+          products left, so a value missing from it would lead to an empty page and is left
+          out. The picked group itself lists all of its values, to switch between them.
+        {%- endcomment -%}
+        {%- if group_has_current == false and current_list.size > 0 -%}
+          {%- unless collection.tags contains tag -%}
+            {%- continue -%}
+          {%- endunless -%}
+        {%- endif -%}
+
+        {%- capture label -%}{%- render 'tag-facet-label', tag: tag, collection: collection -%}{%- endcapture -%}
+        {%- liquid
+          assign label = label | strip
+          assign label_key = '|' | append: label | downcase | append: '|'
+        -%}
+        {%- if label == blank or seen_labels contains label_key -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- assign seen_labels = seen_labels | append: label_key -%}
+
+        {%- liquid
+          assign tag_handle = tag | handle
+          assign is_current = false
+          if current_list contains tag_handle
+            assign is_current = true
+          endif
+
+          assign tag_path = other_tags
+          unless is_current
+            if tag_path != blank
+              assign tag_path = tag_path | append: '+'
+            endif
+            # Shopify redirects tag paths to alphabetical order; they're built that way to skip it.
+            assign tag_path = tag_path | append: tag_handle | split: '+' | sort | join: '+'
+          endunless
+
+          assign option_url = collection.url
+          if tag_path != blank
+            assign option_url = option_url | append: '/' | append: tag_path
+          endif
+          assign option_url = option_url | append: kept_query
+        -%}
+
+        {%- render 'facet-option', label: label, url: option_url, checked: is_current, media: value_media, section: section -%}
+      {%- endfor -%}
+    </div>
+  {%- endcapture -%}
+
+  {%- liquid
+    # Picking a value reloads the results, and the theme only remembers which groups were
+    # open for checkbox filters, so a group with a value picked opens itself.
+    assign group_open = open
+    if group_content contains 'is-checked'
+      assign group_open = true
+    endif
+  -%}
+
+  {%- if group_content contains 'facet-option__label' -%}
+    {%- render 'accordion', title: group, content: group_content, open: group_open, show_arrow: true -%}
+  {%- endif -%}
+{%- endfor -%}

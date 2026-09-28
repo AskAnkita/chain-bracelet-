@@ -4839,26 +4839,31 @@ product-rerender {
   }
 }
 
-.facet-option:has(:checked) {
+.facet-option:has(:checked),
+.facet-option.is-checked {
   color: rgb(173 125 49);
   background: rgb(173 125 49 / .07);
 }
 
-.facet-option:has(:checked) .facet-option__media::after {
+.facet-option:has(:checked) .facet-option__media::after,
+.facet-option.is-checked .facet-option__media::after {
   border-color: rgb(173 125 49);
 }
 
-.facet-option:has(:checked) .facet-option__shape {
+.facet-option:has(:checked) .facet-option__shape,
+.facet-option.is-checked .facet-option__shape {
   color: rgb(173 125 49);
   border-color: rgb(173 125 49 / .4);
 }
 
-.facet-option:has(:checked) .facet-option__count {
+.facet-option:has(:checked) .facet-option__count,
+.facet-option.is-checked .facet-option__count {
   background: rgb(173 125 49 / .14);
   color: rgb(173 125 49);
 }
 
-.facet-option:has(:focus-visible) {
+.facet-option:has(:focus-visible),
+a.facet-option:focus-visible {
   outline: 2px solid rgb(173 125 49);
   outline-offset: 1px;
 }

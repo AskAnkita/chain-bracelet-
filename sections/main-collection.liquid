@@ -11,6 +11,9 @@
     endif
   endfor
 
+  # A Shape, Type or Style picked from the tag links (snippets/facet-tag-links.liquid).
+  assign active_values_count = active_values_count | plus: current_tags.size
+
   if section.settings.quick_links_menu.links.size > 0 or section.settings.show_filters and collection.filters.size > 0
     assign show_filters = true
   else

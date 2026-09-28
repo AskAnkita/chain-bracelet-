@@ -1,0 +1,39 @@
+{%- doc -%}
+  The query string that re-applies a collection's current filters and sort order: each
+  active filter value, the price range and sort_by. A link that changes the page's path
+  (the tag links in snippets/facet-tag-links.liquid go to /collections/earrings/shape-pear)
+  appends it so the shopper's other filters stay on.
+
+  Outputs "?filter...&sort_by=..." when there is anything to keep, and nothing otherwise.
+
+  @param {object} results - the collection drop
+{%- enddoc -%}
+
+{%- liquid
+  assign query = ''
+
+  for filter in results.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != blank
+        assign price = filter.min_value.value | divided_by: 100.0
+        assign query = query | append: '&' | append: filter.min_value.param_name | append: '=' | append: price
+      endif
+      if filter.max_value.value != blank
+        assign price = filter.max_value.value | divided_by: 100.0
+        assign query = query | append: '&' | append: filter.max_value.param_name | append: '=' | append: price
+      endif
+    else
+      for active_value in filter.active_values
+        assign param_name = active_value.param_name | url_encode
+        assign param_value = active_value.value | url_encode
+        assign query = query | append: '&' | append: param_name | append: '=' | append: param_value
+      endfor
+    endif
+  endfor
+
+  if results.sort_by != blank and results.sort_by != results.default_sort_by
+    assign query = query | append: '&sort_by=' | append: results.sort_by
+  endif
+-%}
+
+{%- if query != blank -%}?{{ query | remove_first: '&' }}{%- endif -%}

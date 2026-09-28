@@ -5,10 +5,12 @@
   ring when it is checked.
 
   The input keeps the name and value Shopify gave it, so <facets-form> submits it exactly
-  like the theme's own checkbox.
+  like the theme's own checkbox. Given a `url` instead, the row is a link that reloads the
+  results at that URL (the tag links, snippets/facet-tag-links.liquid).
 
-  @param {string} name - the input's name (the filter value's param_name)
-  @param {string} value - the input's value
+  @param {string} [name] - the input's name (the filter value's param_name)
+  @param {string} [value] - the input's value
+  @param {string} [url] - render the row as a link to this URL instead of a checkbox
   @param {string} label - the text to show
   @param {number} [count] - the product count, shown when passed
   @param {boolean} [checked] - whether the value is active
@@ -22,8 +24,13 @@
   assign downcase_label = label | downcase
 -%}
 
-<label class="facet-option{% if checked %} is-checked{% endif %}" for="{{ id }}">
+{%- if url != blank -%}
+  <facet-link>
+  <a href="{{ url }}" class="facet-option{% if checked %} is-checked{% endif %}" {% if checked %}aria-current="true"{% endif %} data-no-instant>
+{%- else -%}
+  <label class="facet-option{% if checked %} is-checked{% endif %}" for="{{ id }}">
   <input id="{{ id }}" class="facet-option__input" type="checkbox" name="{{ name }}" value="{{ value | escape }}" {% if checked %}checked{% endif %}>
+{%- endif -%}
 
   {%- case media -%}
     {%- when 'metal' -%}
@@ -88,4 +95,9 @@
   {%- if count != blank -%}
     <span class="facet-option__count">{{ count }}</span>
   {%- endif -%}
-</label>
+{%- if url != blank -%}
+  </a>
+  </facet-link>
+{%- else -%}
+  </label>
+{%- endif -%}
