@@ -6,10 +6,9 @@
 
   Where each link points: a tag whose own collection exists and carries at least
   `min_products` products links straight to it (/collections/stud-earrings). A tag whose
-  collection is missing or nearly empty links to the parent collection filtered by that
-  tag instead (/collections/earrings?filter.p.tag=Shape%3APrincess), so the menu stays
-  full but no link lands on a page with one lonely product. The filtered URLs need tag
-  filters switched on in Shopify admin > Search & Discovery > Filters.
+  collection is missing or nearly empty links to the parent collection's tag page instead
+  (/collections/earrings/shape-princess), so the menu stays full but no link lands on a
+  page with one lonely product.
 
   Outputs nothing when the collection carries none of those tags.
 
@@ -104,10 +103,11 @@
             endif
           endfor
 
-          # Too thin, or no collection at all: the category, filtered to this tag.
+          # Too thin, or no collection at all: the category's tag page, which lists only the
+          # products with that tag (the same pages the tag filters use, snippets/facet-tag-links.liquid).
           if link_url == blank
-            assign tag_param = tag | url_encode
-            assign link_url = collection.url | append: '?filter.p.tag=' | append: tag_param
+            assign tag_handle = tag | handle
+            assign link_url = collection.url | append: '/' | append: tag_handle
           endif
 
           # "Station Necklace" under NECKLACES is just "Station"; "Studs" stays "Studs".

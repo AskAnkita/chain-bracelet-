@@ -276,6 +276,17 @@
         letter-spacing: 0.08em;
         line-height: 1.8;
       }
+
+      /*
+        Breadcrumbs and the collection subheading, darker so they're easy to read: full text
+        color instead of faded, and the regular weight of the same typeface (Red Rose) instead
+        of the light one the body text uses.
+      */
+      .breadcrumb .link-faded,
+      .shopify-section--collection-banner .collection-description {
+        color: rgb(var(--text-color));
+        font-weight: var(--heading-font-weight);
+      }
     </style>
   </head>
 

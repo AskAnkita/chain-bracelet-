@@ -174,7 +174,7 @@
     on hairline rules, like a boutique's printed menu. Every heading stays gold whether
     its group is open or not (theme.css turns the open one the plain text colour with
     !important, which read as black here), and the tag links inside a group are the
-    quiet level: smaller, lighter, muted capitals in the desktop mega menu's typeface,
+    quiet level: smaller capitals in the desktop mega menu's typeface, dark enough to read,
     aligned under the heading instead of hanging off a rule, turning gold when tapped.
   {%- endcomment -%}
   #sidebar-menu .header-sidebar__sub-panel .header-sidebar__linklist > li + li {
@@ -198,13 +198,13 @@
 
   #sidebar-menu .header-sidebar__nested-linklist a {
     font-family: var(--heading-font-family);
-    font-weight: var(--heading-font-weight-light);
+    font-weight: var(--heading-font-weight);
     font-style: var(--heading-font-style);
     font-size: .72rem;
     line-height: 1.4;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: rgb(var(--text-color) / .68);
+    color: rgb(var(--text-color));
     transition: color .2s ease;
   }
 

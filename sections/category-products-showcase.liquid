@@ -163,6 +163,22 @@
       #shopify-section-{{ section.id }} .category-products-showcase__products {
         display: contents;
       }
+
+      {%- comment -%}
+        The caption card sits in the tile's bottom-left corner. By default it's positioned
+        within the tile's content area, which is inset by the content-over-media gap (3rem),
+        so it floated mid-bottom; spanning the whole grid anchors it to the tile itself.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .category-products-showcase__tile > .content {
+        grid-area: 1 / 1 / -1 / -1;
+        inset: auto auto 1rem 1rem;
+        width: auto;
+        max-width: calc(100% - 2rem);
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__cta {
+        gap: 1.5rem;
+      }
     }
   </style>
 

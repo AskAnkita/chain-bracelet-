@@ -358,6 +358,29 @@
     </style>
   {%- endif -%}
 
+  {%- if request.page_type == 'list-collections' -%}
+    {%- comment -%}
+      On the Our Collections page the hero is a banner rather than a full screen, so the
+      category products below start on the first screen instead of under the fold.
+    {%- endcomment -%}
+    <style>
+      #shopify-section-{{ section.id }} .slideshow .content-over-media--fill {
+        --content-over-media-height: 42svh;
+      }
+
+      /* The shorter crop would cut the model's face off; keep it and the necklaces in frame. */
+      #shopify-section-{{ section.id }} .slideshow .content-over-media--fill > picture img {
+        object-position: center 30%;
+      }
+
+      @media screen and (max-width: 699px) {
+        #shopify-section-{{ section.id }} .slideshow .content-over-media--fill > picture img {
+          object-position: center center;
+        }
+      }
+    </style>
+  {%- endif -%}
+
   <slideshow-carousel
     id="{{ carousel_id }}"
     class="slideshow"
@@ -416,7 +439,6 @@
                       height="1024"
                       alt="Woman wearing a diamond necklace, earrings, bracelet, and ring"
                       fetchpriority="{{ fetch_priority }}"
-                      style="object-position: center center;"
                     >
                   {%- else -%}
                     {%- liquid

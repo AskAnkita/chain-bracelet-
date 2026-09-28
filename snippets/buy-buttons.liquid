@@ -98,6 +98,7 @@
             -%}
 
             {%- render 'wishlist-button', product: product, class: 'buy-buttons__wishlist-button', square: true -%}
+            {%- render 'product-share', product: product, id_suffix: form_id -%}
           </div>
 
           {%- if show_payment_button -%}

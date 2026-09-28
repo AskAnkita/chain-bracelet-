@@ -2396,6 +2396,86 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
   border-color: rgb(var(--button-background, var(--border-color)));
 }
 
+/*
+  Share button next to "Add to cart" (snippets/product-share.liquid): the same square
+  outline as the wishlist button beside it, opening a small menu of share options.
+*/
+.product-share {
+  position: relative;
+  display: inline-flex;
+}
+
+.product-share__toggle {
+  aspect-ratio: 1;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgb(var(--button-outline-color, var(--border-color)));
+  border-radius: var(--button-border-radius);
+  color: rgb(var(--text-color));
+  line-height: 0;
+}
+
+.product-share__icon {
+  transition: transform .2s ease-in-out;
+}
+
+.product-share__toggle:hover .product-share__icon {
+  transform: scale(1.1);
+}
+
+.product-share__toggle[aria-expanded="true"] {
+  color: rgb(173 125 49);
+  border-color: rgb(173 125 49);
+}
+
+.product-share__menu {
+  position: absolute;
+  z-index: 10;
+  inset-block-start: calc(100% + .5rem);
+  inset-inline-end: 0;
+  min-inline-size: 12rem;
+  padding: .4rem;
+  border: 1px solid rgb(var(--text-color) / .12);
+  border-radius: .5rem;
+  background: #fff;
+  box-shadow: 0 12px 30px rgb(31 42 36 / .14);
+}
+
+.product-share__options {
+  display: grid;
+}
+
+.product-share__option {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  inline-size: 100%;
+  padding: .6rem .7rem;
+  border-radius: .35rem;
+  font-family: var(--heading-font-family);
+  font-size: .7rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: start;
+  color: rgb(var(--text-color));
+  transition: color .2s ease, background-color .2s ease;
+}
+
+.product-share__option svg {
+  flex: none;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+}
+
+.product-share__option:hover,
+.product-share__option:focus-visible,
+.product-share__option.is-done {
+  color: rgb(173 125 49);
+  background: rgb(173 125 49 / .07);
+}
+
 .product-card__quick-add-button {
   background: rgb(var(--circle-button-background));
   color: rgb(var(--circle-button-text-color));
