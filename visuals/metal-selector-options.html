@@ -1,0 +1,276 @@
+<div id="metal-selector-visual" aria-label="Three jewelry material selector concepts">
+  <style>
+    #metal-selector-visual {
+      color-scheme: light dark;
+      color: light-dark(#35443f, #eeeae0);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #metal-selector-visual * {
+      box-sizing: border-box;
+    }
+
+    #metal-selector-visual .concept {
+      background: light-dark(#f7f2e6, #25231e);
+      padding: 24px;
+    }
+
+    #metal-selector-visual .concept + .concept {
+      border-top: 1px solid light-dark(#d9d7cf, #4a4841);
+    }
+
+    #metal-selector-visual .concept-name,
+    #metal-selector-visual .section-title,
+    #metal-selector-visual .row-label {
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    #metal-selector-visual .concept-name {
+      color: light-dark(#95702e, #d8b56d);
+      margin-bottom: 18px;
+    }
+
+    #metal-selector-visual .section-title {
+      margin-bottom: 18px;
+    }
+
+    #metal-selector-visual .selector-row {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+    }
+
+    #metal-selector-visual .selector-row + .selector-row {
+      margin-top: 10px;
+    }
+
+    #metal-selector-visual .row-label {
+      color: light-dark(#63706b, #b8b5ad);
+    }
+
+    #metal-selector-visual .text-options,
+    #metal-selector-visual .metal-options,
+    #metal-selector-visual .karat-options {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 20px;
+    }
+
+    #metal-selector-visual button {
+      color: inherit;
+      font: inherit;
+    }
+
+    #metal-selector-visual .text-option {
+      min-height: 44px;
+      padding: 10px 0 8px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    #metal-selector-visual .text-option[aria-pressed="true"] {
+      border-bottom-color: currentColor;
+      font-weight: 500;
+    }
+
+    #metal-selector-visual .karat {
+      width: 50px;
+      height: 50px;
+      border: 1px solid light-dark(#bbb9b1, #67645d);
+      border-radius: 50%;
+      background: var(--metal-fill);
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 1px 3px light-dark(rgb(44 42 36 / 0.2), rgb(0 0 0 / 0.35));
+    }
+
+    #metal-selector-visual .karat[aria-pressed="true"] {
+      outline: 2px solid light-dark(#35443f, #eeeae0);
+      outline-offset: 4px;
+    }
+
+    #metal-selector-visual .metal-choice {
+      min-width: 70px;
+      min-height: 68px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+    }
+
+    #metal-selector-visual .metal-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--metal-fill);
+      box-shadow: inset 0 0 0 1px light-dark(rgb(50 48 42 / 0.18), rgb(255 255 255 / 0.18));
+    }
+
+    #metal-selector-visual .metal-choice[aria-pressed="true"] .metal-dot {
+      outline: 2px solid light-dark(#35443f, #eeeae0);
+      outline-offset: 4px;
+    }
+
+    #metal-selector-visual .metal-choice span:last-child {
+      color: light-dark(#59645f, #cac6bd);
+    }
+
+    #metal-selector-visual .compact-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #metal-selector-visual .compact-line + .compact-line {
+      margin-top: 16px;
+    }
+
+    #metal-selector-visual .compact-label {
+      width: 78px;
+      color: light-dark(#63706b, #b8b5ad);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    #metal-selector-visual .compact-option {
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    #metal-selector-visual .compact-option[aria-pressed="true"] {
+      border-color: light-dark(#35443f, #eeeae0);
+    }
+
+    #metal-selector-visual .silver { --metal-fill: radial-gradient(circle at 32% 28%, #ffffff, #dedfe3 48%, #a8abb2); }
+    #metal-selector-visual .yellow { --metal-fill: radial-gradient(circle at 32% 28%, #fae8ab, #dfbd56 48%, #a9812e); }
+    #metal-selector-visual .white { --metal-fill: radial-gradient(circle at 32% 28%, #ffffff, #e4e4e7 48%, #aaadb3); }
+    #metal-selector-visual .rose { --metal-fill: radial-gradient(circle at 32% 28%, #f6d7c7, #dfa68d 48%, #ae7056); }
+
+    @media (max-width: 520px) {
+      #metal-selector-visual .concept {
+        padding: 18px;
+      }
+
+      #metal-selector-visual .selector-row {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      #metal-selector-visual .text-options {
+        gap: 4px 16px;
+      }
+    }
+  </style>
+
+  <section class="concept" data-concept="rows" aria-label="Option A, labeled rows">
+    <div class="concept-name">Option A · Recommended</div>
+    <div class="section-title">Jewelry material</div>
+    <div class="selector-row">
+      <div class="row-label">Metal</div>
+      <div class="text-options" aria-label="Choose metal">
+        <button class="text-option" type="button" data-metal="silver" aria-pressed="false">Silver</button>
+        <button class="text-option" type="button" data-metal="yellow" aria-pressed="false">Yellow Gold</button>
+        <button class="text-option" type="button" data-metal="white" aria-pressed="false">White Gold</button>
+        <button class="text-option" type="button" data-metal="rose" aria-pressed="true">Rose Gold</button>
+      </div>
+    </div>
+    <div class="selector-row">
+      <div class="row-label">Karat</div>
+      <div class="karat-options" aria-label="Choose karat">
+        <button class="karat rose" type="button" aria-pressed="true">10K</button>
+        <button class="karat rose" type="button" aria-pressed="false">14K</button>
+        <button class="karat rose" type="button" aria-pressed="false">18K</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="concept" data-concept="swatches" aria-label="Option B, metal swatches">
+    <div class="concept-name">Option B · Visual metals</div>
+    <div class="section-title">Jewelry material</div>
+    <div class="metal-options" aria-label="Choose metal">
+      <button class="metal-choice silver" type="button" data-metal="silver" aria-pressed="false"><span class="metal-dot"></span><span>Silver</span></button>
+      <button class="metal-choice yellow" type="button" data-metal="yellow" aria-pressed="false"><span class="metal-dot"></span><span>Yellow Gold</span></button>
+      <button class="metal-choice white" type="button" data-metal="white" aria-pressed="false"><span class="metal-dot"></span><span>White Gold</span></button>
+      <button class="metal-choice rose" type="button" data-metal="rose" aria-pressed="true"><span class="metal-dot"></span><span>Rose Gold</span></button>
+    </div>
+    <div class="karat-options" aria-label="Choose karat" style="margin-top: 18px;">
+      <button class="karat rose" type="button" aria-pressed="true">10K</button>
+      <button class="karat rose" type="button" aria-pressed="false">14K</button>
+      <button class="karat rose" type="button" aria-pressed="false">18K</button>
+    </div>
+  </section>
+
+  <section class="concept" data-concept="compact" aria-label="Option C, compact grid">
+    <div class="concept-name">Option C · Compact grid</div>
+    <div class="section-title">Jewelry material</div>
+    <div class="compact-line" aria-label="Choose metal">
+      <div class="compact-label">Metal</div>
+      <button class="compact-option" type="button" data-metal="silver" aria-pressed="false">Silver</button>
+      <button class="compact-option" type="button" data-metal="yellow" aria-pressed="false">Yellow</button>
+      <button class="compact-option" type="button" data-metal="white" aria-pressed="false">White</button>
+      <button class="compact-option" type="button" data-metal="rose" aria-pressed="true">Rose</button>
+    </div>
+    <div class="compact-line" aria-label="Choose karat">
+      <div class="compact-label">Karat</div>
+      <button class="compact-option" type="button" aria-pressed="true">10K</button>
+      <button class="compact-option" type="button" aria-pressed="false">14K</button>
+      <button class="compact-option" type="button" aria-pressed="false">18K</button>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const root = document.getElementById('metal-selector-visual');
+      const metalClasses = ['silver', 'yellow', 'white', 'rose'];
+
+      root.querySelectorAll('.concept').forEach((concept) => {
+        concept.querySelectorAll('[data-metal]').forEach((button) => {
+          button.addEventListener('click', () => {
+            concept.querySelectorAll('[data-metal]').forEach((peer) => peer.setAttribute('aria-pressed', String(peer === button)));
+            concept.querySelectorAll('.karat').forEach((karat) => {
+              karat.classList.remove(...metalClasses);
+              karat.classList.add(button.dataset.metal);
+            });
+          });
+        });
+
+        concept.querySelectorAll('.karat-options, .compact-line').forEach((group) => {
+          group.querySelectorAll('button:not([data-metal])').forEach((button) => {
+            button.addEventListener('click', () => {
+              group.querySelectorAll('button:not([data-metal])').forEach((peer) => peer.setAttribute('aria-pressed', String(peer === button)));
+            });
+          });
+        });
+      });
+
+      const state = { concept: 'rows' };
+      if (globalThis.Tweak) {
+        const tweak = new Tweak({ container: root, onChange: () => {
+          root.querySelector(`[data-concept="${state.concept}"]`)?.scrollIntoView({ block: 'nearest' });
+        }});
+        tweak.addSelect(state, 'concept', {
+          label: 'Preview option',
+          options: [
+            { label: 'A · Labeled rows', value: 'rows' },
+            { label: 'B · Metal swatches', value: 'swatches' },
+            { label: 'C · Compact grid', value: 'compact' }
+          ]
+        });
+      }
+    })();
+  </script>
+</div>

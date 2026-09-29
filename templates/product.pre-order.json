@@ -30,7 +30,9 @@
         },
         "description": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "collapse_content": true
+          }
         },
         "variant_picker": {
           "type": "variant_picker",

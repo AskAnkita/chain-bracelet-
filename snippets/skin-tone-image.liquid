@@ -1,0 +1,49 @@
+{%- doc -%}
+  A product gallery photo with a skin-tone slider over it: a vertical track shaded from
+  light to deep skin, with a white knob that starts at the lightest tone and moves through
+  the original photo into deeper tones. The recolouring is done by assets/skin-tone.js.
+
+  The gallery (snippets/product-gallery.liquid) uses this for the photo whose alt text
+  contains "#skintone". Everything from the first "#" on is left out of the alt text people
+  and search engines see, the same as the gallery's variant tags ("#Jewelry material_Gold").
+
+  @param {object} media - the product image
+  @param {object} product
+  @param {string} [sizes] - the sizes attribute for the image
+  @param {boolean} [preload] - load the image eagerly
+  @param {boolean} [low_priority] - with preload, fetch at low priority
+  @param {string} [class] - classes for the image (and the canvas laid over it)
+{%- enddoc -%}
+
+{%- liquid
+  assign loading = 'lazy'
+  assign fetchpriority = 'auto'
+  if preload
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+    if low_priority
+      assign fetchpriority = 'low'
+    endif
+  endif
+
+  assign image_alt = media.alt | split: '#' | first | strip
+  if image_alt == blank
+    assign image_alt = product.title
+  endif
+-%}
+
+<skin-tone-image class="skin-tone" source="{{ media | image_url: width: 1400 }}">
+  {{-
+    media
+    | image_url: width: media.preview_image.width
+    | image_tag: loading: loading, fetchpriority: fetchpriority, sizes: sizes, widths: '200,400,600,800,1000,1200,1400,1600,1800,2000,2200,2400,2600,2800,3000,3200', class: class, alt: image_alt
+  -}}
+
+  <canvas class="skin-tone__canvas {{ class }}" aria-hidden="true" hidden></canvas>
+
+  <div class="skin-tone__control">
+    <input type="range" class="skin-tone__slider" min="0" max="100" step="1" value="0" aria-label="Skin tone, lighter to darker">
+  </div>
+</skin-tone-image>
+
+<script src="{{ 'skin-tone.js' | asset_url }}" defer></script>

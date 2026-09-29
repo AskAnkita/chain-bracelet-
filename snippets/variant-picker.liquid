@@ -70,10 +70,79 @@
         assign coin_option_list = coin_option_list | split: ','
         if coin_option_list contains option_downcase
           assign resolved_option_selector_style = 'coin'
+
+          assign selected_metal_name = option.selected_value | downcase
+          assign selected_metal_group = 'yellow-gold'
+          if selected_metal_name contains 'rose'
+            assign selected_metal_group = 'rose-gold'
+          elsif selected_metal_name contains 'white' or selected_metal_name contains 'platinum' or selected_metal_name contains 'rhodium'
+            assign selected_metal_group = 'white-gold'
+          elsif selected_metal_name contains 'silver' or selected_metal_name contains 'sterling' or selected_metal_name == 'ss'
+            assign selected_metal_group = 'silver'
+          endif
+
+          assign has_silver = false
+          assign has_yellow_gold = false
+          assign has_white_gold = false
+          assign has_rose_gold = false
+
+          for metal_value in option.values
+            assign metal_name = metal_value.name | downcase
+            if metal_name contains 'rose'
+              assign has_rose_gold = true
+            elsif metal_name contains 'white' or metal_name contains 'platinum' or metal_name contains 'rhodium'
+              assign has_white_gold = true
+            elsif metal_name contains 'silver' or metal_name contains 'sterling' or metal_name == 'ss'
+              assign has_silver = true
+            elsif metal_name contains 'yellow' or metal_name contains 'gold'
+              assign has_yellow_gold = true
+            endif
+          endfor
+
+          # A photo of this product in each metal, for the metal choices: the first image whose
+          # alt carries that colour's tag ("#Jewelry material_Gold", "_white_gold", "_Rose gold",
+          # the tags the gallery filters by). Sterling silver has no photos of its own and uses
+          # the white gold one, as the gallery does.
+          assign yellow_media = nil
+          assign white_media = nil
+          assign rose_media = nil
+
+          for media in product.media
+            unless media.media_type == 'image'
+              continue
+            endunless
+
+            assign media_alt = media.alt | downcase
+            unless media_alt contains 'material_'
+              continue
+            endunless
+
+            if media_alt contains 'rose'
+              if rose_media == nil
+                assign rose_media = media
+              endif
+            elsif media_alt contains 'white' or media_alt contains 'silver'
+              if white_media == nil
+                assign white_media = media
+              endif
+            elsif media_alt contains 'gold' or media_alt contains 'yellow'
+              if yellow_media == nil
+                assign yellow_media = media
+              endif
+            endif
+          endfor
+
+          assign silver_media = white_media | default: product.featured_media
+          assign yellow_media = yellow_media | default: product.featured_media
+          assign white_media = white_media | default: product.featured_media
+          assign rose_media = rose_media | default: product.featured_media
         endif
       %}
 
-      <fieldset class="variant-picker__option v-stack gap-2">
+      <fieldset
+        class="variant-picker__option v-stack gap-2{% if resolved_option_selector_style == 'coin' %} variant-picker__option--metal{% endif %}{% if option_downcase contains 'length' %} variant-picker__option--length{% endif %}"
+        {% if resolved_option_selector_style == 'coin' %}data-active-metal="{{ selected_metal_group }}"{% endif %}
+      >
         <div class="variant-picker__option-info h-stack justify-between gap-2">
           <div class="h-stack gap-1">
             <legend>{{ option.name }}:</legend>
@@ -101,6 +170,53 @@
         </div>
 
         {%- assign name = 'option' | append: option.position -%}
+
+        {%- if resolved_option_selector_style == 'coin' -%}
+          {%- capture metal_filter_id -%}metal-filter-{{ section.id }}-{{ product.id }}-{{ option.position }}{%- endcapture -%}
+          {%- capture metal_filter_name -%}metal-filter-option-{{ section.id }}-{{ product.id }}-{{ option.position }}{%- endcapture -%}
+          {%- assign metal_groups = 'silver,yellow-gold,white-gold,rose-gold' | split: ',' -%}
+          <metal-variant-filter
+            class="metal-variant-filter"
+            {% if product.selected_variant == blank and has_silver %}data-default-metal="silver"{% endif %}
+          >
+            <div class="metal-variant-filter__tabs" role="radiogroup" aria-label="Metal">
+              {%- for metal_group in metal_groups -%}
+                {%- liquid
+                  case metal_group
+                    when 'silver'
+                      assign metal_available = has_silver
+                      assign metal_label = 'Silver'
+                      assign metal_media = silver_media
+                    when 'yellow-gold'
+                      assign metal_available = has_yellow_gold
+                      assign metal_label = 'Yellow Gold'
+                      assign metal_media = yellow_media
+                    when 'white-gold'
+                      assign metal_available = has_white_gold
+                      assign metal_label = 'White Gold'
+                      assign metal_media = white_media
+                    when 'rose-gold'
+                      assign metal_available = has_rose_gold
+                      assign metal_label = 'Rose Gold'
+                      assign metal_media = rose_media
+                  endcase
+                -%}
+
+                {%- if metal_available -%}
+                  <label class="metal-variant-filter__tab" for="{{ metal_filter_id }}-{{ metal_group }}">
+                    <input class="sr-only" type="radio" id="{{ metal_filter_id }}-{{ metal_group }}" name="{{ metal_filter_name }}" value="{{ metal_group }}" data-metal-filter-option {% if selected_metal_group == metal_group %}checked{% endif %}>
+                    <span class="metal-variant-filter__thumb metal-variant-filter__thumb--{{ metal_group }}">
+                      {%- if metal_media != blank -%}
+                        {{- metal_media | image_url: width: 200 | image_tag: loading: 'lazy', sizes: '72px', widths: '100,150,200', alt: '' -}}
+                      {%- endif -%}
+                    </span>
+                    <span class="metal-variant-filter__name">{{ metal_label }}</span>
+                  </label>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </metal-variant-filter>
+        {%- endif -%}
 
         {%- if resolved_option_selector_style == 'dropdown' -%}
           <div class="relative">
@@ -212,7 +328,16 @@
                   when 'block_swatch'
                     render 'option-value', type: 'block', form: form_id, option_value: option_value, param_name: name, option_position: option.position, show_swatch: true, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                   when 'coin'
-                    render 'option-value', type: 'coin', form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
+                    assign metal_name = option_value.name | downcase
+                    assign metal_group = 'yellow-gold'
+                    if metal_name contains 'rose'
+                      assign metal_group = 'rose-gold'
+                    elsif metal_name contains 'white' or metal_name contains 'platinum' or metal_name contains 'rhodium'
+                      assign metal_group = 'white-gold'
+                    elsif metal_name contains 'silver' or metal_name contains 'sterling' or metal_name == 'ss'
+                      assign metal_group = 'silver'
+                    endif
+                    render 'option-value', type: 'coin', metal_group: metal_group, form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                   when 'underline'
                     render 'option-value', type: 'underline', form: form_id, option_value: option_value, param_name: name, option_position: option.position, hide_if_disabled: hide_sold_out_variants, reload_page_for_combined_products: is_main_product, id_prefix: forloop.index
                 endcase
@@ -237,4 +362,6 @@
       </noscript>
     {%- endunless -%}
   </variant-picker>
+
+  <script src="{{ 'metal-variant-filter.js' | asset_url }}" defer></script>
 {%- endunless -%}

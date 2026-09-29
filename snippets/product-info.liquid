@@ -214,6 +214,27 @@
             {%- if product_description != blank -%}
               {%- comment -%}The whole description is in capitals, like the headings above it (theme.css, .product-description).{%- endcomment -%}
               {%- if block.settings.collapse_content -%}
+                {%- liquid
+                  # The descriptions open with their own "Description" heading, written as
+                  # <p><strong>Description</strong></p> or <h3>Description</h3>. Inside a dropdown
+                  # already titled "Description" that would read twice, so it is left out.
+                  assign product_description = product_description | strip
+                  assign first_tag = product_description | slice: 0, 3
+                  assign first_closing = ''
+                  if first_tag == '<p>' or first_tag == '<p '
+                    assign first_closing = '</p>'
+                  elsif first_tag == '<h3'
+                    assign first_closing = '</h3>'
+                  endif
+
+                  if first_closing != ''
+                    assign first_element = product_description | split: first_closing | first
+                    assign first_text = first_element | strip_html | strip | downcase
+                    if first_text == 'description'
+                      assign product_description = product_description | remove_first: first_element | remove_first: first_closing
+                    endif
+                  endif
+                -%}
                 {%- assign accordion_title = 'product.general.description' | t -%}
                 {%- assign product_description = '<div class="product-description">' | append: product_description | append: '</div>' -%}
                 {%- render 'accordion', title: accordion_title, content: product_description, prose_content: true, block: block -%}
@@ -491,6 +512,14 @@
             {%- liquid
               assign accordion_title = block.settings.title | default: block.settings.page.title
               assign accordion_content = block.settings.page.content | default: block.settings.liquid | default: block.settings.content
+              assign accordion_key = accordion_title | strip_html | strip | downcase
+
+              if accordion_key contains 'shipping' and accordion_key contains 'return'
+                capture delivery_estimate
+                  render 'shipping-delivery-estimate'
+                endcapture
+                assign accordion_content = delivery_estimate | append: accordion_content
+              endif
 
               if accordion_title != blank and accordion_content != blank
                 render 'accordion', title: accordion_title, content: accordion_content, prose_content: true, icon: block.settings.icon, custom_icon: block.settings.custom_icon, block: block

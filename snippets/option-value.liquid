@@ -18,6 +18,7 @@
   @param {object} [color_metaobject] - a color metaobject used when directly working with it instead of an option
   @param {object} [image] - a specific image to use for the thumbnail (thumbnail specific)
   @param {boolean} [underline] - if true it will be underlined instead of bordered (thumbnail specific)
+  @param {string} [metal_group] - metal family used to filter coin-style product options
   @param {object} [section]
 {%- enddoc -%}
 
@@ -229,6 +230,7 @@
       # "Sterling Silver" -> "SS", "Platinum" -> "PT".
       assign coin_fill = '#d8d2c0'
       assign coin_text = label | split: ' ' | first | upcase
+      assign coin_group = metal_group | default: 'yellow-gold'
 
       if downcase_label contains 'sterling' or downcase_label == 'ss'
         assign coin_text = 'SS'
@@ -249,6 +251,7 @@
     <{{ option_value_tag }}
       class="coin-swatch {% if disabled %}is-disabled{% endif %} {% if selected and option_value_tag == 'a' %}is-selected{% endif %}"
       {{ attributes }}
+      data-metal-group="{{ coin_group }}"
       style="--coin-fill: {{ coin_fill }}"
     >
       <span class="coin-swatch__text" aria-hidden="true">{{ coin_text }}</span>

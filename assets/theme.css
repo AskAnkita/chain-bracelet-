@@ -255,6 +255,31 @@ height-observer {
   padding-inline-end: 1.25rem;
 }
 
+.shipping-delivery-estimate {
+  display: block;
+  margin-block-end: 1rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid rgb(var(--border-color));
+}
+
+.shipping-delivery-estimate__date {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .35rem 1rem;
+  font-family: var(--heading-font-family);
+}
+
+.shipping-delivery-estimate__date strong {
+  font-weight: var(--heading-font-weight);
+}
+
+.shipping-delivery-estimate__note {
+  margin-block-start: .35rem;
+  color: rgb(var(--text-color) / .68);
+  font-size: var(--text-sm);
+}
+
 @media screen and (min-width: 1000px) {
   .accordion__toggle.text-lg {
     padding-block: 1.5rem;
@@ -2065,6 +2090,73 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
   }
 }
 
+/*
+  Zoom view buttons (registerLightboxUi_fn in theme.js): plain icons at the screen's edges
+  instead of a row of round buttons over the bottom of the photo -- the close X in the top
+  right corner, the previous and next arrows at the left and right, halfway down. The
+  photo is padded clear of them (paddingFn in theme.js).
+*/
+.pswp__top-bar:has(> .lightbox-button) {
+  inset: 0;
+  height: auto;
+}
+
+.pswp__top-bar > .lightbox-button {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  color: rgb(var(--text-color));
+  background: none;
+  pointer-events: auto;
+  transition: color .2s ease, opacity .2s ease;
+}
+
+.lightbox-button--close {
+  inset-block-start: 1.25rem;
+  inset-inline-end: 1.5rem;
+}
+
+.lightbox-button--prev,
+.lightbox-button--next {
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+}
+
+.lightbox-button--prev {
+  inset-inline-start: 1.5rem;
+}
+
+.lightbox-button--next {
+  inset-inline-end: 1.5rem;
+}
+
+.pswp__top-bar > .lightbox-button[disabled] {
+  opacity: .25;
+}
+
+@media screen and (pointer: fine) {
+  .pswp__top-bar > .lightbox-button:hover {
+    color: rgb(173 125 49);
+  }
+}
+
+@media screen and (max-width: 699px) {
+  .lightbox-button--close {
+    inset-block-start: .75rem;
+    inset-inline-end: .5rem;
+  }
+
+  .lightbox-button--prev {
+    inset-inline-start: .25rem;
+  }
+
+  .lightbox-button--next {
+    inset-inline-end: .25rem;
+  }
+}
+
 .range {
   -webkit-appearance: none;
   appearance: none;
@@ -2370,8 +2462,8 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
 
 /*
   Square variant used next to "Add to cart": matches the theme's regular .button shape
-  (border + border-radius) instead of the filled circle used on product cards, and is a
-  fixed 1:1 square sized off the ATC button's own padding so the two line up edge to edge.
+  (border + border-radius) instead of the filled circle used on product cards. Its size is
+  set with the rest of that row (.buy-buttons__row), so it is an exact square.
 */
 .wishlist-button--square .wishlist-button__toggle {
   aspect-ratio: 1;
@@ -2474,6 +2566,106 @@ model-media model-viewer, model-media .shopify-model-viewer-ui {
 .product-share__option.is-done {
   color: rgb(173 125 49);
   background: rgb(173 125 49 / .07);
+}
+
+/*
+  Skin-tone slider on a ring-on-hand photo (snippets/skin-tone-image.liquid): a vertical
+  track shaded light to deep skin, inside a soft white pill at the photo's right edge. The
+  input is a normal horizontal range turned a quarter clockwise, so its lightest tone sits
+  at the top.
+*/
+.skin-tone {
+  --skin-tone-length: clamp(6.5rem, 25vw, 12rem);
+  position: relative;
+  display: block;
+}
+
+.skin-tone__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.skin-tone__control {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 50%;
+  inset-inline-end: 3%;
+  width: 2.25rem;
+  height: calc(var(--skin-tone-length) + 1rem);
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / .48);
+  box-shadow: 0 4px 14px rgb(31 42 36 / .08);
+  touch-action: none;
+}
+
+.skin-tone.is-unavailable .skin-tone__control {
+  display: none;
+}
+
+.skin-tone__slider {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: var(--skin-tone-length);
+  height: 2rem;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  transform: translate(-50%, -50%) rotate(90deg);
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: none;
+}
+
+.skin-tone__slider::-webkit-slider-runnable-track {
+  height: .375rem;
+  border-radius: 999px;
+  background: linear-gradient(to right, #fff3ea, #f2d1ba 22%, #d49a72 43%, #b67552 64%, #875038 82%, #543124);
+}
+
+.skin-tone__slider::-moz-range-track {
+  height: .375rem;
+  border-radius: 999px;
+  background: linear-gradient(to right, #fff3ea, #f2d1ba 22%, #d49a72 43%, #b67552 64%, #875038 82%, #543124);
+}
+
+.skin-tone__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.625rem;
+  height: 1.625rem;
+  margin-top: -.625rem;
+  border: 1px solid rgb(0 0 0 / .32);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #fff, #f3f3f3);
+  box-shadow: 0 2px 8px rgb(0 0 0 / .18);
+}
+
+.skin-tone__slider::-moz-range-thumb {
+  width: 1.625rem;
+  height: 1.625rem;
+  border: 1px solid rgb(0 0 0 / .32);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #fff, #f3f3f3);
+  box-shadow: 0 2px 8px rgb(0 0 0 / .18);
+}
+
+.skin-tone__slider:focus-visible {
+  outline: none;
+}
+
+.skin-tone__slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid rgb(173 125 49);
+  outline-offset: 2px;
+}
+
+.skin-tone__slider:focus-visible::-moz-range-thumb {
+  outline: 2px solid rgb(173 125 49);
+  outline-offset: 2px;
 }
 
 .product-card__quick-add-button {
@@ -6967,6 +7159,30 @@ shopify-account::part(content) {
 
 .buy-buttons__row > .button {
   flex: 1;
+}
+
+/*
+  The wishlist and share buttons beside "Add to cart" are exact squares of one fixed size,
+  which "Add to cart" matches in height. Sizing them off the row's height with aspect-ratio
+  alone left them wider than tall, because the row's height isn't known when their width
+  is worked out.
+*/
+.buy-buttons__row {
+  --buy-buttons-square: 2.75rem;
+}
+
+.buy-buttons__row > .button {
+  min-height: var(--buy-buttons-square);
+}
+
+.buy-buttons__row > :is(.wishlist-button, .product-share) {
+  flex: none;
+  align-self: center;
+}
+
+.buy-buttons__row :is(.wishlist-button__toggle, .product-share__toggle) {
+  width: var(--buy-buttons-square);
+  height: var(--buy-buttons-square);
 }
 
 .pickup-location {

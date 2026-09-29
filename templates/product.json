@@ -26,7 +26,9 @@
         },
         "description": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "collapse_content": true
+          }
         },
         "variant_picker": {
           "type": "variant_picker",
@@ -58,7 +60,8 @@
           "type": "accordion",
           "settings": {
             "show_below_gallery": false,
-            "title": "Shipping & Returns"
+            "title": "Shipping & Returns",
+            "content": "<p><strong>Free shipping</strong> on every order, all year long.</p><p>Each piece is made for your order and takes about 5–7 working days to prepare, then ships tracked and insured. You’ll get your tracking details by email once it’s on its way. Higher-value parcels may need a signature on delivery.</p><p>International orders may be subject to duties or taxes charged by the destination country.</p><p><strong>15-day returns.</strong> Return unworn pieces in their original packaging within 15 days of delivery. Custom, personalised and engraved pieces can’t be returned. To start a return, email <a href=\"mailto:info@chainandbracelet.com\">info@chainandbracelet.com</a>.</p><p><a href=\"/policies/shipping-policy\">Shipping Policy</a> · <a href=\"/policies/refund-policy\">Refund Policy</a></p>"
           }
         }
       },

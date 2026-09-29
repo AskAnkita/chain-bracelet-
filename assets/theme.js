@@ -3052,6 +3052,10 @@ var ProductGallery = class extends HTMLElement {
       closeTitle: window.themeVariables.strings.closeGallery,
       zoomTitle: window.themeVariables.strings.zoomGallery,
       errorMsg: window.themeVariables.strings.errorGallery,
+      // Room around the photo so the arrows at the sides and the close button at the top
+      // right never sit on it (see .lightbox-button in theme.css). Phones swipe instead, so
+      // the photo keeps the full width there.
+      paddingFn: (viewportSize) => viewportSize.x < 700 ? { top: 64, bottom: 24, left: 0, right: 0 } : { top: 72, bottom: 72, left: 112, right: 112 },
       // UX
       arrowPrev: false,
       arrowNext: false,
@@ -3099,13 +3103,13 @@ _ProductGallery_instances = new WeakSet();
 registerLightboxUi_fn = function() {
   __privateGet(this, _photoSwipeInstance).pswp.ui.registerElement({
     name: "close-button",
-    className: "circle-button circle-button--xl hover:animate-icon-block",
+    className: "lightbox-button lightbox-button--close",
     ariaLabel: window.themeVariables.strings.closeGallery,
     order: 2,
     isButton: true,
     html: `
-        <svg aria-hidden="true" focusable="false" fill="none" width="16" class="icon" viewBox="0 0 16 16">
-          <path d="m1 1 14 14M1 15 15 1" stroke="currentColor" stroke-width="1"/>
+        <svg aria-hidden="true" focusable="false" fill="none" width="22" viewBox="0 0 16 16">
+          <path d="m1 1 14 14M1 15 15 1" stroke="currentColor" stroke-width="1.2"/>
         </svg>
       `,
     onClick: () => {
@@ -3115,13 +3119,13 @@ registerLightboxUi_fn = function() {
   if (__privateGet(this, _photoSwipeInstance).pswp.options.dataSource.length > 1) {
     __privateGet(this, _photoSwipeInstance).pswp.ui.registerElement({
       name: "previous-button",
-      className: "circle-button hover:animate-icon-inline",
+      className: "lightbox-button lightbox-button--prev",
       ariaLabel: window.themeVariables.strings.previous,
       order: 1,
       isButton: true,
       html: `
-        <svg aria-hidden="true" focusable="false" fill="none" width="16" class="icon icon--direction-aware" viewBox="0 0 16 18">
-          <path d="M11 1 3 9l8 8" stroke="currentColor" stroke-linecap="square"/>
+        <svg aria-hidden="true" focusable="false" fill="none" width="14" class="icon--direction-aware" viewBox="0 0 16 28">
+          <path d="M14 1 2 14l12 13" stroke="currentColor" stroke-width="1.4"/>
         </svg>
       `,
       onClick: () => {
@@ -3130,13 +3134,13 @@ registerLightboxUi_fn = function() {
     });
     __privateGet(this, _photoSwipeInstance).pswp.ui.registerElement({
       name: "next-button",
-      className: "circle-button hover:animate-icon-inline",
+      className: "lightbox-button lightbox-button--next",
       ariaLabel: window.themeVariables.strings.next,
       order: 3,
       isButton: true,
       html: `
-        <svg aria-hidden="true" focusable="false" fill="none" width="16" class="icon icon--direction-aware" viewBox="0 0 16 18">
-          <path d="m5 17 8-8-8-8" stroke="currentColor" stroke-linecap="square"/>
+        <svg aria-hidden="true" focusable="false" fill="none" width="14" class="icon--direction-aware" viewBox="0 0 16 28">
+          <path d="m2 1 12 13L2 27" stroke="currentColor" stroke-width="1.4"/>
         </svg>
       `,
       onClick: () => {
@@ -3456,6 +3460,18 @@ onRerender_fn = function(event) {
               element.replaceWith(matchingBlock);
               matchingBlock.querySelector("quantity-selector").quantity = existingQuantity;
             }
+          } else if (blockType === "variant-picker") {
+            const existingMetalFilter = element.querySelector("metal-variant-filter");
+            const matchingMetalFilter = matchingBlock.querySelector("metal-variant-filter");
+            if (existingMetalFilter && matchingMetalFilter) {
+              const selectedMetal = matchingMetalFilter.querySelector("[data-metal-filter-option]:checked")?.value;
+              const existingSelectedMetal = Array.from(existingMetalFilter.querySelectorAll("[data-metal-filter-option]")).find((option) => option.value === selectedMetal);
+              if (existingSelectedMetal) {
+                existingSelectedMetal.checked = true;
+              }
+              matchingMetalFilter.replaceWith(existingMetalFilter);
+            }
+            element.replaceWith(matchingBlock);
           } else {
             element.replaceWith(matchingBlock);
           }

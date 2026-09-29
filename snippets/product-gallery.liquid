@@ -44,12 +44,19 @@
     }
 
     {%- if desktop_layout == 'grid_2x_highlighted' -%}
-      #shopify-section-{{ section.id }} .product-gallery__media:not([hidden]) {
-        grid-column: span 2;
+      {%- comment -%}
+        One large photo, then two small side by side, then one large, two small, and so on.
+        Counted over the visible photos only ("of :not([hidden])"), so the rhythm holds for
+        whichever metal is selected, including after switching metal on the page. A small
+        photo left alone at the very end goes large rather than leave a gap beside it.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .product-gallery__media {
+        grid-column: span 1;
       }
 
-      #shopify-section-{{ section.id }} .product-gallery__media:not([hidden]) ~ .product-gallery__media {
-        grid-column: span 1;
+      #shopify-section-{{ section.id }} .product-gallery__media:nth-child(3n + 1 of .product-gallery__media:not([hidden])),
+      #shopify-section-{{ section.id }} .product-gallery__media:nth-child(3n + 2 of .product-gallery__media:not([hidden])):nth-last-child(1 of .product-gallery__media:not([hidden])) {
+        grid-column: span 2;
       }
     {%- endif -%}
   }
@@ -85,7 +92,11 @@
 {%- endcomment -%}
 
 {% liquid
-  assign default_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  # A variant's own photo, when one is assigned in admin, always stays visible and opens the
+  # gallery. These products assign none and rely on the "#Jewelry material_..." tags instead,
+  # so the gallery opens on the first photo tagged for the selected metal (worked out below).
+  assign variant_media = product.selected_or_first_available_variant.featured_media
+  assign default_media = variant_media | default: product.featured_media
   assign product_gallery_carousel_id = 'product-gallery-carousel-' | append: product.id | append: '-' | append: section.id
   assign filtered_indexes = null | sort
 
@@ -198,11 +209,32 @@
         endif
       endfor
 
-      if media_is_filtered and media != default_media
-        assign media_position = media.position | sort
-        assign filtered_indexes = filtered_indexes | concat: media_position
+      # Only a photo assigned to the variant itself is kept despite its tag. The product's
+      # first photo used to be kept too, so a gold photo stayed at the front of the gallery
+      # with Silver or Rose Gold selected.
+      if media_is_filtered
+        if variant_media == blank or media != variant_media
+          assign media_position = media.position | sort
+          assign filtered_indexes = filtered_indexes | concat: media_position
+        endif
       endif
     endfor
+  endif
+
+  if variant_media == blank
+    assign default_media = nil
+    for media in product.media
+      unless filtered_indexes contains media.position
+        assign default_media = media
+        break
+      endunless
+    endfor
+
+    # Every photo tagged for other metals: show them all rather than an empty gallery.
+    if default_media == nil
+      assign default_media = product.featured_media
+      assign filtered_indexes = null | sort
+    endif
   endif
 %}
 
@@ -355,20 +387,36 @@
                 actual hover-then-unhover to make it re-evaluate and hide. An autoplaying preview
                 isn't meant to be operated like a player anyway; the point is it just plays.
               {%- endcomment -%}
-              {%- render 'media',
-                media: media,
-                sizes: sizes,
-                preload: preload,
-                low_priority: low_priority,
-                controls: show_controls,
-                playsinline: true,
-                autoplay: enable_media_autoplay,
-                muted: enable_media_autoplay,
-                loop: enable_video_looping,
-                group: 'product',
-                product: product,
-                class: gallery_media_class
-              -%}
+              {%- comment -%}
+                A photo tagged "#skintone" in its alt text (a ring on a hand) gets the skin-tone
+                slider; see snippets/skin-tone-image.liquid.
+              {%- endcomment -%}
+              {%- assign media_alt_key = media.alt | downcase | remove: '-' -%}
+              {%- if media.media_type == 'image' and media_alt_key contains '#skintone' -%}
+                {%- render 'skin-tone-image',
+                  media: media,
+                  product: product,
+                  sizes: sizes,
+                  preload: preload,
+                  low_priority: low_priority,
+                  class: gallery_media_class
+                -%}
+              {%- else -%}
+                {%- render 'media',
+                  media: media,
+                  sizes: sizes,
+                  preload: preload,
+                  low_priority: low_priority,
+                  controls: show_controls,
+                  playsinline: true,
+                  autoplay: enable_media_autoplay,
+                  muted: enable_media_autoplay,
+                  loop: enable_video_looping,
+                  group: 'product',
+                  product: product,
+                  class: gallery_media_class
+                -%}
+              {%- endif -%}
             </div>
           {%- endfor -%}
         {%- else -%}

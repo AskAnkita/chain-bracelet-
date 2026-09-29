@@ -98,7 +98,7 @@
   },
   "product": {
     "general": {
-      "description": "Description",
+      "description": "Product Details",
       "view_details": "View details",
       "add_to_cart_button": "Add to cart",
       "pre_order_button": "Pre-order",
