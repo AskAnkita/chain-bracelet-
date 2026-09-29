@@ -82,6 +82,11 @@
             {%- continue -%}
           {%- endif -%}
 
+          {%- comment -%}Every piece is made to order, so "In stock only" means nothing here.{%- endcomment -%}
+          {%- if filter.param_name == 'filter.v.availability' -%}
+            {%- continue -%}
+          {%- endif -%}
+
           {%- comment -%}
             The products are tagged `Shape:Round`, `Style:Halo`, `Type:Studs`, and Shopify
             offers all of them as one flat "Product tag" filter. This renders it as a group
