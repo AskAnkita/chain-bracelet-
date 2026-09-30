@@ -13,7 +13,7 @@
   # mobile drawer both build from it. Each entry is TITLE|URL; a category adds the filename
   # of its flat-lay in Content > Files, which the mega menu uses as its first image.
   # On desktop, /collections/ links sit left of the logo and the rest sit right of it.
-  assign nav_items = "NECKLACES|/collections/necklaces|f7a8ab48-3b7f-412e-ab3c-3036603e1a80.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,ABOUT US|/pages/about-us" | split: ","
+  assign nav_items = "NECKLACES|/collections/necklaces|f7a8ab48-3b7f-412e-ab3c-3036603e1a80.png,BRACELETS|/collections/bracelets|74f7a1fc-25b0-4be9-be7b-f4afbf0e883a.png,RINGS|/collections/rings|3112205e-855b-473e-a451-2929ed5f104f.png,EARRINGS|/collections/earrings|841d5f8b-ee25-419c-8033-c968d70a9c3a.png,SIZE GUIDE|/pages/size-guide,OUR STORY|/pages/about-us" | split: ","
 -%}
 
 <style>
@@ -217,8 +217,20 @@
     color: rgb(173 125 49);
   }
 
-  #sidebar-menu::part(close-button) {
+  #sidebar-menu::part(close-button),
+  #sidebar-menu::part(home-link) {
     color: rgb(173 125 49);
+  }
+
+  {%- comment -%}Home icon opposite the close button (snippets/header-sidebar.liquid).{%- endcomment -%}
+  #sidebar-menu::part(home-link) {
+    display: grid;
+    place-items: center;
+  }
+
+  #sidebar-menu::part(home-link):focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 4px;
   }
 
   {%- comment -%}
@@ -235,6 +247,8 @@
     align-items: start;
     column-gap: clamp(2.5rem, 5vw, 5rem);
     padding-block: 1.75rem 2rem;
+    max-height: min(65vh, 44rem);
+    overflow: hidden;
     box-shadow: 0 1.25rem 1.5rem -1.25rem rgb(0 0 0 / .15);
   }
 
@@ -260,6 +274,10 @@
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     width: 100%;
     max-width: 44rem;
+    min-height: 0;
+    max-height: calc(min(65vh, 44rem) - 3.75rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
   #shopify-section-{{ section.id }} .category-mega-menu__column {
@@ -280,6 +298,17 @@
     row-gap: .8rem;
   }
 
+  #shopify-section-{{ section.id }} .category-mega-menu__column--style .category-mega-menu__column-links {
+    display: block;
+    column-count: 2;
+    column-gap: 1.5rem;
+  }
+
+  #shopify-section-{{ section.id }} .category-mega-menu__column--style .category-mega-menu__column-links li {
+    break-inside: avoid;
+    margin-block-end: .8rem;
+  }
+
   {%- comment -%}
     A block's own menu keeps the older single list: links flow down each column, then
     across, with the row count set inline from `links_per_column`.
@@ -292,6 +321,10 @@
     grid-auto-columns: max-content;
     column-gap: clamp(3rem, 5vw, 4.5rem);
     row-gap: .85rem;
+    min-height: 0;
+    max-height: calc(min(65vh, 44rem) - 3.75rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
   {%- comment -%}

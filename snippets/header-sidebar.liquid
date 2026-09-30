@@ -66,6 +66,17 @@
 
     <div part="content">
       <header part="header">
+        {%- comment -%}
+          On mobile the logo is the only other way back to the homepage, so the top bar carries
+          a home icon on the left, with the close button on the right. It sits in the bar
+          rather than in the list so it stays in view on every panel, category sub-menus
+          included. A homepage link in the mobile menu setting is skipped below so home isn't
+          offered twice.
+        {%- endcomment -%}
+        <a href="{{ routes.root_url }}" part="home-link" aria-label="{{ 'general.home' | t | escape }}" {% if template.name == 'index' %}aria-current="page"{% endif %}>
+          {%- render 'icon' with 'home', width: 22 -%}
+        </a>
+
         <dialog-close-button class="contents">
           <button type="button" part="close-button tap-area" aria-label="{{ 'general.accessibility.close' | t | escape }}">
             {%- render 'icon' with 'close', width: 16 -%}
@@ -149,6 +160,10 @@
             assign link_title_key = '|' | append: link.title | strip | downcase | append: '|'
             assign link_url_key = '|' | append: link.url | strip | downcase | append: '|'
             if nav_keys contains link_title_key or nav_keys contains link_url_key
+              continue
+            endif
+
+            if link.url == routes.root_url and link.links.size == 0
               continue
             endif
           -%}

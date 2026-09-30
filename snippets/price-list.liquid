@@ -40,10 +40,11 @@
     <sale-price class="{% if variant.compare_at_price > variant.price %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
       <span class="sr-only">{{ 'product.price.sale_price' | t }}</span>
 
+      {%- assign whole_variant_price = variant.price | divided_by: 100.0 | round | times: 100 -%}
       {%- if settings.currency_code_enabled -%}
-        {{- variant.price | money_with_currency -}}
+        {{- whole_variant_price | money_without_trailing_zeros }} {{ cart.currency.iso_code -}}
       {%- else -%}
-        {{- variant.price | money -}}
+        {{- whole_variant_price | money_without_trailing_zeros -}}
       {%- endif -%}
     </sale-price>
 
@@ -51,10 +52,11 @@
       <compare-at-price class="{{ compare_at_price_classes }}">
         <span class="sr-only">{{ 'product.price.regular_price' | t }}</span>
 
+        {%- assign whole_compare_at_price = variant.compare_at_price | divided_by: 100.0 | round | times: 100 -%}
         {%- if settings.currency_code_enabled -%}
-          {{- variant.compare_at_price | money_with_currency -}}
+          {{- whole_compare_at_price | money_without_trailing_zeros }} {{ cart.currency.iso_code -}}
         {%- else -%}
-          {{- variant.compare_at_price | money -}}
+          {{- whole_compare_at_price | money_without_trailing_zeros -}}
         {%- endif -%}
       </compare-at-price>
     {%- endif -%}
@@ -67,10 +69,11 @@
     <sale-price class="{% if line_item.original_price > line_item.final_price %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
       <span class="sr-only">{{ 'product.price.sale_price' | t }}</span>
 
+      {%- assign whole_final_price = line_item.final_price | divided_by: 100.0 | round | times: 100 -%}
       {%- if settings.currency_code_enabled -%}
-        {{- line_item.final_price | money_with_currency -}}
+        {{- whole_final_price | money_without_trailing_zeros }} {{ cart.currency.iso_code -}}
       {%- else -%}
-        {{- line_item.final_price | money -}}
+        {{- whole_final_price | money_without_trailing_zeros -}}
       {%- endif -%}
     </sale-price>
 
@@ -78,10 +81,11 @@
       <compare-at-price class="{{ compare_at_price_classes }}">
         <span class="sr-only">{{ 'product.price.regular_price' | t }}</span>
 
+        {%- assign whole_original_price = line_item.original_price | divided_by: 100.0 | round | times: 100 -%}
         {%- if settings.currency_code_enabled -%}
-          {{- line_item.original_price | money_with_currency -}}
+          {{- whole_original_price | money_without_trailing_zeros }} {{ cart.currency.iso_code -}}
         {%- else -%}
-          {{- line_item.original_price | money -}}
+          {{- whole_original_price | money_without_trailing_zeros -}}
         {%- endif -%}
       </compare-at-price>
     {%- endif -%}
@@ -98,12 +102,14 @@
         assign variant = product.variants | sort: 'price' | first | default: product.selected_or_first_available_variant
       endif
 
+      assign whole_variant_price = variant.price | divided_by: 100.0 | round | times: 100
+      assign whole_compare_at_price = variant.compare_at_price | divided_by: 100.0 | round | times: 100
       if settings.currency_code_enabled
-        assign variant_price = variant.price | money_with_currency
-        assign variant_compare_at_price = variant.compare_at_price | money_with_currency
+        assign variant_price = whole_variant_price | money_without_trailing_zeros | append: ' ' | append: cart.currency.iso_code
+        assign variant_compare_at_price = whole_compare_at_price | money_without_trailing_zeros | append: ' ' | append: cart.currency.iso_code
       else
-        assign variant_price = variant.price | money
-        assign variant_compare_at_price = variant.compare_at_price | money
+        assign variant_price = whole_variant_price | money_without_trailing_zeros
+        assign variant_compare_at_price = whole_compare_at_price | money_without_trailing_zeros
       endif
     -%}
 
@@ -120,10 +126,11 @@
           what the gold versions cost. Only products whose variants differ in price get a range.
         {%- endcomment -%}
         {%- liquid
+          assign whole_product_price_max = product.price_max | divided_by: 100.0 | round | times: 100
           if settings.currency_code_enabled
-            assign product_price_max = product.price_max | money_with_currency
+            assign product_price_max = whole_product_price_max | money_without_trailing_zeros | append: ' ' | append: cart.currency.iso_code
           else
-            assign product_price_max = product.price_max | money
+            assign product_price_max = whole_product_price_max | money_without_trailing_zeros
           endif
         -%}
         <sale-price class="{% if is_variant_on_sale %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
@@ -160,9 +167,9 @@
       <span class="sr-only">{{ 'product.price.sale_price' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
-        {{- 4999 | money_with_currency -}}
+        {{- 5000 | money_without_trailing_zeros }} {{ cart.currency.iso_code -}}
       {%- else -%}
-        {{- 4999 | money -}}
+        {{- 5000 | money_without_trailing_zeros -}}
       {%- endif -%}
     </sale-price>
   {%- endif -%}

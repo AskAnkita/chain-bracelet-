@@ -2,16 +2,37 @@
   This component is used in complementary product to show a condensed view of the product.
 
   @param {object} product - the product to render
+  @param {object} [variant] - if set, the card shows, links to and adds this variant instead of the product's default one
+  @param {object} [media] - if set, the photo to show instead of the product's featured media
   @param {boolean} [show_quick_buy] - show or not the quick buy (which opens a modal if the product contains more than 1 choice)
+  @param {string} [quick_buy_context] - a unique text to dissociate quick buy if the same product is embedded multiple times
   @param {object} [block]
 {%- enddoc -%}
 
+{%- liquid
+  assign card_media = media | default: product.featured_media
+  assign card_url = product.url
+  assign card_variant = product.selected_or_first_available_variant
+
+  if variant != blank
+    assign card_url = variant.url
+    assign card_variant = variant
+  endif
+
+  # A chosen variant of a product whose only option is that choice (e.g. metal) can be added
+  # straight away; anything with another option left to pick (e.g. ring size) opens the modal.
+  assign direct_add = false
+  if product.variants.size == 1 or variant != blank and product.options.size == 1
+    assign direct_add = true
+  endif
+-%}
+
 <div class="horizontal-product-card">
-  {%- if product.featured_media -%}
-    <a href="{{ product.url }}" class="horizontal-product-card__figure" data-instant>
+  {%- if card_media -%}
+    <a href="{{ card_url }}" class="horizontal-product-card__figure" data-instant>
       {{-
-        product.featured_media
-        | image_url: width: product.featured_media.width
+        card_media
+        | image_url: width: card_media.width
         | image_tag: loading: 'lazy', sizes: '100px', widths: '100,150,200,250,300', class: 'horizontal-product-card__image'
       -}}
     </a>
@@ -19,16 +40,22 @@
 
   <div class="horizontal-product-card__info">
     <div class="v-stack gap-1 justify-items-start">
-      <a href="{{ product.url }}" class="product-title {% if settings.product_card_text_font == 'heading' %}h6{% endif %}" data-instant>{{ product.title }}</a>
-      {%- render 'price-list', product: product, context: 'card' -%}
+      <a href="{{ card_url }}" class="product-title {% if settings.product_card_text_font == 'heading' %}h6{% endif %}" data-instant>{{ product.title }}</a>
+
+      {%- comment -%}Names the metal/karat the photo and price are for, so neither reads as another version's.{%- endcomment -%}
+      {%- if variant != blank and product.has_only_default_variant == false -%}
+        <p class="smallcaps text-subdued">{{ variant.title | replace: ' / ', ' · ' }}</p>
+      {%- endif -%}
+
+      {%- render 'price-list', product: product, variant: variant, context: 'card' -%}
     </div>
 
-    {%- if product.available and show_quick_buy -%}
-      {%- if product.variants.size == 1 -%}
+    {%- if card_variant.available and show_quick_buy -%}
+      {%- if direct_add -%}
         {%- comment -%}With one variant, we can simply render a form for direct add{%- endcomment -%}
         <product-form>
           {%- form 'product', product -%}
-            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <input type="hidden" name="id" value="{{ card_variant.id }}">
             <input type="hidden" name="quantity" value="1">
             <input type="hidden" name="on_success" value="force_open_drawer">
 
@@ -39,10 +66,13 @@
       {%- else -%}
         {%- comment -%}Otherwise, we need to open a modal{%- endcomment -%}
         {%- assign modal_id = 'modal-' | append: block.id | append: '-' | append: product.id -%}
+        {%- if quick_buy_context != blank -%}
+          {%- assign modal_id = modal_id | append: '-' | append: quick_buy_context -%}
+        {%- endif -%}
 
         <quick-buy-modal
           id="{{ modal_id }}"
-          handle="{{ product.handle }}?variant={{ product.selected_or_first_available_variant.id }}"
+          handle="{{ product.handle }}?variant={{ card_variant.id }}"
           class="quick-buy-modal modal modal--lg color-scheme color-scheme--dialog"
           aria-label="{{ 'product.general.choose_options_with_title' | t: title: product.title | escape }}"
         >

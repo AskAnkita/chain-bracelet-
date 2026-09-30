@@ -147,6 +147,12 @@
       <path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-miterlimit="10"/>
     </svg>
 
+  {%- when 'home' -%}
+    <svg aria-hidden="true" fill="none" focusable="false" width="{{ width | default: 24 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
+      <path d="M3 10.5 12 3l9 7.5" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5.25 8.625V21h4.875v-6.375h3.75V21h4.875V8.625" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-linejoin="round"/>
+    </svg>
+
   {%- when 'search' -%}
     <svg aria-hidden="true" fill="none" focusable="false" width="{{ width | default: 24 }}" class="{{ class | strip }}" viewBox="0 0 24 24">
       <path d="M10.364 3a7.364 7.364 0 1 0 0 14.727 7.364 7.364 0 0 0 0-14.727Z" stroke="currentColor" stroke-width="{{ stroke_width | default: settings.icon_stroke_width }}" stroke-miterlimit="10"/>

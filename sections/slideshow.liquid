@@ -140,9 +140,11 @@
       {%- comment -%}
         A short gold hairline under the title, in the lighter gold of the owner's logo
         (#d6a542) so it still reads on the warm, mid-tone hero photos. It follows the
-        heading's alignment.
+        heading's alignment. :has(> *) keeps it off a slide whose heading, tagline and
+        accent settings are all empty -- every part of the elegant heading is optional, so
+        without it a text-free slide showed a stray gold line over the photo.
       {%- endcomment -%}
-      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant::after {
+      #shopify-section-{{ section.id }} .slideshow__slide-content--elegant .slideshow-elegant:has(> *)::after {
         content: '';
         display: block;
         width: 4.5rem;
@@ -361,11 +363,13 @@
   {%- if request.page_type == 'list-collections' -%}
     {%- comment -%}
       On the Our Collections page the hero is a banner rather than a full screen, so the
-      category products below start on the first screen instead of under the fold.
+      category products below start on the first screen instead of under the fold. It
+      carries no heading or button of its own (those settings are cleared on the block),
+      so it is shorter than a hero that has to hold text.
     {%- endcomment -%}
     <style>
       #shopify-section-{{ section.id }} .slideshow .content-over-media--fill {
-        --content-over-media-height: 42svh;
+        --content-over-media-height: 30svh;
       }
 
       /* The shorter crop would cut the model's face off; keep it and the necklaces in frame. */

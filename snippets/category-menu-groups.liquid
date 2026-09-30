@@ -167,7 +167,7 @@
           </accordion-disclosure>
         </li>
       {%- else -%}
-        <div class="category-mega-menu__column">
+        <div class="category-mega-menu__column category-mega-menu__column--{{ group | downcase }}">
           <span class="category-mega-menu__column-title">Shop by {{ group }}</span>
           <ul class="category-mega-menu__column-links unstyled-list" role="list">{{ group_links }}</ul>
         </div>

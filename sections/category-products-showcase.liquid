@@ -1,6 +1,6 @@
 {%- comment -%}
-  One row per merchant-picked collection: a tall image tile (title overlaid, links to the
-  collection) followed by that collection's own top N products, all in one row. Meant for
+  One row per merchant-picked collection: a category image tile and title link followed by
+  that collection's own top N products, all in one row. Meant for
   the "/collections" all-collections page, to preview what's inside each category instead
   of only linking out to it -- main-list-collections.liquid's own grid is tile-only, with
   no product preview.
@@ -22,6 +22,13 @@
       color: #a97524;
     }
 
+    #shopify-section-{{ section.id }} .category-products-showcase__category {
+      display: grid;
+      align-content: start;
+      gap: .9rem;
+      min-width: 0;
+    }
+
     #shopify-section-{{ section.id }} .category-products-showcase__tile {
       position: relative;
       align-self: start;
@@ -39,13 +46,8 @@
       outline-offset: 3px;
     }
 
-    #shopify-section-{{ section.id }} .category-products-showcase__tile > .content {
-      position: absolute;
-      inset: auto 0 0;
-      width: 100%;
-      max-width: none;
-      padding: 0;
-      text-shadow: none;
+    #shopify-section-{{ section.id }} .category-products-showcase__category-link {
+      color: #30463b;
     }
 
     #shopify-section-{{ section.id }} .category-products-showcase__cta {
@@ -54,10 +56,7 @@
       justify-content: space-between;
       gap: 1rem;
       width: 100%;
-      padding: .9rem 1rem;
-      color: #30463b;
-      background: rgb(255 255 255 / .94);
-      backdrop-filter: blur(8px);
+      padding: 0;
     }
 
     #shopify-section-{{ section.id }} .category-products-showcase__eyebrow {
@@ -80,7 +79,7 @@
       word-break: normal;
       hyphens: none;
       text-transform: uppercase;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     #shopify-section-{{ section.id }} .category-products-showcase__arrow {
@@ -102,7 +101,7 @@
         transform: translateY(-2px);
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__tile:hover .category-products-showcase__arrow {
+      #shopify-section-{{ section.id }} .category-products-showcase__category-link:hover .category-products-showcase__arrow {
         color: #fff;
         background: #30463b;
         transform: translateX(2px);
@@ -119,7 +118,7 @@
         gap: 1rem;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__row > .category-products-showcase__tile {
+      #shopify-section-{{ section.id }} .category-products-showcase__category > .category-products-showcase__tile {
         aspect-ratio: 4 / 3;
       }
 
@@ -151,7 +150,7 @@
       }
 
       #shopify-section-{{ section.id }} .category-products-showcase__cta {
-        padding: .85rem 1rem;
+        padding-block: .1rem .25rem;
       }
     }
 
@@ -162,18 +161,6 @@
 
       #shopify-section-{{ section.id }} .category-products-showcase__products {
         display: contents;
-      }
-
-      {%- comment -%}
-        The caption card sits in the tile's bottom-left corner. By default it's positioned
-        within the tile's content area, which is inset by the content-over-media gap (3rem),
-        so it floated mid-bottom; spanning the whole grid anchors it to the tile itself.
-      {%- endcomment -%}
-      #shopify-section-{{ section.id }} .category-products-showcase__tile > .content {
-        grid-area: 1 / 1 / -1 / -1;
-        inset: auto auto 1rem 1rem;
-        width: auto;
-        max-width: calc(100% - 2rem);
       }
 
       #shopify-section-{{ section.id }} .category-products-showcase__cta {
@@ -203,19 +190,21 @@
 
           {%- if showcase_collection != blank -%}
             <div class="category-products-showcase__row" style="--category-products-showcase-columns: {{ columns }};" {{ block.shopify_attributes }}>
-              <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group" aria-label="Shop {{ block.settings.title | default: showcase_collection.title | escape }}">
-                {%- liquid
-                  assign tile_image = block.settings.image | default: showcase_collection.image
-                -%}
+              <div class="category-products-showcase__category">
+                <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group" aria-label="Shop {{ block.settings.title | default: showcase_collection.title | escape }}">
+                  {%- liquid
+                    assign tile_image = block.settings.image | default: showcase_collection.image
+                  -%}
 
-                {%- if tile_image != blank -%}
-                  {{- tile_image | image_url: width: tile_image.width | image_tag: loading: 'lazy', sizes: '(max-width: 699px) 74vw, 25vw', widths: '400,600,800,1000,1200', class: 'zoom-image group-hover:zoom' -}}
-                {%- else -%}
-                  {%- capture collection_placeholder -%}{%- cycle 'collection-1', 'collection-2', 'collection-3' -%}{%- endcapture -%}
-                  {{- collection_placeholder | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
-                {%- endif -%}
+                  {%- if tile_image != blank -%}
+                    {{- tile_image | image_url: width: tile_image.width | image_tag: loading: 'lazy', sizes: '(max-width: 699px) 74vw, 25vw', widths: '400,600,800,1000,1200', class: 'zoom-image group-hover:zoom' -}}
+                  {%- else -%}
+                    {%- capture collection_placeholder -%}{%- cycle 'collection-1', 'collection-2', 'collection-3' -%}{%- endcapture -%}
+                    {{- collection_placeholder | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
+                  {%- endif -%}
+                </a>
 
-                <div class="content w-full align-self-end text-start">
+                <a href="{{ showcase_collection.url }}" class="category-products-showcase__category-link">
                   <div class="category-products-showcase__cta">
                     <div>
                       <span class="category-products-showcase__eyebrow">Shop collection</span>
@@ -226,8 +215,8 @@
                       {%- render 'icon' with 'arrow-right', width: 14, direction_aware: true -%}
                     </span>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
 
               <div class="category-products-showcase__products">
                 {%- for product in showcase_collection.products limit: products_count -%}

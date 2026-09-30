@@ -1357,7 +1357,7 @@
         },
         "complementary_products": {
           "name": "Complementary products",
-          "instructions": "To select complementary products, use the Search & Discovery app. [Learn more](https://help.shopify.com/en/manual/online-store/search-and-discovery/product-recommendations#complementary-products)",
+          "instructions": "Products picked in the Search & Discovery app show first. Without any, the block suggests one piece from each other jewelry category (Necklaces, Bracelets, Rings, Earrings) in the metal being viewed. [Learn more](https://help.shopify.com/en/manual/online-store/search-and-discovery/product-recommendations#complementary-products)",
           "products_count": "Products count",
           "show_below_gallery": "Show below gallery on desktop",
           "stack_products": "Stack products",

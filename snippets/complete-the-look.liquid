@@ -1,0 +1,192 @@
+{%- doc -%}
+  Automatic "Complete the look" picks for the complementary products block, shown when no
+  complementary products were picked by hand in the Search & Discovery app.
+
+  Takes one piece from each of the store's other jewelry categories (Necklaces, Bracelets,
+  Rings, Earrings -- the same collection handles as sections/category-cross-sell.liquid),
+  e.g. on a ring: a necklace, a bracelet and earrings. Each piece is shown, linked and added
+  in the metal of the variant on screen -- the same karat where it is sold in it, else the
+  same colour -- so an 18k rose gold ring suggests 18k rose gold pieces; silver and white
+  gold count as one colour, as they share photos (see product-card.liquid). In-stock pieces
+  come first, but sold-out ones still fill the block rather than leaving it empty.
+  The main product re-renders this list when the variant changes (see ProductRerender in
+  theme.js), so switching metal switches the suggestions too.
+
+  Which piece comes from each category is chosen by the product's id, not at random: every
+  product gets its own set, and a page never changes it between visits.
+
+  @param {object} product - the product the picks go with
+  @param {object} block - the complementary products block
+{%- enddoc -%}
+
+{%- liquid
+  assign categories = 'necklaces,bracelets,rings,earrings' | split: ','
+  assign current_category = blank
+
+  for handle in categories
+    for product_collection in product.collections
+      if product_collection.handle == handle
+        assign current_category = handle
+        break
+      endif
+    endfor
+
+    unless current_category == blank
+      break
+    endunless
+  endfor
+
+  assign current_title = product.selected_or_first_available_variant.title | downcase
+  assign wanted_metals = ''
+
+  if current_title contains 'rose gold'
+    assign wanted_metals = 'rose gold'
+  elsif current_title contains 'yellow gold'
+    assign wanted_metals = 'yellow gold'
+  elsif current_title contains 'silver'
+    assign wanted_metals = 'silver,white gold'
+  elsif current_title contains 'white gold'
+    assign wanted_metals = 'white gold,silver'
+  endif
+
+  assign wanted_metals = wanted_metals | split: ','
+
+  # The exact metal first ("18k rose gold" out of "18k Rose Gold / 7"), then any of its colour.
+  if wanted_metals.size > 0
+    assign current_parts = current_title | split: ' / '
+    for part in current_parts
+      if part contains wanted_metals.first
+        assign exact_metal = part | split: '|'
+        assign wanted_metals = exact_metal | concat: wanted_metals
+        break
+      endif
+    endfor
+  endif
+  assign picks_count = 0
+-%}
+
+{%- capture picks -%}
+  {%- liquid
+    for handle in categories
+      if handle == current_category or picks_count >= block.settings.products_count
+        continue
+      endif
+
+      # compact turns the collection's product list into a plain array, which slice needs.
+      assign pool = collections[handle].products | compact
+      if pool.size == 0
+        continue
+      endif
+
+      # Start the search at a different place in the collection for every product.
+      assign start = product.id | modulo: pool.size
+      if start > 0
+        assign pool_head = pool | slice: start, pool.size
+        assign pool_tail = pool | slice: 0, start
+        assign pool = pool_head | concat: pool_tail
+      endif
+
+      # First pass: in stock only; second pass: anything, so sold-out stock never empties the block.
+      assign pick = nil
+      assign pick_variant = nil
+
+      for pass in (1..2)
+        for wanted_metal in wanted_metals
+          for candidate in pool
+            if candidate.id == product.id or pass == 1 and candidate.available == false
+              continue
+            endif
+
+            for variant in candidate.variants
+              assign variant_title = variant.title | downcase
+              if variant_title contains wanted_metal
+                if variant.available or pass == 2
+                  assign pick = candidate
+                  assign pick_variant = variant
+                  break
+                endif
+              endif
+            endfor
+
+            if pick != blank
+              break
+            endif
+          endfor
+
+          if pick != blank
+            break
+          endif
+        endfor
+
+        # Nothing in this metal (or no metal on the product): take the first piece as it is.
+        if pick == blank
+          for candidate in pool
+            if candidate.id == product.id or pass == 1 and candidate.available == false
+              continue
+            endif
+
+            assign pick = candidate
+            assign pick_variant = candidate.selected_or_first_available_variant
+            break
+          endfor
+        endif
+
+        if pick != blank
+          break
+        endif
+      endfor
+
+      if pick == blank
+        continue
+      endif
+
+      # Photos are labelled by metal in their alt text, as on product cards: "#Jewelry
+      # material_Gold" (yellow), "..._white_gold" (also used for silver), "..._Rose gold".
+      assign pick_title = pick_variant.title | downcase
+      assign alt_label = ''
+      if pick_title contains 'rose gold'
+        assign alt_label = 'rose gold'
+      elsif pick_title contains 'silver' or pick_title contains 'white gold'
+        assign alt_label = 'white gold'
+      elsif pick_title contains 'yellow gold'
+        assign alt_label = 'material gold'
+      endif
+
+      assign pick_media = pick_variant.featured_media | default: pick.featured_media
+      if alt_label != ''
+        for media in pick.media
+          assign media_alt = media.alt | downcase | replace: '_', ' '
+          if media.media_type == 'image' and media_alt contains alt_label
+            assign pick_media = media
+            break
+          endif
+        endfor
+      endif
+
+      assign picks_count = picks_count | plus: 1
+      render 'product-card-horizontal', product: pick, variant: pick_variant, media: pick_media, show_quick_buy: block.settings.show_quick_buy, quick_buy_context: 'look', block: block
+    endfor
+  -%}
+{%- endcapture -%}
+
+<style>
+  .complementary-look:has(> product-recommendations) > .complete-the-look {
+    display: none;
+  }
+</style>
+
+<div class="complete-the-look" data-complete-look="{{ block.id }}">
+  {%- if picks_count > 0 -%}
+    <div class="complementary-products">
+      {%- if block.settings.title != blank -%}
+        <div class="complementary-products__header {% if block.settings.show_below_gallery %}justify-center{% endif %}">
+          <p class="h5">{{ block.settings.title }}</p>
+        </div>
+      {%- endif -%}
+
+      <div class="complementary-products__product-list">
+        {{- picks -}}
+      </div>
+    </div>
+  {%- endif -%}
+</div>

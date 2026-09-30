@@ -3478,6 +3478,12 @@ onRerender_fn = function(event) {
         }
       });
     });
+    this.querySelectorAll("[data-complete-look]").forEach((element) => {
+      const matchingLook = matchingElement.querySelector(`[data-complete-look="${element.getAttribute("data-complete-look")}"]`);
+      if (matchingLook) {
+        element.replaceWith(matchingLook);
+      }
+    });
   }
   if (focusedElement.id) {
     const element = document.getElementById(focusedElement.id);

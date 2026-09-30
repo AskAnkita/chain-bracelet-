@@ -16,6 +16,16 @@
           "type": "title",
           "settings": {}
         },
+        "sku": {
+          "type": "sku",
+          "settings": {}
+        },
+        "igi_certificate": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "{% assign certificate_url = product.metafields.custom.igi_certificate.value %}{% assign model_reference = product.metafields.custom.model_reference.value %}{% if certificate_url != blank or model_reference != blank %}<div class=\"product-certificate text-sm\">{% if model_reference != blank %}<span>Model/Reference: {{ model_reference | escape }}</span>{% endif %}{% if certificate_url != blank %}<a href=\"{{ certificate_url | escape }}\" target=\"_blank\" rel=\"noopener\">View IGI certificate</a>{% endif %}</div>{% endif %}"
+          }
+        },
         "price": {
           "type": "price",
           "settings": {}
@@ -48,6 +58,26 @@
             "show_payment_button": false
           }
         },
+        "trust_shipping": {
+          "type": "feature_with_icon",
+          "settings": {
+            "text": "Free insured shipping",
+            "icon": "picto-delivery-truck",
+            "icon_width": 24,
+            "background": "#F6F1E5",
+            "text_color": "#30463B"
+          }
+        },
+        "trust_returns": {
+          "type": "feature_with_icon",
+          "settings": {
+            "text": "15-day returns",
+            "icon": "picto-return",
+            "icon_width": 24,
+            "background": "#F6F1E5",
+            "text_color": "#30463B"
+          }
+        },
         "pickup_availability": {
           "type": "pickup_availability",
           "settings": {}
@@ -59,6 +89,8 @@
       },
       "block_order": [
         "title",
+        "sku",
+        "igi_certificate",
         "price",
         "payment_terms",
         "separator",
@@ -66,6 +98,8 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "trust_shipping",
+        "trust_returns",
         "complementary_products"
       ],
       "settings": {
