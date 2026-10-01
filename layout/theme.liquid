@@ -424,9 +424,9 @@
     {%- if request.page_type == 'policy' and request.path contains 'refund-policy' -%}
       <script>
         (() => {
-          // Highlight every "15 days" / "15-day" / "15 business days" mention that isn't bold yet
+          // Highlight every "30 days" / "30-day" / "30 business days" mention that isn't bold yet
           const policyBody = document.querySelector('.shopify-policy__body');
-          const pattern = /15(?:[\s\u00a0-]+business)?[\s\u00a0-]+days?\b/gi;
+          const pattern = /30(?:[\s\u00a0-]+business)?[\s\u00a0-]+days?\b/gi;
 
           if (!policyBody) return;
 

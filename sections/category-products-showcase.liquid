@@ -1,67 +1,20 @@
 {%- comment -%}
-  One row per merchant-picked collection: a category image tile and title link followed by
-  that collection's own top N products, all in one row. Meant for
-  the "/collections" all-collections page, to preview what's inside each category instead
-  of only linking out to it -- main-list-collections.liquid's own grid is tile-only, with
-  no product preview.
+  Z-pattern editorial layout: alternating lifestyle-image / product-grid
+  columns per collection row.  Mobile stays stacked; desktop (≥ 990px) uses
+  Flexbox with reversed rows on even iterations for the zig-zag.
 {%- endcomment -%}
 
 {%- if section.blocks.size > 0 -%}
   <style>
-    #shopify-section-{{ section.id }} .category-products-showcase__row {
-      display: grid;
-      gap: 1rem;
-      min-width: 0;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__row + .category-products-showcase__row {
-      margin-block-start: var(--section-vertical-spacing, 2.5rem);
-    }
-
+    /* ── Section-level ──────────────────────────────────────── */
     #shopify-section-{{ section.id }} .section-header .h2 {
       color: #a97524;
     }
 
-    #shopify-section-{{ section.id }} .category-products-showcase__category {
-      display: grid;
-      align-content: start;
-      gap: .9rem;
-      min-width: 0;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__tile {
-      position: relative;
-      align-self: start;
-      aspect-ratio: 1;
-      isolation: isolate;
-      border: 1px solid rgb(var(--text-color) / .12);
-      border-radius: .25rem;
-      background: rgb(var(--text-color) / .04);
-      box-shadow: 0 10px 30px rgb(31 42 36 / .08);
-      transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__tile:focus-visible {
-      outline: 2px solid #b5812f;
-      outline-offset: 3px;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__category-link {
-      color: #30463b;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__cta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      width: 100%;
-      padding: 0;
-    }
-
+    /* ── Eyebrow ────────────────────────────────────────────── */
     #shopify-section-{{ section.id }} .category-products-showcase__eyebrow {
       display: block;
-      margin-block-end: .2rem;
+      margin-block-end: .25rem;
       color: #a97524;
       font-size: .625rem;
       font-weight: 600;
@@ -70,101 +23,151 @@
       text-transform: uppercase;
     }
 
+    /* ── Collection title ───────────────────────────────────── */
     #shopify-section-{{ section.id }} .category-products-showcase__title {
       display: block;
-      font-size: clamp(1rem, 1.35vw, 1.35rem);
+      font-size: clamp(1.1rem, 1.6vw, 1.5rem);
       line-height: 1.15;
       letter-spacing: .04em;
-      overflow-wrap: normal;
-      word-break: normal;
-      hyphens: none;
       text-transform: uppercase;
-      white-space: normal;
+      margin: 0;
     }
 
-    #shopify-section-{{ section.id }} .category-products-showcase__arrow {
-      display: grid;
-      flex: 0 0 2rem;
-      width: 2rem;
-      height: 2rem;
-      place-items: center;
-      color: #a97524;
-      border: 1px solid rgb(169 117 36 / .5);
-      border-radius: 50%;
-      transition: color .25s ease, background-color .25s ease, transform .25s ease;
+    /* ── Lifestyle image column ─────────────────────────────── */
+    #shopify-section-{{ section.id }} .category-products-showcase__image-col {
+      position: relative;
+      overflow: hidden;
+      border-radius: .25rem;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__image-col a {
+      display: block;
+      height: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__image-col img,
+    #shopify-section-{{ section.id }} .category-products-showcase__image-col svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .45s ease;
     }
 
     @media (hover: hover) {
-      #shopify-section-{{ section.id }} .category-products-showcase__tile:hover {
-        border-color: rgb(169 117 36 / .45);
-        box-shadow: 0 14px 36px rgb(31 42 36 / .14);
-        transform: translateY(-2px);
-      }
-
-      #shopify-section-{{ section.id }} .category-products-showcase__category-link:hover .category-products-showcase__arrow {
-        color: #fff;
-        background: #30463b;
-        transform: translateX(2px);
+      #shopify-section-{{ section.id }} .category-products-showcase__image-col:hover img,
+      #shopify-section-{{ section.id }} .category-products-showcase__image-col:hover svg {
+        transform: scale(1.03);
       }
     }
 
-    {%- comment -%}
-      Mobile: each category gets a full-width shopping card, followed by a contained
-      horizontal product strip. The next product remains visible as a swipe cue without
-      making the page itself wider than the viewport.
-    {%- endcomment -%}
-    @media screen and (max-width: 699px) {
+    /* ── Product grid ───────────────────────────────────────── */
+    #shopify-section-{{ section.id }} .category-products-showcase__product-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--product-grid-cols, 2), 1fr);
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    /* ── "Shop All" CTA button ──────────────────────────────── */
+    #shopify-section-{{ section.id }} .category-products-showcase__shop-all {
+      display: inline-block;
+      align-self: center;
+      margin-top: 1.25rem;
+      padding: .75rem 1.75rem;
+      border: 1px solid #a97524;
+      color: #a97524;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background-color .25s ease, color .25s ease;
+    }
+
+    #shopify-section-{{ section.id }} .category-products-showcase__shop-all:hover {
+      background-color: #a97524;
+      color: #fff;
+    }
+
+    /* ── Mobile (< 990px) ── stacked layout preserved ───────── */
+    @media screen and (max-width: 989px) {
       #shopify-section-{{ section.id }} .category-products-showcase__row {
-        gap: 1rem;
+        margin-bottom: 2.5rem;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__category > .category-products-showcase__tile {
+      #shopify-section-{{ section.id }} .category-products-showcase__row:last-child {
+        margin-bottom: 0;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__image-col {
         aspect-ratio: 4 / 3;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__products {
+      #shopify-section-{{ section.id }} .category-products-showcase__content-col {
+        margin-top: 1rem;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__product-grid {
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: minmax(148px, 72%);
+        grid-template-columns: none;
         gap: .75rem;
-        min-width: 0;
-        max-width: 100%;
         overflow-x: auto;
         overscroll-behavior-inline: contain;
         scroll-snap-type: x mandatory;
         scrollbar-width: none;
         padding-inline-end: 1rem;
-        scroll-padding-inline: 0;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__products::-webkit-scrollbar {
+      #shopify-section-{{ section.id }} .category-products-showcase__product-grid::-webkit-scrollbar {
         display: none;
       }
 
-      #shopify-section-{{ section.id }} .category-products-showcase__products > * {
+      #shopify-section-{{ section.id }} .category-products-showcase__product-grid > * {
         scroll-snap-align: start;
       }
 
       #shopify-section-{{ section.id }} .category-products-showcase__title {
         font-size: 1.2rem;
       }
-
-      #shopify-section-{{ section.id }} .category-products-showcase__cta {
-        padding-block: .1rem .25rem;
-      }
     }
 
-    @media screen and (min-width: 700px) {
+    /* ── Desktop Z-pattern (≥ 990px) ────────────────────────── */
+    @media screen and (min-width: 990px) {
       #shopify-section-{{ section.id }} .category-products-showcase__row {
-        grid-template-columns: repeat(var(--category-products-showcase-columns, 4), minmax(0, 1fr));
-      }
-
-      #shopify-section-{{ section.id }} .category-products-showcase__products {
-        display: contents;
-      }
-
-      #shopify-section-{{ section.id }} .category-products-showcase__cta {
+        display: flex;
+        align-items: center;
         gap: 1.5rem;
+        margin-bottom: 80px;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__row:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Even rows: image anchors the right side */
+      #shopify-section-{{ section.id }} .category-products-showcase__row--reversed {
+        flex-direction: row-reverse;
+      }
+
+      /* Hide lifestyle banner on desktop */
+      #shopify-section-{{ section.id }} .category-products-showcase__image-col {
+        display: none;
+      }
+
+      /* Content column — tighter layout */
+      #shopify-section-{{ section.id }} .category-products-showcase__content-col {
+        flex: 1 1 0%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      #shopify-section-{{ section.id }} .category-products-showcase__product-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: .75rem;
       }
     }
   </style>
@@ -185,47 +188,54 @@
           {%- liquid
             assign showcase_collection = block.settings.collection
             assign products_count = block.settings.products_count
-            assign columns = products_count | plus: 1
+            assign grid_cols = products_count | at_most: 4
+            assign is_even = forloop.index | modulo: 2
           -%}
 
           {%- if showcase_collection != blank -%}
-            <div class="category-products-showcase__row" style="--category-products-showcase-columns: {{ columns }};" {{ block.shopify_attributes }}>
-              <div class="category-products-showcase__category">
-                <a href="{{ showcase_collection.url }}" class="category-products-showcase__tile content-over-media color-scheme color-scheme--{{ block.settings.tile_color_scheme.id }} group" aria-label="Shop {{ block.settings.title | default: showcase_collection.title | escape }}">
+            <div
+              class="category-products-showcase__row {% if is_even == 0 %}category-products-showcase__row--reversed{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {%- comment -%} Lifestyle image column (~40 % on desktop) {%- endcomment -%}
+              <div class="category-products-showcase__image-col">
+                <a href="{{ showcase_collection.url }}" aria-label="Shop {{ block.settings.title | default: showcase_collection.title | escape }}">
                   {%- liquid
                     assign tile_image = block.settings.image | default: showcase_collection.image
                   -%}
 
                   {%- if tile_image != blank -%}
-                    {{- tile_image | image_url: width: tile_image.width | image_tag: loading: 'lazy', sizes: '(max-width: 699px) 74vw, 25vw', widths: '400,600,800,1000,1200', class: 'zoom-image group-hover:zoom' -}}
+                    {{- tile_image | image_url: width: tile_image.width | image_tag: loading: 'lazy', sizes: '(max-width: 989px) 100vw, 40vw', widths: '400,600,800,1000,1200,1600' -}}
                   {%- else -%}
                     {%- capture collection_placeholder -%}{%- cycle 'collection-1', 'collection-2', 'collection-3' -%}{%- endcapture -%}
-                    {{- collection_placeholder | placeholder_svg_tag: 'placeholder zoom-image group-hover:zoom' -}}
+                    {{- collection_placeholder | placeholder_svg_tag: 'placeholder' -}}
                   {%- endif -%}
-                </a>
-
-                <a href="{{ showcase_collection.url }}" class="category-products-showcase__category-link">
-                  <div class="category-products-showcase__cta">
-                    <div>
-                      <span class="category-products-showcase__eyebrow">Shop collection</span>
-                      <span class="h3 category-products-showcase__title">{{ block.settings.title | default: showcase_collection.title }}</span>
-                    </div>
-
-                    <span class="category-products-showcase__arrow" aria-hidden="true">
-                      {%- render 'icon' with 'arrow-right', width: 14, direction_aware: true -%}
-                    </span>
-                  </div>
                 </a>
               </div>
 
-              <div class="category-products-showcase__products">
-                {%- for product in showcase_collection.products limit: products_count -%}
-                  {%- render 'product-card', product: product, reveal: false, position: forloop.index, section: section -%}
-                {%- else -%}
-                  {%- for i in (1..products_count) -%}
-                    {%- render 'product-card-placeholder', reveal: false, loop_index: forloop.index0 -%}
+              {%- comment -%} Content column: header + product grid + CTA (~60 % on desktop) {%- endcomment -%}
+              <div class="category-products-showcase__content-col">
+                <span class="category-products-showcase__eyebrow">Shop Collection</span>
+                <span class="h3 category-products-showcase__title">
+                  {{- block.settings.title | default: showcase_collection.title -}}
+                </span>
+
+                <div
+                  class="category-products-showcase__product-grid"
+                  style="--product-grid-cols: {{ grid_cols }};"
+                >
+                  {%- for product in showcase_collection.products limit: products_count -%}
+                    {%- render 'product-card', product: product, reveal: false, position: forloop.index, section: section -%}
+                  {%- else -%}
+                    {%- for i in (1..products_count) -%}
+                      {%- render 'product-card-placeholder', reveal: false, loop_index: forloop.index0 -%}
+                    {%- endfor -%}
                   {%- endfor -%}
-                {%- endfor -%}
+                </div>
+
+                <a href="{{ showcase_collection.url }}" class="category-products-showcase__shop-all">
+                  Shop All {{ block.settings.title | default: showcase_collection.title }}
+                </a>
               </div>
             </div>
           {%- endif -%}
@@ -299,7 +309,7 @@
           "id": "products_count",
           "min": 2,
           "max": 4,
-          "default": 3,
+          "default": 4,
           "label": "Products to show"
         },
         {

@@ -71,7 +71,7 @@
         "trust_returns": {
           "type": "feature_with_icon",
           "settings": {
-            "text": "15-day returns",
+            "text": "30-day returns",
             "icon": "picto-return",
             "icon_width": 24,
             "background": "#F6F1E5",

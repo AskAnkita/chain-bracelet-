@@ -17,20 +17,20 @@
           "settings": {
             "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_23_02_PM.png",
             "subheading": "",
-            "title": "",
+            "title": "SHOP BY CATEGORY",
             "heading_style": "h1",
             "elegant_heading": true,
             "divider_text": "",
             "accent_text": "",
             "accent_color": "#9a763c",
             "show_ornament": false,
-            "tagline": "",
+            "tagline": "Explore signature diamonds designed for everyday wear.",
             "mobile_text_position": "place-self-center-start text-start",
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 560,
             "button_size": "sm",
-            "button_1_text": "",
-            "button_1_link": "/collections/all",
+            "button_1_text": "EXPLORE COLLECTIONS",
+            "button_1_link": "/collections",
             "button_1_style": "solid",
             "button_1_background": "#ffffff",
             "button_1_text_color": "#30463b",
@@ -75,7 +75,7 @@
           "type": "category",
           "settings": {
             "collection": "earrings",
-            "products_count": 3,
+            "products_count": 4,
             "title": "",
             "image": "shopify://shop_images/6411652352769478a5ff94cda58850c1.jpg",
             "tile_color_scheme": "scheme-2"
@@ -85,7 +85,7 @@
           "type": "category",
           "settings": {
             "collection": "necklaces",
-            "products_count": 3,
+            "products_count": 4,
             "title": "",
             "image": "shopify://shop_images/1d1a0bce-8b8e-434a-9617-590a7f02f5a0_1c763e38-3fdc-4575-98af-35c247c26392.png",
             "tile_color_scheme": "scheme-2"
@@ -95,7 +95,7 @@
           "type": "category",
           "settings": {
             "collection": "bracelets",
-            "products_count": 3,
+            "products_count": 4,
             "title": "",
             "tile_color_scheme": "scheme-2"
           }
@@ -104,7 +104,7 @@
           "type": "category",
           "settings": {
             "collection": "rings",
-            "products_count": 3,
+            "products_count": 4,
             "title": "",
             "tile_color_scheme": "scheme-2"
           }
@@ -120,9 +120,9 @@
         "color_scheme": "scheme-1",
         "separate_section_with_border": false,
         "subheading": "",
-        "heading": "Shop by category",
+        "heading": "",
         "heading_style": "h2",
-        "content": "<p>Explore signature diamonds designed for everyday wear.</p>"
+        "content": ""
       }
     }
   },
