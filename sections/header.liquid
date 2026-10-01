@@ -245,7 +245,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 40rem);
     align-items: start;
-    column-gap: clamp(2.5rem, 5vw, 5rem);
+    column-gap: clamp(2rem, 3.5vw, 3.5rem);
     padding-block: 1.75rem 2rem;
     max-height: min(65vh, 44rem);
     overflow: hidden;
@@ -269,11 +269,10 @@
   #shopify-section-{{ section.id }} .category-mega-menu__columns {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-columns: max-content;
     justify-content: start;
     column-gap: clamp(1.5rem, 2.5vw, 2.5rem);
     width: 100%;
-    max-width: 44rem;
     min-height: 0;
     max-height: calc(min(65vh, 44rem) - 3.75rem);
     overflow-y: auto;
@@ -296,6 +295,29 @@
   #shopify-section-{{ section.id }} .category-mega-menu__column-links {
     display: grid;
     row-gap: .8rem;
+  }
+
+  {%- comment -%}
+    Shop by Style is the longest list, so it splits in two side by side: down the first
+    half, then the second (--half-rows is set by snippets/category-menu-groups.liquid).
+    Every column above is only as wide as its longest link, with tight gaps between
+    them, which leaves it the room without shrinking the images.
+  {%- endcomment -%}
+  #shopify-section-{{ section.id }} .category-mega-menu__column--style .category-mega-menu__column-links {
+    grid-template-rows: repeat(var(--half-rows), auto);
+    grid-auto-flow: column;
+    column-gap: 1.5rem;
+  }
+
+  {%- comment -%}
+    Narrower than this, four columns no longer fit beside the full-size images: Style
+    goes back to one list rather than being clipped.
+  {%- endcomment -%}
+  @media screen and (max-width: 1399px) {
+    #shopify-section-{{ section.id }} .category-mega-menu__column--style .category-mega-menu__column-links {
+      grid-template-rows: none;
+      grid-auto-flow: row;
+    }
   }
 
   {%- comment -%}

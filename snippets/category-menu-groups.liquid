@@ -167,9 +167,11 @@
           </accordion-disclosure>
         </li>
       {%- else -%}
+        {%- comment -%}--half-rows: rows for a list split in two (Shop by Style, styled in sections/header.liquid).{%- endcomment -%}
+        {%- assign half_rows = group_count | plus: 1 | divided_by: 2 -%}
         <div class="category-mega-menu__column category-mega-menu__column--{{ group | downcase }}">
           <span class="category-mega-menu__column-title">Shop by {{ group }}</span>
-          <ul class="category-mega-menu__column-links unstyled-list" role="list">{{ group_links }}</ul>
+          <ul class="category-mega-menu__column-links unstyled-list" style="--half-rows: {{ half_rows }}" role="list">{{ group_links }}</ul>
         </div>
       {%- endif -%}
     {%- endif -%}
