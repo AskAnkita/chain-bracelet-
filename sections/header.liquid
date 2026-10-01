@@ -310,14 +310,14 @@
   }
 
   {%- comment -%}
-    Narrower than this, four columns no longer fit beside the full-size images: Style
-    goes back to one list rather than being clipped.
+    Where the two Style columns would overflow the links area, the script at the end of
+    this file marks the panel stacked and Style goes back to one list rather than being
+    clipped. It checks each category's own links, so a menu with short labels (Necklaces)
+    keeps two columns on a screen where a longer one (Rings) can't.
   {%- endcomment -%}
-  @media screen and (max-width: 1399px) {
-    #shopify-section-{{ section.id }} .category-mega-menu__column--style .category-mega-menu__column-links {
-      grid-template-rows: none;
-      grid-auto-flow: row;
-    }
+  #shopify-section-{{ section.id }} .category-mega-menu__columns--stacked .category-mega-menu__column--style .category-mega-menu__column-links {
+    grid-template-rows: none;
+    grid-auto-flow: row;
   }
 
   {%- comment -%}
@@ -1466,6 +1466,32 @@
 
     nav.addEventListener('pointerover', loadPanelImages, { once: true });
     nav.addEventListener('focusin', loadPanelImages, { once: true });
+  })();
+</script>
+
+{%- comment -%}
+  Splits Shop by Style in two only where both halves fit beside the other columns (see
+  .category-mega-menu__columns--stacked above). Re-checked whenever a panel's links area
+  changes width, which includes the first time a closed panel opens.
+{%- endcomment -%}
+<script>
+  (() => {
+    const lists = document.querySelectorAll('#shopify-section-{{ section.id }} .category-mega-menu__columns');
+    if (!lists.length || !window.ResizeObserver) return;
+
+    const widths = new WeakMap();
+    const observer = new ResizeObserver((entries) => {
+      entries.forEach(({ target }) => {
+        const width = target.clientWidth;
+        if (width === 0 || widths.get(target) === width) return;
+        widths.set(target, width);
+
+        target.classList.remove('category-mega-menu__columns--stacked');
+        target.classList.toggle('category-mega-menu__columns--stacked', target.scrollWidth > width + 1);
+      });
+    });
+
+    lists.forEach((list) => observer.observe(list));
   })();
 </script>
 
