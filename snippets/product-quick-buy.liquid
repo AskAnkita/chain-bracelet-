@@ -17,6 +17,46 @@
       .quick-buy-modal__content {
         align-items: start;
       }
+
+      /*
+        The gallery's arrows only show on phones; here they also show on desktop, as round
+        buttons over the photo's left and right edges, beside the dots.
+      */
+      .quick-buy-modal__content .product-gallery__carousel-with-arrows {
+        position: relative;
+      }
+
+      .quick-buy-modal__content :is(carousel-prev-button, carousel-next-button) > button {
+        position: absolute;
+        inset-block-start: 50%;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 999px;
+        background: rgb(var(--background));
+        box-shadow: 0 .125rem .625rem rgb(var(--text-color) / .15);
+        transform: translateY(-50%);
+        transition: opacity .2s ease;
+      }
+
+      .quick-buy-modal__content carousel-prev-button > button {
+        inset-inline-start: .75rem;
+      }
+
+      .quick-buy-modal__content carousel-next-button > button {
+        inset-inline-end: .75rem;
+      }
+
+      .quick-buy-modal__content :is(carousel-prev-button, carousel-next-button) > button svg {
+        width: .75rem;
+      }
+
+      .quick-buy-modal__content :is(carousel-prev-button, carousel-next-button) > button[disabled] {
+        opacity: 0;
+        pointer-events: none;
+      }
     }
   </style>
 
