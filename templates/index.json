@@ -834,35 +834,12 @@
     "real_moments_1": {
       "type": "real-moments",
       "blocks": {
-        "photo_1": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/il_1588xN_8637481021_3n3q_jpg.webp",
-            "caption": "",
-            "link": ""
-          }
-        },
         "video_1": {
           "type": "video",
           "settings": {
             "video": "shopify://files/videos/20260926_164655.mp4",
             "caption": "",
-            "link": ""
-          }
-        },
-        "photo_2": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/il_1588xN_8605682972_70fc_jpg.webp",
-            "caption": "",
-            "link": ""
-          }
-        },
-        "image_wnjiKp": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/20260930_153249.jpg",
-            "caption": "",
+            "product": "pear-cut-green-gemstone-lab-grown-diamond-toi-et-moi-necklace",
             "link": ""
           }
         },
@@ -871,6 +848,16 @@
           "settings": {
             "video": "shopify://files/videos/vid_v1.mp4",
             "caption": "",
+            "product": "round-brilliant-lab-grown-diamond-solitaire-cuban-link-bracelet",
+            "link": ""
+          }
+        },
+        "photo_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/il_1588xN_8605682972_70fc_jpg.webp",
+            "caption": "",
+            "product": "round-brilliant-lab-grown-diamond-tennis-necklace",
             "link": ""
           }
         },
@@ -879,16 +866,15 @@
           "settings": {
             "video": "shopify://files/videos/20260930_160031.mp4",
             "caption": "",
+            "product": "4-ctw-round-brilliant-lab-grown-diamond-tennis-bracelet",
             "link": ""
           }
         }
       },
       "block_order": [
-        "photo_1",
         "video_1",
-        "photo_2",
-        "image_wnjiKp",
         "video_2",
+        "photo_2",
         "video_cfDrqb"
       ],
       "settings": {
@@ -899,7 +885,8 @@
         "heading_style": "h2",
         "content": "",
         "aspect_ratio": "4 / 5",
-        "tiles_per_row": 4
+        "tiles_per_row": 4,
+        "show_product_name": true
       }
     },
     "multi_column_1": {
