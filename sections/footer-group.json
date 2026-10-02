@@ -23,6 +23,26 @@
             "button_text_color": ""
           }
         },
+        "shop": {
+          "type": "links",
+          "settings": {
+            "menu": "",
+            "links_text": "Necklaces | /collections/necklaces\nBracelets | /collections/bracelets\nRings | /collections/rings\nEarrings | /collections/earrings\nNew Arrivals | /collections/all?sort_by=created-descending\nBest Sellers | /collections/all?sort_by=best-selling",
+            "collapse_on_mobile": false,
+            "show_menu_title": true,
+            "menu_title": "Shop"
+          }
+        },
+        "discover": {
+          "type": "links",
+          "settings": {
+            "menu": "",
+            "links_text": "Our Story | /pages/about-us\nSize Guide | /pages/size-guide\nFAQ | /pages/faq\nSecure Payments | /pages/secure-payments",
+            "collapse_on_mobile": false,
+            "show_menu_title": true,
+            "menu_title": "Discover"
+          }
+        },
         "customer-care": {
           "type": "links",
           "settings": {
@@ -35,6 +55,8 @@
       },
       "block_order": [
         "newsletter",
+        "shop",
+        "discover",
         "customer-care"
       ],
       "settings": {
