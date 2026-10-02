@@ -40,6 +40,7 @@
       ],
       "settings": {
         "color_scheme": "scheme-3",
+        "background_color": "#d71821",
         "enable_sticky": true,
         "autoplay": true,
         "cycle_speed": 5,
@@ -435,26 +436,32 @@
         },
         "rings_category_menu": {
           "type": "category_mega_menu",
+          "name": "rings",
           "settings": {
             "menu_item": "rings",
             "menu": "",
             "links_per_column": 7,
             "featured_product": "",
+            "image_1": "shopify://shop_images/2d9b935bb026c38226378c6eb21f7a52.jpg",
             "image_1_label": "",
             "image_1_link": "",
+            "image_2": "shopify://shop_images/il_1588xN_8637354995_mzdt_jpg.webp",
             "image_2_label": "",
             "image_2_link": ""
           }
         },
         "earrings_category_menu": {
           "type": "category_mega_menu",
+          "name": "earrings",
           "settings": {
             "menu_item": "earrings",
             "menu": "",
             "links_per_column": 7,
             "featured_product": "",
+            "image_1": "shopify://shop_images/7ce0b0b8-172a-4780-a43a-4e2ce08ebe50_b135085c-5e4b-4646-a18f-bd1cbde45358.png",
             "image_1_label": "",
             "image_1_link": "",
+            "image_2": "shopify://shop_images/801ed6b8c383dbe3fea0c033732dc67a.jpg",
             "image_2_label": "",
             "image_2_link": ""
           }
