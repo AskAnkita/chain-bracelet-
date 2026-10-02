@@ -861,6 +861,15 @@
             "link": ""
           }
         },
+        "image_inUnN4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/il_1588xN_8637354995_mzdt_jpg.webp",
+            "caption": "",
+            "product": "2-25-ctw-cushion-cut-lab-grown-diamond-halo-engagement-ring",
+            "link": ""
+          }
+        },
         "video_cfDrqb": {
           "type": "video",
           "settings": {
@@ -875,6 +884,7 @@
         "video_1",
         "video_2",
         "photo_2",
+        "image_inUnN4",
         "video_cfDrqb"
       ],
       "settings": {
