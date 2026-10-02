@@ -513,13 +513,20 @@
     gap: 1.25rem;
   }
 
+  /*
+    The guide sits inside .prose, which gives every element after the first a top margin.
+    On a row of chips that pushed all but the first down, and the row's stretch made the
+    first one taller to match. No margins here, and the chips centred, keeps them one size.
+  */
   .sg .sg-lg__chips {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: .5rem;
   }
 
   .sg .sg-lg__chip {
+    margin: 0;
     padding: .55rem 1.1rem;
     border: 1px solid rgb(var(--sg-accent) / .2);
     border-radius: 999px;
@@ -819,6 +826,7 @@
   .sg .sg-lg__fits ul {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: .5rem;
     margin: 0;
     padding: 0;
@@ -826,6 +834,7 @@
   }
 
   .sg .sg-lg .sg-lg__fits li {
+    margin: 0;
     padding: .45rem .9rem;
     border-radius: 999px;
     background: var(--sg-tint);
@@ -867,6 +876,11 @@
     color: rgb(var(--sg-accent));
   }
 
+  /* Same .prose top margin as the chips: it dropped the "mm" below the number. */
+  .sg .sg-lg__finder-field > * {
+    margin: 0;
+  }
+
   .sg .sg-lg__finder-field:focus-within {
     box-shadow: 0 0 0 2px var(--sg-gold);
   }
@@ -881,6 +895,13 @@
     font-weight: 600;
     outline: none;
     -moz-appearance: textfield;
+  }
+
+  /* The number's up/down arrows, hidden in Safari and Chrome as they already are in Firefox. */
+  .sg .sg-lg__finder-field input::-webkit-inner-spin-button,
+  .sg .sg-lg__finder-field input::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
   }
 
   .sg .sg-lg__finder-result {
