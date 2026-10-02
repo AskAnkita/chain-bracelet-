@@ -100,6 +100,20 @@
   assign product_gallery_carousel_id = 'product-gallery-carousel-' | append: product.id | append: '-' | append: section.id
   assign filtered_indexes = null | sort
 
+  # While the skin-tone slider is switched off (Theme settings > Product page), the photo
+  # it belongs to ("#skintone" in its alt text) is hidden from the gallery too, the same
+  # way photos for other metals are: its position joins filtered_indexes below.
+  assign skin_tone_indexes = null | sort
+  unless settings.enable_skin_tone_viewer
+    for media in product.media
+      assign media_alt_key = media.alt | downcase | remove: '-'
+      if media_alt_key contains '#skintone'
+        assign media_position = media.position | sort
+        assign skin_tone_indexes = skin_tone_indexes | concat: media_position
+      endif
+    endfor
+  endunless
+
   if product.variants.size > 1
     for media in product.media
       unless media.alt contains '#'
@@ -224,18 +238,38 @@
   if variant_media == blank
     assign default_media = nil
     for media in product.media
-      unless filtered_indexes contains media.position
+      unless filtered_indexes contains media.position or skin_tone_indexes contains media.position
         assign default_media = media
         break
       endunless
     endfor
 
-    # Every photo tagged for other metals: show them all rather than an empty gallery.
+    # Every photo tagged for other metals: show them all rather than an empty gallery
+    # (still leaving out a hidden skin-tone photo).
     if default_media == nil
-      assign default_media = product.featured_media
       assign filtered_indexes = null | sort
+      for media in product.media
+        unless skin_tone_indexes contains media.position
+          assign default_media = media
+          break
+        endunless
+      endfor
+      assign default_media = default_media | default: product.featured_media
     endif
   endif
+
+  assign filtered_indexes = filtered_indexes | concat: skin_tone_indexes | uniq
+
+  # A product with a video opens on it rather than on the variant's photo (a variant can
+  # only have a photo of its own); theme.js returns to it when another option is picked.
+  for media in product.media
+    if media.media_type == 'video' or media.media_type == 'external_video'
+      unless filtered_indexes contains media.position
+        assign default_media = media
+        break
+      endunless
+    endif
+  endfor
 %}
 
 <product-gallery
@@ -389,10 +423,11 @@
               {%- endcomment -%}
               {%- comment -%}
                 A photo tagged "#skintone" in its alt text (a ring on a hand) gets the skin-tone
-                slider; see snippets/skin-tone-image.liquid.
+                slider; see snippets/skin-tone-image.liquid. Only while Theme settings > Product
+                page > Show skin-tone slider is on; otherwise it's a plain photo.
               {%- endcomment -%}
               {%- assign media_alt_key = media.alt | downcase | remove: '-' -%}
-              {%- if media.media_type == 'image' and media_alt_key contains '#skintone' -%}
+              {%- if settings.enable_skin_tone_viewer and media.media_type == 'image' and media_alt_key contains '#skintone' -%}
                 {%- render 'skin-tone-image',
                   media: media,
                   product: product,

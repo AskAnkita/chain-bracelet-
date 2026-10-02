@@ -3161,6 +3161,29 @@ onSectionRerender_fn = function(event) {
     this.carousel.filter(galleryMarkup.filteredIndexes);
     this.setAttribute("filtered-indexes", galleryMarkup.getAttribute("filtered-indexes"));
   }
+  // A variant change re-filters the gallery (photos for other metals hidden); go back to the
+  // product video once the new set of slides is in place.
+  if (this.selectVideoAfterRerender) {
+    this.selectVideoAfterRerender = false;
+    selectProductGalleryVideo(this);
+  }
+};
+/**
+ * Products with a video open on it, and go back to it when another option is picked, instead of
+ * jumping to the variant's own photo (Shopify only lets a variant have a photo, not a video).
+ * Returns false when the gallery has no visible video, so the theme's usual behaviour applies.
+ */
+var selectProductGalleryVideo = function(gallery) {
+  const cells = gallery.carousel.cells, index = cells.findIndex((cell) => ["video", "external_video"].includes(cell.getAttribute("data-media-type")));
+  if (index === -1) {
+    return false;
+  }
+  if (gallery.carousel.isScrollable) {
+    gallery.carousel.select(index, { instant: true });
+  } else {
+    cells[index].scrollIntoView({ block: "start", behavior: "smooth" });
+  }
+  return true;
 };
 /**
  * When the variant changes, we check the alt tags for each media and filter them
@@ -3168,6 +3191,12 @@ onSectionRerender_fn = function(event) {
 onVariantChange_fn = function(event) {
   if (!event.detail.variant) {
     return;
+  }
+  if (this.carousel.allCells.some((cell) => ["video", "external_video"].includes(cell.getAttribute("data-media-type")))) {
+    this.selectVideoAfterRerender = true;
+    if (selectProductGalleryVideo(this)) {
+      return;
+    }
   }
   if (event.detail.variant["featured_media"] && event.detail.previousVariant?.["featured_media"]?.["id"] !== event.detail.variant["featured_media"]["id"]) {
     const position = event.detail.variant["featured_media"]["position"] - 1, filteredIndexBelowPosition = this.filteredIndexes.filter((filteredIndex) => filteredIndex < position);
