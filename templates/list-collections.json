@@ -22,11 +22,11 @@
         "button": {
           "type": "button",
           "settings": {
-            "style": "outline",
+            "style": "solid",
             "text": "EXPLORE COLLECTIONS",
             "url": "/collections/all",
             "background": "",
-            "text_color": "#9a763c"
+            "text_color": ""
           }
         }
       },

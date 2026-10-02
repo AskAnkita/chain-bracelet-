@@ -69,25 +69,11 @@
       margin-top: 1.25rem;
     }
 
-    /* ── "Shop All" CTA button ──────────────────────────────── */
+    /* ── "Shop All" CTA: the theme's standard button (gold, wipe on hover), centred ── */
     #shopify-section-{{ section.id }} .category-products-showcase__shop-all {
-      display: inline-block;
       align-self: center;
       margin-top: 1.25rem;
-      padding: .75rem 1.75rem;
-      border: 1px solid #a97524;
-      color: #a97524;
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background-color .25s ease, color .25s ease;
-    }
-
-    #shopify-section-{{ section.id }} .category-products-showcase__shop-all:hover {
-      background-color: #a97524;
-      color: #fff;
+      text-align: center;
     }
 
     /* ── Mobile (< 990px) ── stacked layout preserved ───────── */
@@ -233,9 +219,10 @@
                   {%- endfor -%}
                 </div>
 
-                <a href="{{ showcase_collection.url }}" class="category-products-showcase__shop-all">
-                  Shop All {{ block.settings.title | default: showcase_collection.title }}
-                </a>
+                <div class="category-products-showcase__shop-all">
+                  {%- capture shop_all_label -%}Shop All {{ block.settings.title | default: showcase_collection.title }}{%- endcapture -%}
+                  {%- render 'button', href: showcase_collection.url, content: shop_all_label -%}
+                </div>
               </div>
             </div>
           {%- endif -%}
