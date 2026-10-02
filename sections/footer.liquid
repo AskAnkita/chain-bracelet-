@@ -1,9 +1,9 @@
 <style>
   #shopify-section-{{ section.id }} {
-    --footer-content-justify-items: center;
+    --footer-content-justify-items: {% if section.settings.blocks.size <= 2 %}start{% else %}space-between{% endif %};
   }
 
-  #shopify-section-{{ section.id }} .footer__block--links {
+  #shopify-section-{{ section.id }} .footer__block--customer-care {
     text-transform: uppercase;
   }
 
@@ -25,46 +25,15 @@
     letter-spacing: 0.12em;
   }
 
-  {%- comment -%}
-    The columns sit together in the middle of the footer, an even gap apart, with open
-    space on either side rather than pressed against the edges.
-  {%- endcomment -%}
   @media screen and (min-width: 700px) {
-    #shopify-section-{{ section.id }} .footer__block-list {
-      column-gap: clamp(3rem, 6vw, 6.5rem);
+    #shopify-section-{{ section.id }} .footer__block--customer-care {
+      flex: 0 0 auto;
+      margin-inline-start: auto;
+      text-align: end;
     }
 
-    #shopify-section-{{ section.id }} .footer__block {
-      flex: 0 1 auto;
-    }
-
-    #shopify-section-{{ section.id }} .footer__block--newsletter {
-      flex-basis: 18rem;
-    }
-  }
-
-  {%- comment -%}
-    The © line (and the payment icons, once the store takes payments) centred under the
-    columns, instead of the theme's copyright-left / icons-right split on desktop.
-  {%- endcomment -%}
-  @media screen and (min-width: 1000px) {
-    #shopify-section-{{ section.id }} .footer__aside {
-      grid-auto-flow: row;
-      justify-content: center;
-      justify-items: center;
-    }
-
-    #shopify-section-{{ section.id }} .footer__aside .payment-methods {
-      justify-content: center;
-    }
-  }
-
-  {%- comment -%}Tablets: the columns side by side in a centred grid, two to a row.{%- endcomment -%}
-  @media screen and (min-width: 700px) and (max-width: 999px) {
-    #shopify-section-{{ section.id }} .footer__block-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 18rem));
-      justify-content: center;
+    #shopify-section-{{ section.id }} .footer__block--customer-care .v-stack {
+      justify-items: end;
     }
   }
 </style>
@@ -127,16 +96,7 @@
                   {%- endif -%}
 
                 {%- when 'links' -%}
-                  {%- liquid
-                    assign menu = block.settings.menu
-
-                    assign has_links = false
-                    if menu != blank and menu.links.size > 0
-                      assign has_links = true
-                    elsif menu == blank and block.settings.links_text != blank
-                      assign has_links = true
-                    endif
-                  -%}
+                  {%- assign menu = block.settings.menu -%}
 
                   {%- if menu == blank and block.settings.menu_title == 'Customer Care' -%}
                     {%- liquid
@@ -154,31 +114,16 @@
                         <li><a href="/policies/privacy-policy" class="link-faded">Privacy Policy</a></li>
                       </ul>
                     </div>
-                  {%- elsif has_links -%}
+                  {%- elsif menu != blank and menu.links.size > 0 -%}
                     {%- assign menu_title = block.settings.menu_title | default: menu.title -%}
-
+                    
                     {%- capture menu_content -%}
                       <ul class="v-stack gap-2.5 unstyled-list" role="list">
-                        {%- if menu != blank -%}
-                          {%- for link in menu.links -%}
-                            <li>
-                              <a href="{{ link.url }}" class="link-faded">{{ link.title }}</a>
-                            </li>
-                          {%- endfor -%}
-                        {%- else -%}
-                          {%- comment -%}No menu picked: the block's own list, one "Title | /url" per line.{%- endcomment -%}
-                          {%- assign link_lines = block.settings.links_text | newline_to_br | split: '<br />' -%}
-                          {%- for line in link_lines -%}
-                            {%- assign parts = line | split: '|' -%}
-                            {%- assign link_title = parts[0] | strip -%}
-                            {%- assign link_url = parts[1] | strip -%}
-                            {%- if link_title != blank and link_url != blank -%}
-                              <li>
-                                <a href="{{ link_url }}" class="link-faded">{{ link_title }}</a>
-                              </li>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        {%- endif -%}
+                        {%- for link in menu.links -%}
+                          <li>
+                            <a href="{{ link.url }}" class="link-faded">{{ link.title }}</a>
+                          </li>
+                        {%- endfor -%}
                       </ul>
                     {%- endcapture -%}
 
@@ -472,12 +417,6 @@
           "label": "t:sections.footer.blocks.links.menu",
           "info": "t:sections.footer.blocks.links.menu_info",
           "default": "footer"
-        },
-        {
-          "type": "textarea",
-          "id": "links_text",
-          "label": "Links (without a menu)",
-          "info": "Used when no menu is picked above. One link per line, as Title | /url, e.g. Necklaces | /collections/necklaces"
         },
         {
           "type": "checkbox",
