@@ -1,6 +1,6 @@
 <style>
   #shopify-section-{{ section.id }} {
-    --footer-content-justify-items: {% if section.blocks.size <= 2 %}start{% else %}space-between{% endif %};
+    --footer-content-justify-items: center;
   }
 
   #shopify-section-{{ section.id }} .footer__block--links {
@@ -26,12 +26,29 @@
   }
 
   {%- comment -%}
-    With only two blocks, Customer Care sat against the right edge across an empty middle.
-    Every block now shares the row, spread evenly: Newsletter, then the link columns.
+    The columns sit together in the middle of the footer, an even gap apart, with open
+    space on either side rather than pressed against the edges.
   {%- endcomment -%}
   @media screen and (min-width: 700px) {
-    #shopify-section-{{ section.id }} .footer__block--links {
+    #shopify-section-{{ section.id }} .footer__block-list {
+      column-gap: clamp(3rem, 6vw, 6.5rem);
+    }
+
+    #shopify-section-{{ section.id }} .footer__block {
       flex: 0 1 auto;
+    }
+
+    #shopify-section-{{ section.id }} .footer__block--newsletter {
+      flex-basis: 18rem;
+    }
+  }
+
+  {%- comment -%}Tablets: two columns by two rows, rather than one column left alone on a second row.{%- endcomment -%}
+  @media screen and (min-width: 700px) and (max-width: 999px) {
+    #shopify-section-{{ section.id }} .footer__block-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 18rem));
+      justify-content: center;
     }
   }
 </style>
