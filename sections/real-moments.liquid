@@ -1,7 +1,8 @@
 {%- comment -%}
   Real Shine: a row of the shop's own photos and short videos (pieces being worn,
   made, packed), in place of the reviews section until the store has reviews. Each
-  block is one tile, a photo or a video, with an optional caption and link. Videos play
+  block is one tile, a photo or a video, linked to the product it shows (or a custom
+  link), with an optional caption (the product's name by default). Videos play
   muted on a loop once they scroll into view (the theme's video-media element).
 
   A row that scrolls sideways on every screen: one and a bit tiles on phones, so the
@@ -131,14 +132,22 @@
                   continue
                 endif
 
+                assign tile_product = block.settings.product
+                assign tile_url = block.settings.link | default: tile_product.url
+
+                assign tile_caption = block.settings.caption
+                if tile_caption == blank and section.settings.show_product_name
+                  assign tile_caption = tile_product.title
+                endif
+
                 assign tile_tag = 'div'
-                if block.settings.link != blank
+                if tile_url != blank
                   assign tile_tag = 'a'
                 endif
               -%}
 
               <{{ tile_tag }}
-                {% if tile_tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
+                {% if tile_tag == 'a' %}href="{{ tile_url }}"{% endif %}
                 class="real-moments__tile"
                 {{ block.shopify_attributes }}
               >
@@ -152,14 +161,14 @@
                     sizes: '(min-width: 1000px) 25vw, 72vw'
                   -%}
                 {%- elsif block.settings.image != blank -%}
-                  {%- capture image_alt -%}{{ block.settings.image.alt | default: block.settings.caption | default: section.settings.title }}{%- endcapture -%}
+                  {%- capture image_alt -%}{{ block.settings.image.alt | default: tile_caption | default: section.settings.title }}{%- endcapture -%}
                   {{- block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '(min-width: 1000px) 25vw, 72vw', widths: '400,600,800,1000,1200', alt: image_alt -}}
                 {%- else -%}
                   {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
                 {%- endif -%}
 
-                {%- if block.settings.caption != blank -%}
-                  <span class="real-moments__caption">{{ block.settings.caption }}</span>
+                {%- if tile_caption != blank -%}
+                  <span class="real-moments__caption">{{ tile_caption }}</span>
                 {%- endif -%}
               </{{ tile_tag }}>
             {%- endfor -%}
@@ -250,6 +259,13 @@
       "max": 6,
       "step": 1,
       "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_name",
+      "label": "Show product name on tiles",
+      "info": "On tiles with a product and no caption of their own.",
+      "default": true
     }
   ],
   "blocks": [
@@ -269,10 +285,16 @@
           "info": "Optional, shown at the foot of the tile."
         },
         {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The piece in the photo. The tile opens its product page."
+        },
+        {
           "type": "url",
           "id": "link",
-          "label": "Link",
-          "info": "Optional, e.g. the product in the photo."
+          "label": "Link (optional)",
+          "info": "Only to send the tile somewhere other than the product page."
         }
       ]
     },
@@ -293,10 +315,16 @@
           "info": "Optional, shown at the foot of the tile."
         },
         {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "The piece in the video. The tile opens its product page."
+        },
+        {
           "type": "url",
           "id": "link",
-          "label": "Link",
-          "info": "Optional, e.g. the product in the video."
+          "label": "Link (optional)",
+          "info": "Only to send the tile somewhere other than the product page."
         }
       ]
     }
