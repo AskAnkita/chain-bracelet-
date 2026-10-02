@@ -31,6 +31,7 @@
             "accent_color": "#9a763c",
             "show_ornament": false,
             "tagline": "Timeless pieces, made to shine every day.",
+            "elegant_uppercase": false,
             "mobile_text_position": "place-self-center-start text-start",
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 780,
@@ -72,6 +73,7 @@
             "accent_color": "#856024",
             "show_ornament": true,
             "tagline": "",
+            "elegant_uppercase": false,
             "mobile_text_position": "place-self-center text-center",
             "desktop_text_position": "sm:place-self-center sm:text-center",
             "content_max_width": 680,
@@ -155,6 +157,7 @@
             "accent_color": "#9a763c",
             "show_ornament": false,
             "tagline": "",
+            "elegant_uppercase": false,
             "mobile_text_position": "place-self-center-start text-start",
             "desktop_text_position": "sm:place-self-center-start sm:text-start",
             "content_max_width": 920,
@@ -812,6 +815,7 @@
         "testimonial_1",
         "testimonial_2"
       ],
+      "disabled": true,
       "name": "t:sections.testimonials.presets.testimonials.name",
       "settings": {
         "color_scheme": "scheme-3",
