@@ -678,6 +678,18 @@
     ]
   },
   {
+    "name": "Product page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_skin_tone_viewer",
+        "label": "Show skin-tone slider",
+        "info": "On product photos whose alt text contains #skintone, a slider lets shoppers preview the piece on different skin tones.",
+        "default": false
+      }
+    ]
+  },
+  {
     "name": "t:theme_settings.cart.name",
     "settings": [
       {

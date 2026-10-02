@@ -389,10 +389,11 @@
               {%- endcomment -%}
               {%- comment -%}
                 A photo tagged "#skintone" in its alt text (a ring on a hand) gets the skin-tone
-                slider; see snippets/skin-tone-image.liquid.
+                slider; see snippets/skin-tone-image.liquid. Only while Theme settings > Product
+                page > Show skin-tone slider is on; otherwise it's a plain photo.
               {%- endcomment -%}
               {%- assign media_alt_key = media.alt | downcase | remove: '-' -%}
-              {%- if media.media_type == 'image' and media_alt_key contains '#skintone' -%}
+              {%- if settings.enable_skin_tone_viewer and media.media_type == 'image' and media_alt_key contains '#skintone' -%}
                 {%- render 'skin-tone-image',
                   media: media,
                   product: product,
