@@ -9,63 +9,37 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "slideshow",
+    "intro": {
+      "type": "rich-text",
       "blocks": {
-        "banner": {
-          "type": "image",
+        "heading": {
+          "type": "heading",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_20_2026_at_04_23_02_PM.png",
-            "subheading": "",
-            "title": "SHOP BY CATEGORY",
-            "heading_style": "h1",
-            "elegant_heading": true,
-            "divider_text": "",
-            "accent_text": "",
-            "accent_color": "#9a763c",
-            "show_ornament": false,
-            "tagline": "Explore signature diamonds designed for everyday wear.",
-            "mobile_text_position": "place-self-center-start text-start",
-            "desktop_text_position": "sm:place-self-center-start sm:text-start",
-            "content_max_width": 560,
-            "button_size": "sm",
-            "button_1_text": "EXPLORE COLLECTIONS",
-            "button_1_link": "/collections",
-            "button_1_style": "solid",
-            "button_1_background": "#ffffff",
-            "button_1_text_color": "#30463b",
-            "button_2_text": "",
-            "button_2_link": "",
-            "button_2_style": "solid",
-            "button_2_background": "#ffffff",
-            "button_2_text_color": "#000000",
+            "text": "SHOP BY CATEGORY",
+            "heading_tag": "h1"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "style": "outline",
+            "text": "EXPLORE COLLECTIONS",
+            "url": "/collections/all",
             "background": "",
-            "background_opacity": 4,
-            "text_color": "#ffffff",
-            "border_color": "",
-            "gradient_overlay": "",
-            "enable_text_shadow": false,
-            "text_shadow_opacity": 80,
-            "elegant_uppercase": true,
-            "elegant_center_text": false,
-            "title_condensed_font": false,
-            "title_font_weight": 350
+            "text_color": "#9a763c"
           }
         }
       },
       "block_order": [
-        "banner"
+        "heading",
+        "button"
       ],
       "settings": {
-        "allow_transparent_header": true,
-        "show_next_section_button": false,
-        "media_size": "fill",
-        "show_initial_transition": false,
-        "autoplay": false,
-        "autoplay_pause_on_video": true,
-        "cycle_speed": 5,
-        "background": "#f3ede3",
-        "controls_color": "#ffffff"
+        "color_scheme": "scheme-1",
+        "separate_section_with_border": false,
+        "content_width": "md",
+        "text_position": "center",
+        "remove_vertical_spacing": false
       }
     },
     "category_showcase": {
@@ -127,7 +101,7 @@
     }
   },
   "order": [
-    "hero",
+    "intro",
     "category_showcase"
   ]
 }
