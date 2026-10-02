@@ -831,6 +831,26 @@
         "content": ""
       }
     },
+    "real_moments_1": {
+      "type": "real-moments",
+      "blocks": {
+        "photo_1": { "type": "image", "settings": { "caption": "", "link": "" } },
+        "video_1": { "type": "video", "settings": { "caption": "", "link": "" } },
+        "photo_2": { "type": "image", "settings": { "caption": "", "link": "" } },
+        "video_2": { "type": "video", "settings": { "caption": "", "link": "" } }
+      },
+      "block_order": ["photo_1", "video_1", "photo_2", "video_2"],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "separate_section_with_border": false,
+        "subheading": "#ChainAndBracelet",
+        "title": "Real Moments",
+        "heading_style": "h2",
+        "content": "",
+        "aspect_ratio": "4 / 5",
+        "tiles_per_row": 4
+      }
+    },
     "multi_column_1": {
       "type": "multi-column",
       "blocks": {
@@ -964,6 +984,7 @@
     "featured_collections_MMEWzD",
     "image_with_text_block_1",
     "testimonials_1",
+    "real_moments_1",
     "multi_column_1",
     "1787126109d318dad6"
   ]

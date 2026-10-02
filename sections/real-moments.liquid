@@ -1,0 +1,316 @@
+{%- comment -%}
+  Real Moments: a row of the shop's own photos and short videos (pieces being worn,
+  made, packed), in place of the reviews section until the store has reviews. Each
+  block is one tile, a photo or a video, with an optional caption and link. Videos play
+  muted on a loop once they scroll into view (the theme's video-media element).
+
+  A row that scrolls sideways on every screen: one and a bit tiles on phones, so the
+  next one peeks in, and `tiles_per_row` on desktop with arrows when there are more.
+  Hidden on the storefront until at least one tile has a photo or video; the theme
+  editor shows placeholders so the empty tiles can still be picked and filled.
+{%- endcomment -%}
+
+{%- liquid
+  assign has_media = false
+  for block in section.blocks
+    if block.settings.image != blank or block.settings.video != blank
+      assign has_media = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_media or request.design_mode -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      --real-moments-gap: .75rem;
+      --real-moments-tile-size: 72vw;
+      --real-moments-aspect-ratio: {{ section.settings.aspect_ratio }};
+    }
+
+    @media screen and (min-width: 700px) {
+      #shopify-section-{{ section.id }} {
+        --real-moments-gap: 1rem;
+        --real-moments-tile-size: 40vw;
+      }
+    }
+
+    @media screen and (min-width: 1000px) {
+      #shopify-section-{{ section.id }} {
+        --real-moments-gap: 1.25rem;
+        --real-moments-tile-size: calc((100% - var(--real-moments-gap) * {{ section.settings.tiles_per_row | minus: 1 }}) / {{ section.settings.tiles_per_row }});
+      }
+    }
+
+    #shopify-section-{{ section.id }} .real-moments {
+      display: flex;
+      gap: var(--real-moments-gap);
+    }
+
+    #shopify-section-{{ section.id }} .real-moments__tile {
+      position: relative;
+      display: block;
+      flex: 0 0 var(--real-moments-tile-size);
+      aspect-ratio: var(--real-moments-aspect-ratio);
+      overflow: hidden;
+      background: rgb(var(--text-color) / .05);
+    }
+
+    #shopify-section-{{ section.id }} .real-moments__tile > :is(img, video-media, svg) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .real-moments__tile img,
+    #shopify-section-{{ section.id }} .real-moments__tile video-media {
+      object-fit: cover;
+      object-position: center;
+      --video-media-object-fit: cover;
+    }
+
+    #shopify-section-{{ section.id }} .real-moments__tile video-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    {%- comment -%}Captions sit on a soft fade at the foot of the tile, in the header's gold tracked caps.{%- endcomment -%}
+    #shopify-section-{{ section.id }} .real-moments__caption {
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: 0;
+      padding: 2.5rem 1rem 1rem;
+      background: linear-gradient(to top, rgb(0 0 0 / .45), transparent);
+      color: rgb(255 255 255);
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    @media screen and (pointer: fine) {
+      #shopify-section-{{ section.id }} a.real-moments__tile img {
+        transition: transform .6s ease;
+      }
+
+      #shopify-section-{{ section.id }} a.real-moments__tile:hover img {
+        transform: scale(1.04);
+      }
+    }
+  </style>
+
+  {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
+
+  <div class="section-spacing color-scheme color-scheme--{{ section.settings.color_scheme.id }} color-scheme--bg-{{ color_scheme_hash }} {% if section.settings.separate_section_with_border %}bordered-section{% endif %}">
+    <div class="container">
+      <div class="section-stack">
+        {%- render 'section-header',
+          subheading: section.settings.subheading,
+          heading: section.settings.title,
+          heading_style: section.settings.heading_style,
+          content: section.settings.content,
+          text_alignment: 'center'
+        -%}
+
+        {%- assign carousel_id = 'carousel-' | append: section.id -%}
+
+        <div class="floating-controls-container floating-controls-container--inside floating-controls-container--on-hover">
+          <carousel-prev-button class="floating-controls-container__control" aria-controls="{{ carousel_id }}">
+            <button type="button" class="prev-next-button prev-next-button--prev circle-button circle-button--lg hover:animate-icon-inline" disabled>
+              <span class="sr-only">{{ 'general.accessibility.previous' | t }}</span>
+              {%- render 'icon' with 'arrow-left', direction_aware: true -%}
+            </button>
+          </carousel-prev-button>
+
+          <scroll-carousel id="{{ carousel_id }}" group-cells allow-drag class="real-moments scroll-area bleed lg:unbleed">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                if block.settings.image == blank and block.settings.video == blank and request.design_mode == false
+                  continue
+                endif
+
+                assign tile_tag = 'div'
+                if block.settings.link != blank
+                  assign tile_tag = 'a'
+                endif
+              -%}
+
+              <{{ tile_tag }}
+                {% if tile_tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
+                class="real-moments__tile"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.type == 'video' and block.settings.video != blank -%}
+                  {%- render 'media',
+                    media: block.settings.video,
+                    autoplay: true,
+                    loop: true,
+                    muted: true,
+                    controls: false,
+                    sizes: '(min-width: 1000px) 25vw, 72vw'
+                  -%}
+                {%- elsif block.settings.image != blank -%}
+                  {%- capture image_alt -%}{{ block.settings.image.alt | default: block.settings.caption | default: section.settings.title }}{%- endcapture -%}
+                  {{- block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '(min-width: 1000px) 25vw, 72vw', widths: '400,600,800,1000,1200', alt: image_alt -}}
+                {%- else -%}
+                  {{- 'lifestyle-1' | placeholder_svg_tag: 'placeholder' -}}
+                {%- endif -%}
+
+                {%- if block.settings.caption != blank -%}
+                  <span class="real-moments__caption">{{ block.settings.caption }}</span>
+                {%- endif -%}
+              </{{ tile_tag }}>
+            {%- endfor -%}
+          </scroll-carousel>
+
+          <carousel-next-button class="floating-controls-container__control" aria-controls="{{ carousel_id }}">
+            <button type="button" class="prev-next-button prev-next-button--next circle-button circle-button--lg hover:animate-icon-inline">
+              <span class="sr-only">{{ 'general.accessibility.next' | t }}</span>
+              {%- render 'icon' with 'arrow-right', direction_aware: true -%}
+            </button>
+          </carousel-next-button>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Real photos & videos",
+  "class": "shopify-section--real-moments",
+  "tag": "section",
+  "disabled_on": {
+    "templates": ["password"],
+    "groups": ["header", "custom.overlay"]
+  },
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:global.colors.scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "separate_section_with_border",
+      "label": "t:global.section.separate_section_with_border",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:global.text.subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:global.text.heading",
+      "default": "Real Moments"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "t:global.text.style",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:global.text.content"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Tile shape",
+      "info": "Reel suits phone videos; portrait or square suits photos.",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "9 / 16", "label": "Reel (9:16)" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "tiles_per_row",
+      "label": "Tiles per row on desktop",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:global.image.image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "info": "Optional, shown at the foot of the tile."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional, e.g. the product in the photo."
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "t:global.video.video",
+          "info": "Plays muted on a loop. Short clips (under 15 seconds) load fastest."
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "info": "Optional, shown at the foot of the tile."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional, e.g. the product in the video."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Real photos & videos",
+      "blocks": [
+        { "type": "image" },
+        { "type": "video" },
+        { "type": "image" },
+        { "type": "video" }
+      ]
+    }
+  ]
+}
+{% endschema %}
