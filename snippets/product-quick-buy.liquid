@@ -8,6 +8,18 @@
 {%- capture product_form_id -%}product-form-quick-buy-{{ product.id }}-{{ section.id }}{%- endcapture -%}
 
 <template id="quick-buy-content">
+  {%- comment -%}The product page's option picker styles (metal photos, karat and length buttons), which live in that page's section and so don't reach this popup.{%- endcomment -%}
+  <style>
+    {%- render 'product-option-styles', scope: '.quick-buy-modal__content' -%}
+
+    /* Photo pinned to the top beside the details, rather than centred against them with a gap above. */
+    @media screen and (min-width: 700px) {
+      .quick-buy-modal__content {
+        align-items: start;
+      }
+    }
+  </style>
+
   <p class="h5" slot="header">{{ 'product.general.choose_options' | t }}</p>
 
   <div class="quick-buy-modal__content">
