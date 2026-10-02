@@ -332,6 +332,7 @@
         "separate_section_with_border": false,
         "desktop_row_height": 320,
         "mobile_row_height": 240,
+        "animate_titles_on_scroll": true,
         "section_width": "full",
         "spacing": "xs",
         "subheading": "",

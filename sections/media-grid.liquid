@@ -73,6 +73,20 @@
         white-space: nowrap;
       }
     }
+
+    {%- if section.settings.animate_titles_on_scroll -%}
+      {%- comment -%}
+        Titles that travel down their tile as the page scrolls: centred at the top while the
+        visitor is on the hero, at the bottom centre once the tile reaches the upper third
+        of the screen. The script below sets --title-shift on each title.
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .media-grid__item .prose {
+        place-self: start center;
+        text-align: center;
+        transform: translateY(var(--title-shift, 0px));
+        will-change: transform;
+      }
+    {%- endif -%}
   </style>
 
   {%- assign color_scheme_hash = section.settings.color_scheme.settings.background_gradient | default: section.settings.color_scheme.settings.background | md5 -%}
@@ -160,6 +174,53 @@
       </div>
     </div>
   </div>
+
+  {%- if section.settings.animate_titles_on_scroll -%}
+    <script>
+      (() => {
+        const section = document.getElementById('shopify-section-{{ section.id }}');
+        if (!section) return;
+
+        const items = Array.from(section.querySelectorAll('.media-grid__item'));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let frame = null;
+
+        // Progress 0 at the top of the page, 1 once a tile's top reaches the upper third of
+        // the screen; the title moves the same fraction of the way from its tile's top to
+        // its bottom, keeping the same inset at both ends.
+        const update = () => {
+          frame = null;
+          const settleAt = window.innerHeight * 0.35;
+
+          items.forEach((item) => {
+            const title = item.querySelector('.prose');
+            if (!title) return;
+
+            const itemRect = item.getBoundingClientRect();
+            const titleRect = title.getBoundingClientRect();
+            const currentShift = parseFloat(title.style.getPropertyValue('--title-shift')) || 0;
+            const inset = titleRect.top - currentShift - itemRect.top;
+            const travel = Math.max(0, itemRect.height - titleRect.height - inset * 2);
+
+            const distance = itemRect.top + window.scrollY - settleAt;
+            let progress = distance <= 0 ? 1 : Math.min(1, Math.max(0, window.scrollY / distance));
+            if (reduceMotion.matches) progress = 1;
+
+            title.style.setProperty('--title-shift', `${(travel * progress).toFixed(1)}px`);
+          });
+        };
+
+        const requestUpdate = () => {
+          if (frame === null) frame = requestAnimationFrame(update);
+        };
+
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate);
+        reduceMotion.addEventListener?.('change', requestUpdate);
+        update();
+      })();
+    </script>
+  {%- endif -%}
 {%- endif -%}
 
 {% schema %}
@@ -202,6 +263,13 @@
       "unit": "px",
       "label": "t:sections.media_grid.mobile_row_height",
       "default": 180
+    },
+    {
+      "type": "checkbox",
+      "id": "animate_titles_on_scroll",
+      "label": "Move titles down as the page scrolls",
+      "info": "Titles start centred at the top of each tile and settle at the bottom centre as visitors scroll down. Overrides each tile's text position.",
+      "default": false
     },
     {
       "type": "select",
