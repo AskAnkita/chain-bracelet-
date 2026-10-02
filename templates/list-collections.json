@@ -16,13 +16,13 @@
           "type": "heading",
           "settings": {
             "text": "SHOP BY CATEGORY",
-            "heading_tag": "h1"
+            "heading_tag": "h2"
           }
         },
         "button": {
           "type": "button",
           "settings": {
-            "style": "solid",
+            "style": "outline",
             "text": "EXPLORE COLLECTIONS",
             "url": "/collections/all",
             "background": "",

@@ -275,6 +275,13 @@
         color: rgb(173 125 49);
       }
 
+      {%- if template.name == 'list-collections' -%}
+        /* Shop by Category page: its title (a Rich text heading) in the same gold. */
+        .shopify-section--rich-text .prose > :is(.h1, .h2, .h3) {
+          color: rgb(173 125 49);
+        }
+      {%- endif -%}
+
       /* Collection subheading (the description under the title): smaller and tracked out. */
       .shopify-section--collection-banner .collection-description {
         font-size: 0.6875rem;
