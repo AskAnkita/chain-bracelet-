@@ -43,7 +43,23 @@
     }
   }
 
-  {%- comment -%}Tablets: two columns by two rows, rather than one column left alone on a second row.{%- endcomment -%}
+  {%- comment -%}
+    The © line (and the payment icons, once the store takes payments) centred under the
+    columns, instead of the theme's copyright-left / icons-right split on desktop.
+  {%- endcomment -%}
+  @media screen and (min-width: 1000px) {
+    #shopify-section-{{ section.id }} .footer__aside {
+      grid-auto-flow: row;
+      justify-content: center;
+      justify-items: center;
+    }
+
+    #shopify-section-{{ section.id }} .footer__aside .payment-methods {
+      justify-content: center;
+    }
+  }
+
+  {%- comment -%}Tablets: the columns side by side in a centred grid, two to a row.{%- endcomment -%}
   @media screen and (min-width: 700px) and (max-width: 999px) {
     #shopify-section-{{ section.id }} .footer__block-list {
       display: grid;

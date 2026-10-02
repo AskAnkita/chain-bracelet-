@@ -23,26 +23,6 @@
             "button_text_color": ""
           }
         },
-        "shop": {
-          "type": "links",
-          "settings": {
-            "menu": "",
-            "links_text": "New Arrivals | /collections/all?sort_by=created-descending\nBest Sellers | /collections/all?sort_by=best-selling\nShop All | /collections/all\nWishlist | /pages/wishlist",
-            "collapse_on_mobile": false,
-            "show_menu_title": true,
-            "menu_title": "Shop"
-          }
-        },
-        "discover": {
-          "type": "links",
-          "settings": {
-            "menu": "",
-            "links_text": "FAQ | /pages/faq\nSecure Payments | /pages/secure-payments\nMy Account | /account",
-            "collapse_on_mobile": false,
-            "show_menu_title": true,
-            "menu_title": "Help"
-          }
-        },
         "customer-care": {
           "type": "links",
           "settings": {
@@ -55,8 +35,6 @@
       },
       "block_order": [
         "newsletter",
-        "shop",
-        "discover",
         "customer-care"
       ],
       "settings": {
