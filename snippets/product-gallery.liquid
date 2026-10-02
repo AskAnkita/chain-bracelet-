@@ -259,6 +259,17 @@
   endif
 
   assign filtered_indexes = filtered_indexes | concat: skin_tone_indexes | uniq
+
+  # A product with a video opens on it rather than on the variant's photo (a variant can
+  # only have a photo of its own); theme.js returns to it when another option is picked.
+  for media in product.media
+    if media.media_type == 'video' or media.media_type == 'external_video'
+      unless filtered_indexes contains media.position
+        assign default_media = media
+        break
+      endunless
+    endif
+  endfor
 %}
 
 <product-gallery
