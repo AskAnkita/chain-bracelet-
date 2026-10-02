@@ -35,12 +35,10 @@
     endif
   endfor
 
-  # Product photos sit two to a row on desktop, the first one included (the theme's
-  # transparent-header layout used to make the first photo span both columns).
   if allow_transparent_header
+    assign desktop_media_layout = 'grid_2x_highlighted'
     assign product_info_size = 50
   endif
-  assign desktop_media_layout = 'grid_2x'
 
   assign section_scope = '#shopify-section-' | append: section.id
 -%}
